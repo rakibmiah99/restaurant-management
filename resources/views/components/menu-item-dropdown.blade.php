@@ -1,0 +1,17 @@
+<!-- Layouts -->
+<li class="menu-item {{$attributes->get('active') ? 'active open' : '' }}">
+    <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons bx bx-layout"></i>
+        <div data-i18n="Layouts">{{$attributes->get('name')}}</div>
+    </a>
+
+    <ul class="menu-sub">
+        @foreach($attributes->get('child') as $item)
+            <li class="menu-item {{ array_key_exists('active', $item) && $item['active'] ? 'active' : ''}}">
+                <a href="{{$item['url']}}" class="menu-link">
+                    <div data-i18n="Without menu">{{$item['name']}}</div>
+                </a>
+            </li>
+        @endforeach
+    </ul>
+</li>

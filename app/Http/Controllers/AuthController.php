@@ -14,8 +14,8 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request){
         $credential = $request->only(['email', 'password']);
-        if(Auth::attempt($credential)){
-
+        if(Auth::attempt($credential, true)){
+            return redirect()->route('home');
         }
         else{
             return redirect()
@@ -24,5 +24,10 @@ class AuthController extends Controller
                 ->withInput($request->all());
         }
 
+    }
+
+    public function logout(){
+        Auth::logout();
+        return redirect()->route('loginPage');
     }
 }
