@@ -15,12 +15,17 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
 
-//        $exceptions->respond(function (\Symfony\Component\HttpFoundation\Response $response){
-//           if($response->getStatusCode() == 404){
-//               return response()->view('404');
-//           }
-//           else if($response->getStatusCode() == 500){
-//               return response()->view('500');
-//           }
-//        });
+        $exceptions->render(function (Exception $exception){
+            dd($exception->getMessage());
+        });
+
+
+        $exceptions->respond(function (\Symfony\Component\HttpFoundation\Response $response){
+           if($response->getStatusCode() == 404){
+               return response()->view('404');
+           }
+           else if($response->getStatusCode() == 500){
+               return response()->view('500');
+           }
+        });
     })->create();

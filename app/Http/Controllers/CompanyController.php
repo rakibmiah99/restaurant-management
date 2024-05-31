@@ -18,7 +18,7 @@ class CompanyController extends Controller
     public function show($id){
         $company =  Company::find($id);
         if (!$company){
-            abort(404);
+            abort(500, 'ff');
         }
         return response()->json($company);
     }
