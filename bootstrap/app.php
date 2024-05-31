@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
 
         $exceptions->render(function (Exception $exception){
-            dd($exception->getMessage());
+            dd($exception->getMessage()) ;
         });
 
 
