@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html
     lang="en"
@@ -36,12 +37,34 @@
         </div>
         <!-- / Layout page -->
     </div>
-
+    <x-delete-modal/>
     <!-- Overlay -->
     <div class="layout-overlay layout-menu-toggle"></div>
 </div>
 <!-- / Layout wrapper -->
 
     <x-footer-script/>
+    <script>
+        let timeout = null;
+        function searchData(){
+            clearTimeout(timeout);
+            timeout = setTimeout(function (){
+                $('#search-form').trigger('submit');
+            }, 500)
+        }
+
+
+        $(document).ready(function() {
+            $('.select-2').select2();
+        });
+
+
+
+        //delete modal from index list button
+        $('.delete-btn').on('click', function (){
+            let url = $(this).attr('url')
+            $('#modal-delete-form').attr('action', url)
+        })
+    </script>
 </body>
 </html>

@@ -1,11 +1,7 @@
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-            <div class="d-flex pe-4 justify-content-between align-items-center">
-                <h5 class="card-header">Companies</h5>
-                <button type="button" class="btn btn-sm btn-primary">Create</button>
-            </div>
-            <hr class="m-0">
+           <x-card-header :url="route('company.create')" name="Create"/>
             <div class="mt-3">
 
                 <form class="d-flex px-2 justify-content-between" id="search-form">
@@ -16,6 +12,7 @@
                         <option @if(request()->perpage == 100) selected @endif value="100">100</option>
                     </select>
 
+                    <!-- searchData function in main layout script -->
                     <input value="{{request()->q}}" name="q" onkeyup="searchData()" style="width: 150px" id="searchInput" class="form-control d-inline form-control-sm" type="text" placeholder="search">
 
                 </form>
@@ -43,8 +40,20 @@
                                     <th>{{$item->country_id}}</th>
                                     <th>{{$item->agent_name}}</th>
                                     <th>{{$item->email}}</th>
-                                    <th>{{$item->status}}</th>
-                                    <th>Action</th>
+                                    <th>{{$item->status ? \App\Enums\Status::ACTIVE->value : \App\Enums\Status::INACTIVE->value }}</th>
+                                    <th>
+                                        <div class="dropdown">
+                                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <div class="dropdown-menu" style="">
+                                                <a class="dropdown-item view-btn" href="javascript:void(0);" url="{{route('company.show', $item->id)}}"><i class='bx bx-low-vision'></i> View</a>
+                                                <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Edit</a>
+                                                <a class="dropdown-item" href="{{route('company.changeStatus', $item->id)}}"><i class='bx bx-checkbox-minus'></i> {{$item->status ? \App\Enums\Status::INACTIVE->value : \App\Enums\Status::ACTIVE->value }}</a>
+                                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" url="{{route('company.delete', $item->id)}}"  class="dropdown-item delete-btn" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
+                                            </div>
+                                        </div>
+                                    </th>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -58,15 +67,22 @@
             </div>
         </div>
     </div>
-
 </x-main-layout>
 
 <script>
-    let timeout = null;
-    function searchData(){
-        clearTimeout(timeout);
-        timeout = setTimeout(function (){
-            $('#search-form').trigger('submit');
-        }, 500)
-    }
+
+    $('.view-btn').on('click', function (){
+        let url = $(this).attr('url')
+        axios({
+            method: 'get',
+            url: url
+        })
+        .then(function (response){
+            console.log(response)
+        })
+        .catch(function (error){
+
+        });
+    })
+
 </script>

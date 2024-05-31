@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('agent_mobile')->nullable();
             $table->boolean('status')->default(true);
             $table->unsignedBigInteger('country_id');
-            $table->unsignedBigInteger('meal_price_id');
+            $table->unsignedBigInteger('meal_price_id')->nullable();
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->softDeletes();

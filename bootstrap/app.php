@@ -14,5 +14,12 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias(['auth.check' => \App\Http\Middleware\AuthMiddleware::class]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->respond(function (\Symfony\Component\HttpFoundation\Response $response){
+           if($response->getStatusCode() == 404){
+               return response()->view('404');
+           }
+           else if($response->getStatusCode() == 500){
+               return response()->view('500');
+           }
+        });
     })->create();
