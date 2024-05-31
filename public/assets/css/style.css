@@ -10,7 +10,19 @@
     width: 45%;
 }
 
+.lang-btn button:hover{
+    background-color: transparent;
+    color: #696cff;
+}
 
+.lang-btn .btn-outline-primary.dropdown-toggle.show {
+    background-color: transparent;
+    color: #696cff;
+}
+.lang-btn button:focus{
+    background-color: transparent;
+    color: #696cff;
+}
 
 .dropdown-item{
     font-size: 12px;

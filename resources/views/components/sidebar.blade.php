@@ -17,189 +17,133 @@
 
     <ul class="menu-inner py-1">
 
-        <x-menu-item url="" name="Dashboard"/>
+        <x-menu-item url="" :name="__('dashboard')"/>
         <x-menu-item-dropdown
-            name="Company Management"
+            :name="__('menu.company_management')"
             :active="request()->segment(1) == 'company'"
             :child="[
                 [
                     'active' => request()->segment(1) == 'company',
                     'url' => route('company'),
-                    'name' => 'company'
+                    'name' => __('company')
                 ]
             ]
         "/>
         <x-menu-item-dropdown
-            name="Meal Management"
+            :name="__('meal_management')"
             :child="[
                 [
                     'url' => 'd',
-                    'name' => 'Meal Price'
-                ]
-            ]
-        "/>
-
-        <x-menu-item-dropdown
-            name="Hotel Management"
-            :child="[
-                [
-                    'url' => 'd',
-                    'name' => 'Hotel'
-                ],
-                [
-                    'url' => 'd',
-                    'name' => 'Hall'
-                ],
-            ]
-        "/>
-
-        <x-menu-item-dropdown
-            name="Order Management"
-            :child="[
-                [
-                    'url' => 'd',
-                    'name' => 'Orders'
-                ],
-                [
-                    'url' => 'd',
-                    'name' => 'Order Monitoring'
-                ],
-                [
-                    'url' => 'd',
-                    'name' => 'Complete Order'
-                ],
-                [
-                    'url' => 'd',
-                    'name' => 'Invoice'
-                ],
-            ]
-        "/>
-
-
-        <x-menu-item-dropdown
-            name="Reports"
-            :child="[
-                [
-                    'url' => 'd',
-                    'name' => 'Hotel Report'
-                ],
-                [
-                    'url' => 'd',
-                    'name' => 'Hall Report'
-                ],
-                [
-                    'url' => 'd',
-                    'name' => 'Kitchen Report'
-                ],
-                [
-                    'url' => 'd',
-                    'name' => 'Revenue Report'
-                ],
-                [
-                    'url' => 'd',
-                    'name' => 'Order Report'
-                ],
-                [
-                    'url' => 'd',
-                    'name' => 'Invoice Report'
-                ],
-                [
-                    'url' => 'd',
-                    'name' => 'Packaging Report'
-                ],
-            ]
-        "/>
-
-
-        <x-menu-item-dropdown
-            name="Settings"
-            :child="[
-                [
-                    'url' => 'd',
-                    'name' => 'Company Settings'
+                    'name' => __('meal_price')
                 ]
             ]
         "/>
 
         <x-menu-item-dropdown
-            name="Roles Management"
+            :name="__('hotel_management')"
             :child="[
                 [
                     'url' => 'd',
-                    'name' => 'Permission'
+                    'name' => __('hotel')
                 ],
                 [
                     'url' => 'd',
-                    'name' => 'Roles'
+                    'name' => __('hall')
+                ],
+            ]
+        "/>
+
+        <x-menu-item-dropdown
+            :name="__('order_management')"
+            :child="[
+                [
+                    'url' => 'd',
+                    'name' => __('orders')
+                ],
+                [
+                    'url' => 'd',
+                    'name' => __('order_monitoring')
+                ],
+                [
+                    'url' => 'd',
+                    'name' => __('complete_order')
+                ],
+                [
+                    'url' => 'd',
+                    'name' => __('invoice')
+                ],
+            ]
+        "/>
+
+
+        <x-menu-item-dropdown
+            :name="__('reports')"
+            :child="[
+                [
+                    'url' => 'd',
+                    'name' => __('hotel_report')
+                ],
+                [
+                    'url' => 'd',
+                    'name' => __('hall_report')
+                ],
+                [
+                    'url' => 'd',
+                    'name' => __('kitchen_report')
+                ],
+                [
+                    'url' => 'd',
+                    'name' => __('revenue_report')
+                ],
+                [
+                    'url' => 'd',
+                    'name' => __('order_report')
+                ],
+                [
+                    'url' => 'd',
+                    'name' => __('invoice_report')
+                ],
+                [
+                    'url' => 'd',
+                    'name' => __('packaging_report')
+                ],
+            ]
+        "/>
+
+
+        <x-menu-item-dropdown
+            :name="__('settings')"
+            :child="[
+                [
+                    'url' => 'd',
+                    'name' => __('company_settings')
                 ]
             ]
         "/>
 
         <x-menu-item-dropdown
-            name="Users Activity"
+            :name="__('roles_management')"
             :child="[
                 [
                     'url' => 'd',
-                    'name' => 'User Activity'
+                    'name' => __('permission')
                 ],
+                [
+                    'url' => 'd',
+                    'name' => __('roles')
+                ]
             ]
         "/>
 
-
-
-
-
-
-
-
-
-
-
-
-
-        {{--<!-- Dashboard -->
-        <li class="menu-item active">
-            <a href="index.html" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                <div data-i18n="Analytics">Dashboard</div>
-            </a>
-        </li>
-
-        <!-- Layouts -->
-        <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-layout"></i>
-                <div data-i18n="Layouts">Layouts</div>
-            </a>
-
-            <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="layouts-without-menu.html" class="menu-link">
-                        <div data-i18n="Without menu">Without menu</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="layouts-without-navbar.html" class="menu-link">
-                        <div data-i18n="Without navbar">Without navbar</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="layouts-container.html" class="menu-link">
-                        <div data-i18n="Container">Container</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="layouts-fluid.html" class="menu-link">
-                        <div data-i18n="Fluid">Fluid</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="layouts-blank.html" class="menu-link">
-                        <div data-i18n="Blank">Blank</div>
-                    </a>
-                </li>
-            </ul>
-        </li>--}}
+        <x-menu-item-dropdown
+            :name="__('user_activity')"
+            :child="[
+                [
+                    'url' => 'd',
+                    'name' => __('user_activity')
+                ],
+            ]
+        "/>
 
 
 

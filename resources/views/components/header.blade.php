@@ -87,4 +87,13 @@
         Toast(toastMessage, 'error');
         @endif
     })
+
+
+    function modalLoaderON(){
+        $('#modal-loader').removeClass('d-none')
+    }
+
+    function modalLoaderOFF(){
+        $('#modal-loader').addClass('d-none')
+    }
 </script>
