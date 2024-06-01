@@ -24,7 +24,7 @@
             :child="[
                 [
                     'active' => request()->segment(1) == 'company',
-                    'url' => route('company'),
+                    'url' => route('company.index'),
                     'name' => __('company')
                 ]
             ]

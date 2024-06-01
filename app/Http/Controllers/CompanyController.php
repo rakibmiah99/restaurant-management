@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CompanyExport;
 use App\Http\Requests\Category\CategoryCreateRequest;
 use App\Models\Company;
 use App\Models\Country;
 use App\Models\MealPrice;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CompanyController extends Controller
 {
     public function index(Request $request){
-        $data = Company::where('name', 'like', '%'.$request->q."%")->paginate((int)$request->perpage ?? 10)->withQueryString();
-        return view('company.index', compact('data'));
+//        return $request->only(['q', 'columns']);
+        $columns = (new Company())->getColumns();
+        $data = Company::filter()->paginate((int)$request->perpage ?? 10)->withQueryString();
+        return view('company.index', compact('data', 'columns'));
     }
 
     public function show($id){
@@ -59,5 +63,17 @@ class CompanyController extends Controller
         $company->status = !$company->status;
         $company->save();
         return redirect()->back()->with('success', "status successfully updated");
+    }
+
+
+    //for export to pdf and Excel file
+    public function export(Request $request){
+        if ($request->get('export-type') == "excel"){
+            return Excel::download(new CompanyExport(), 'company.xlsx');
+        }
+        else if($request->get('export-type') == "pdf"){
+            return Excel::download(new CompanyExport(), 'company.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        }
+
     }
 }

@@ -4,12 +4,18 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth.check', 'localization'])->prefix('/')->group(function (){
     Route::get('/', [\App\Http\Controllers\DashboardController::class, 'page'])->name('home');
-    Route::get('/company', [\App\Http\Controllers\CompanyController::class, 'index'])->name('company');
-    Route::get('/company/create', [\App\Http\Controllers\CompanyController::class, 'create'])->name('company.create');
-    Route::get('/company/show/{id}', [\App\Http\Controllers\CompanyController::class, 'show'])->name('company.show');
-    Route::get('/company/changeStatus/{id}', [\App\Http\Controllers\CompanyController::class, 'changeStatus'])->name('company.changeStatus');
-    Route::post('/company/store', [\App\Http\Controllers\CompanyController::class, 'store'])->name('company.store');
-    Route::post('/company/delete/{id}', [\App\Http\Controllers\CompanyController::class, 'delete'])->name('company.delete');
+
+    Route::prefix('company')->name('company.')->group(function (){
+        Route::get('/', [\App\Http\Controllers\CompanyController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\CompanyController::class, 'create'])->name('create');
+        Route::get('/show/{id}', [\App\Http\Controllers\CompanyController::class, 'show'])->name('show');
+        Route::get('/changeStatus/{id}', [\App\Http\Controllers\CompanyController::class, 'changeStatus'])->name('changeStatus');
+        Route::post('/store', [\App\Http\Controllers\CompanyController::class, 'store'])->name('store');
+        Route::post('/delete/{id}', [\App\Http\Controllers\CompanyController::class, 'delete'])->name('delete');
+        Route::get('/export', [\App\Http\Controllers\CompanyController::class, 'export'])->name('export');
+    });
+
+
 
     Route::get('change-lang/{lang}', [\App\Http\Controllers\LangController::class, 'change'])->name('lang.change');
 });

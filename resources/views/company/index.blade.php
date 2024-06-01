@@ -1,47 +1,36 @@
+
 <x-main-layout>
     <div class="p-4">
         <div class="card">
            <x-card-header :url="route('company.create')" name="Create"/>
             <div class="mt-3">
-
-                <form class="d-flex px-2 justify-content-between" id="search-form">
-                    <select name="perpage" onchange="$('#search-form').trigger('submit')" style="width: 150px" class="form-select form-select-sm">
-                        <option @if(request()->perpage == 10) selected @endif value="10">10</option>
-                        <option @if(request()->perpage == 30) selected @endif value="30">30</option>
-                        <option @if(request()->perpage == 50) selected @endif value="50">50</option>
-                        <option @if(request()->perpage == 100) selected @endif value="100">100</option>
-                    </select>
-
-                    <!-- searchData function in main layout script -->
-                    <input value="{{request()->q}}" name="q" onkeyup="searchData()" style="width: 150px" id="searchInput" class="form-control d-inline form-control-sm" type="text" placeholder="search">
-
-                </form>
+                <x-filter-data export-url="company.export" translate-from="db.company" :columns="$columns"/>
 
                 <div class="table-responsive mt-2 text-nowrap">
                     <table class="table">
                         <thead>
                         <tr>
                             <th>Sl</th>
-                            <th>Code</th>
-                            <th>Name</th>
-                            <th>Country</th>
-                            <th>Agent</th>
-                            <th>Email</th>
-                            <th>Status</th>
+                            @foreach(request()->columns ?? $columns  as $column)
+                                <th>{{__('db.company.'.$column)}}</th>
+                            @endforeach
                             <th>Action</th>
                         </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
                             @foreach ($data as $key=>$item)
                                 <tr>
-                                    <th>{{$key+1}}</th>
-                                    <th>{{$item->code}}</th>
-                                    <th>{{$item->name}}</th>
-                                    <th>{{$item->country_id}}</th>
-                                    <th>{{$item->agent_name}}</th>
-                                    <th>{{$item->email}}</th>
-                                    <th>{{$item->status ? \App\Enums\Status::ACTIVE->value : \App\Enums\Status::INACTIVE->value }}</th>
-                                    <th>
+                                    <td>{{$key+1}}</td>
+                                    @foreach(request()->columns ?? $columns as $column)
+                                        @if($column == "status")
+                                            <td>{{$item->$column ? \App\Enums\Status::ACTIVE->value : \App\Enums\Status::INACTIVE->value }}</td>
+                                        @else
+                                            <td>{{$item->$column}}</td>
+                                        @endif
+
+                                    @endforeach
+
+                                    <td>
                                         <div class="dropdown">
                                             <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="bx bx-dots-vertical-rounded"></i>
@@ -53,7 +42,7 @@
                                                 <a data-bs-toggle="modal" data-bs-target="#deleteModal" url="{{route('company.delete', $item->id)}}"  class="dropdown-item delete-btn" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
                                             </div>
                                         </div>
-                                    </th>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -74,6 +63,13 @@
         <div class="table-responsive mt-2 text-nowrap">
             <table class="table">
                 <tbody id="data" class="table-border-bottom-0">
+                    @foreach($columns as $column)
+                        <tr>
+                            <th>{{__('db.company.'.$column)}}</th>
+                            <th>:</th>
+                            <td id="v-{{$column}}"></td>
+                        </tr>
+                    @endforeach
 
                 </tbody>
             </table>
@@ -95,14 +91,11 @@
             const data = response.data;
 
             for(let property in data){
-                let tr = `
-                    <tr>
-                        <th>${property}</th>
-                        <th>:</th>
-                        <td>${data[property]}</td>
-                    </tr>
-                `;
-                $('#data').append(tr);
+                let id = '#v-'+property;
+                console.log(data[property])
+                $(id).html(data[property])
+
+
             }
         })
         .catch(function (error){

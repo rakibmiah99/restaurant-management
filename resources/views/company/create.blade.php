@@ -3,7 +3,7 @@
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-            <x-card-header :url="route('company')" name="Back"/>
+            <x-card-header :url="route('company.index')" name="Back"/>
             <form action="{{route('company.store')}}" method="post" c class="card-body">
                 @csrf
                 <div class="mb-3 row">
