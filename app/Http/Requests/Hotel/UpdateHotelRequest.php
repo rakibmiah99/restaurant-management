@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Category;
+namespace App\Http\Requests\Hotel;
 
+use App\Models\Hotel;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class CategoryCreateRequest extends FormRequest
+class UpdateHotelRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,16 +24,15 @@ class CategoryCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'unique_id' => 'required',
             'name' => 'required',
-            'country_id' => 'required|exists:countries,id',
-            'meal_price_id' => 'nullable|exists:meal_prices,id',
-            'email' => 'nullable|email',
-            'phone' => 'nullable',
+            'code' => [
+                'required',
+                Rule::unique('hotels')->ignore($this->id)
+            ],
+            'phone' => 'required',
+            'email' => 'nullable',
             'address' => 'nullable',
-            'agent_name' => 'nullable',
-            'agent_mobile' => 'nullable',
-            'status' => 'required',
+            'status' => 'required'
         ];
     }
 }

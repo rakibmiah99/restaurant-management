@@ -7,13 +7,6 @@ use Barryvdh\Debugbar\Facades\Debugbar;
 
 class Model extends \Illuminate\Database\Eloquent\Model
 {
-    /**
-     * Create a new class instance.
-     */
-    public function __construct()
-    {
-        //
-    }
 
     public function getColumns(): array
     {

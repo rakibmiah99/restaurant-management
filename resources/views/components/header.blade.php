@@ -56,6 +56,24 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 <script>
+
+    function convertTo12HourFormat(time24) {
+        // Split the time string into hours and minutes
+        let [hours, minutes] = time24.split(':').map(Number);
+
+        // Determine the period (AM or PM)
+        let period = hours >= 12 ? 'PM' : 'AM';
+
+        // Adjust hours to 12-hour format
+        hours = hours % 12 || 12; // Converts '0' hours to '12'
+
+        // Format the result as a string
+        let time12 = `${hours}:${minutes.toString().padStart(2, '0')} ${period}`;
+        return time12;
+    }
+
+
+
     function Toast(message, type = 'success'){
         let options = {
             text: message,

@@ -14,7 +14,7 @@
             <i class='bx bxs-file-pdf'></i>
         </a>
         <a
-            href="{{route('company.export', array_merge(request()->only(['q', 'columns']), ['export-type' => 'excel']))}}"
+            href="{{route($attributes->get('export-url'), array_merge(request()->only(['q', 'columns']), ['export-type' => 'excel']))}}"
             type="button" class="btn btn-icon btn-sm ms-2 btn-outline-success "
         >
             <i class='bx bx-spreadsheet' ></i>
@@ -29,7 +29,7 @@
                 @foreach($attributes->get('columns') as $column)
                     <li>
                         <div class="dropdown-item">
-                            <input name="columns[]" @if(in_array($column, request()->columns ?? $columns)) checked @endif class="form-check-input" value="{{$column}}" type="checkbox" id="{{$column}}">
+                            <input name="columns[]" @if(in_array($column, request()->columns ?? $attributes->get('columns'))) checked @endif class="form-check-input" value="{{$column}}" type="checkbox" id="{{$column}}">
                             <label class="form-check-label" for="{{$column}}"> {{__($attributes->get('translate-from').".".$column)}} </label>
                         </div>
                     </li>

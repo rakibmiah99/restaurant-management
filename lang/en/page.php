@@ -1,0 +1,45 @@
+<?php
+    return [
+        'companies' => 'Companies',
+        'company_code' => 'Company Code',
+        'company_name' => 'Company Name',
+        'country' => 'Country',
+        'meal_price' => 'Meal Price',
+        'company_email' => 'Company Email',
+        'company_phone' => 'Company Phone',
+        'company_address' => 'Company Address',
+        'company_agent' => 'Company Agent',
+        'agent_mobile' => 'Agent Mobile',
+        'company_status' => 'Company Status',
+        'pricing_code' => 'Pricing Code',
+        'pricing_name' => 'Pricing Name',
+        'cuisine_name' => 'Cuisine Name',
+        'service_type' => 'Service Type',
+        'pricing_status' => 'Pricing Status',
+        'hotels' => 'Hotels',
+        'hotel_name' => 'Hotel Name',
+        'hotel_code' => 'Hotel Code',
+        'hotel_status' => 'Hotel Status',
+        'phone' => 'Phone',
+        'email' => 'email',
+        'address' => 'address',
+        'meal_system' => 'Meal System',
+        'start_time' => 'Start Time',
+        'end_time' => 'End Time',
+
+
+
+        'active' => 'Active',
+        'inactive' => 'InActive',
+        'save' => 'Save',
+        'create' => 'Create',
+        'back' => 'Back',
+        'edit' => 'Edit',
+        'delete' => 'Delete',
+        'view' => 'View',
+        'action' => 'Action',
+        'sl' => 'SL',
+        'select' => 'select',
+
+
+    ];

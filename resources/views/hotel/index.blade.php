@@ -2,9 +2,9 @@
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-           <x-card-header :url="route('company.create')" :name="__('page.companies')" :url-name="__('page.create')"/>
+           <x-card-header :url="route('hotel.create')" :name="__('page.hotels')" :url-name="__('page.create')"/>
             <div class="mt-3">
-                <x-filter-data export-url="company.export" translate-from="db.company" :columns="$columns"/>
+                <x-filter-data export-url="hotel.export" translate-from="db.hotel" :columns="$columns"/>
 
                 <div class="table-responsive mt-2 text-nowrap">
                     <table class="table">
@@ -12,7 +12,7 @@
                         <tr>
                             <th>{{__('page.sl')}}</th>
                             @foreach(request()->columns ?? $columns  as $column)
-                                <th>{{__('db.company.'.$column)}}</th>
+                                <th>{{__('db.hotel.'.$column)}}</th>
                             @endforeach
                             <th>{{__('page.action')}}</th>
                         </tr>
@@ -36,10 +36,10 @@
                                                 <i class="bx bx-dots-vertical-rounded"></i>
                                             </button>
                                             <div class="dropdown-menu" style="">
-                                                <a data-bs-toggle="modal" data-bs-target="#viewModal" class="dropdown-item view-btn" href="javascript:void(0);" url="{{route('company.show', $item->id)}}"><i class='bx bx-low-vision'></i>{{__('page.view')}}</a>
-                                                <a class="dropdown-item" href="{{route('company.edit', $item->id)}}"><i class="bx bx-edit-alt me-1"></i>{{__('page.edit')}}</a>
-                                                <a class="dropdown-item" href="{{route('company.changeStatus', $item->id)}}"><i class='bx bx-checkbox-minus'></i> {{$item->status ? __('page.inactive') : __('page.active') }}</a>
-                                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" url="{{route('company.delete', $item->id)}}"  class="dropdown-item delete-btn" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>{{__('page.delete')}}</a>
+                                                <a data-bs-toggle="modal" data-bs-target="#viewModal" class="dropdown-item view-btn" href="javascript:void(0);" url="{{route('hotel.show', $item->id)}}"><i class='bx bx-low-vision'></i>{{__('page.view')}}</a>
+                                                <a class="dropdown-item" href="{{route('hotel.edit', $item->id)}}"><i class="bx bx-edit-alt me-1"></i>{{__('page.edit')}}</a>
+                                                <a class="dropdown-item" href="{{route('hotel.changeStatus', $item->id)}}"><i class='bx bx-checkbox-minus'></i> {{$item->status ? __('page.inactive') : __('page.active') }}</a>
+                                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" url="{{route('hotel.delete', $item->id)}}"  class="dropdown-item delete-btn" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>{{__('page.delete')}}</a>
                                             </div>
                                         </div>
                                     </td>
@@ -65,7 +65,7 @@
                 <tbody id="data" class="table-border-bottom-0">
                     @foreach($columns as $column)
                         <tr>
-                            <th>{{__('db.company.'.$column)}}</th>
+                            <th>{{__('db.hotel.'.$column)}}</th>
                             <th>:</th>
                             <td id="v-{{$column}}"></td>
                         </tr>
@@ -92,8 +92,13 @@
 
             for(let property in data){
                 let id = '#v-'+property;
-                console.log(data[property])
-                $(id).html(data[property])
+
+                if (property == "status"){
+                    $(id).html(data[property] ? '{{__('page.active')}}' : '{{__('page.inactive')}}')
+                }
+                else{
+                    $(id).html(data[property])
+                }
 
 
             }

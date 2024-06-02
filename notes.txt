@@ -1,0 +1,2 @@
+`meal_system_for_meal_price`
+`price` column need default 0

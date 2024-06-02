@@ -24,6 +24,25 @@
     color: #696cff;
 }
 
+.meal-price-card{
+    transition: linear all .2s;
+    padding: 5px;
+}
+
+.meal-price-card:hover{
+    background-color: #696cff!important;
+}
+
+
+.meal-price-card:hover h1{
+    color: white;
+}
+.meal-price-card h1{
+    color: #696cff;
+    font-weight: bold;
+}
+
+
 .dropdown-item{
     font-size: 12px;
 }

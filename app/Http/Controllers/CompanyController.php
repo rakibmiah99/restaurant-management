@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Exports\CompanyExport;
-use App\Http\Requests\Category\CategoryCreateRequest;
+use App\Http\Requests\Company\CompanyCreateRequest;
+use App\Http\Requests\Company\CompanyUpdateRequest;
 use App\Models\Company;
 use App\Models\Country;
 use App\Models\MealPrice;
@@ -13,9 +14,8 @@ use Maatwebsite\Excel\Facades\Excel;
 class CompanyController extends Controller
 {
     public function index(Request $request){
-//        return $request->only(['q', 'columns']);
         $columns = (new Company())->getColumns();
-        $data = Company::filter()->paginate((int)$request->perpage ?? 10)->withQueryString();
+        $data = Company::filter()->paginate($request->perpage ?? 10)->withQueryString();
         return view('company.index', compact('data', 'columns'));
     }
 
@@ -27,20 +27,43 @@ class CompanyController extends Controller
         return response()->json($company);
     }
 
-    public function create(Request $request){
+    public function create(Request $request): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
+    {
         $countries = Country::get();
         $meal_prices = MealPrice::active()->get();
         return view('company.create', compact('countries', 'meal_prices'));
     }
 
-    public function store(CategoryCreateRequest $request){
+    public function edit($id, Request $request): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
+    {
+        $company = Company::find($id);
+        if (!$company){
+            abort(404);
+        }
+        $countries = Country::get();
+        $meal_prices = MealPrice::active()->get();
+        return view('company.edit', compact('countries', 'meal_prices', 'company'));
+    }
+
+
+    public function store(CompanyCreateRequest $request){
         try {
             Company::create($request->validated());
             return redirect()->back()->with('success', 'Company Created Successfully');
         }
         catch (\Exception $exception){
-            return redirect()->back()->with('error', $exception->getMessage());
+            return redirect()->back()->with('error', $exception->getMessage())->withInput($request->all());
         }
+    }
+
+
+    public function update($id, CompanyUpdateRequest $request){
+        $company = Company::find($id);
+        if (!$company){
+            abort(404);
+        }
+        $company->update($request->validated());
+        return redirect()->back()->with('success', 'Company Updated Successfully');
     }
 
 

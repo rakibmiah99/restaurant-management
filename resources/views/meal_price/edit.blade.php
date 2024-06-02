@@ -1,0 +1,28 @@
+@php $is_edit = request()->segment(2) == "edit"  @endphp
+<x-main-layout>
+    <div class="p-4">
+        <div class="card">
+            <x-card-header :name="__('page.companies')" :url="route('company.index')" :url-name="__('page.back')"/>
+            <form action="{{route('meal_price.update', request()->id)}}" method="post" c class="card-body">
+                @csrf
+
+                @include('meal_price.form_data', compact('is_edit'))
+
+                <div class="mb-3 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary">
+                        {{__('page.save')}}
+                    </button>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+</x-main-layout>
+@include('company.common_script')
+<script>
+    $('#countriesId').val('{{$meal_price->country_id}}')
+
+
+</script>
+
