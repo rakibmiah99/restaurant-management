@@ -60,9 +60,11 @@
 
         <x-menu-item-dropdown
             :name="__('menu.order_management')"
+            :active="request()->segment(1) == 'order'"
             :child="[
                 [
-                    'url' => 'd',
+                    'active' => request()->segment(1) == 'order',
+                    'url' => route('order.index'),
                     'name' => __('menu.orders')
                 ],
                 [

@@ -2,43 +2,40 @@
 @if(!$is_edit) <input type="hidden" name="type" value="{{request()->get('meal-type')}}"/> @endif
 <div class="mb-3 row">
     <div class="col-md-4">
-        <label for="html5-text-input" class=" col-form-label">
-            {{__('page.pricing_code')}}
-            <x-required/>
-            <x-input-error name="code"/>
-        </label>
-        <div class="">
-            <input readonly required value="{{$is_edit ? $meal_price->code : \App\Models\MealPrice::GenerateUniqueCode()}}" name="code" class="form-control" type="text" id="html5-text-input">
-        </div>
+        <x-input
+            mode="vertical"
+            :title="__('page.pricing_code')"
+            name="code"
+            type="text"
+            :required="true"
+            :readonly="true"
+            :value="$is_edit ? $meal_price->code : \App\Models\MealPrice::GenerateUniqueCode()"
+        />
     </div>
 
 
     <div class="col-md-8">
-        <label class=" col-form-label text-md-end">
-            {{__('page.pricing_name')}}
-            <x-required/>
-            <x-input-error name="name"/>
-        </label>
-        <div class="">
-            <input required value="{{$is_edit ? $meal_price->name:  old('name')}}" name="name" class="form-control" type="text">
-        </div>
+        <x-input
+            mode="vertical"
+            :title="__('page.pricing_name')"
+            name="name"
+            type="text"
+            :required="true"
+            :value="$is_edit ? $meal_price->name:  ''"
+        />
     </div>
 
     <div class="col-md-4 mt-3">
 
-            <label for="html5-email-input" class="col-form-label">
-                {{__('page.cuisine_name')}}
-                <x-required/>
-                <x-input-error name="country_id" />
-            </label>
-            <div class="">
-                <select required name="country_id" class="form-select select-2" id="countriesId" aria-label="Default select example">
-                    <option value="">{{__('page.select')}}</option>
-                    @foreach($countries as $county)
-                        <option @if(old('country_id' == $county->id)) selected @endif value="{{$county->id}}">{{$county->name}}</option>
-                    @endforeach
-                </select>
-            </div>
+            <x-input-select2
+                mode="vertical"
+                :title="__('page.cuisine_name')"
+                :is_required="true"
+                :array="$countries"
+                name="country_id"
+                :value="$is_edit ? $meal_price->country_id : ''"
+            />
+
     </div>
 
     <div class="col-md-4 mt-3">
@@ -60,25 +57,21 @@
             </div>
     </div>
 
+
+
+
     <div class="col-md-4 mt-3">
-            <label for="html5-datetime-local-input" class=" col-form-label">
-                {{__('page.pricing_status')}}
-                <x-required/>
-                <x-input-error name="status" />
-            </label>
-            <div class="">
-                <div class="col-md">
-                    <div class="form-check form-check-inline mt-1">
-                        <input  @if($is_edit ? $meal_price->status : old('status') ) checked @endif class="form-check-input" type="radio" name="status" id="inlineRadio1" value="1">
-                        <label class="form-check-label" for="inlineRadio1">{{__('page.active')}}</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input @if($is_edit ? !$meal_price->status : !old('status')) checked @endif class="form-check-input" type="radio" name="status" id="inlineRadio2" value="0">
-                        <label class="form-check-label" for="inlineRadio2">{{__('page.inactive')}}</label>
-                    </div>
-                </div>
-            </div>
+        <x-input-status
+            mode="vertical"
+            :value="$is_edit ? $meal_price->status : old('status')"
+            :title="__('page.pricing_status')"
+        />
     </div>
+
+
+
+
+
 
     <div class="d-flex justify-content-center mt-4 ">
         <div class="w-50 mt-3 border border-1  px-3">
@@ -94,7 +87,7 @@
                             </label>
                             <div class="col-md-7">
                                 <input type="hidden" value="{{$meal_system->id}}" name="meal_systems[]">
-                                <input required value="{{$meal_system_for_meal_price->price}}" name="meal_system_price[]" class="form-control" type="number" id="html5-text-input">
+                                <input min="1" required value="{{$meal_system_for_meal_price->price}}" name="meal_system_price[]" class="form-control" type="number" id="html5-text-input">
                             </div>
                         </div>
                     @endforeach
@@ -109,7 +102,7 @@
                             </label>
                             <div class="col-md-7">
                                 <input type="hidden" value="{{$meal_system->id}}" name="meal_systems[]">
-                                <input required value="0" name="meal_system_price[]" class="form-control" type="number" id="html5-text-input">
+                                <input min="1" required value="0" name="meal_system_price[]" class="form-control" type="number" id="html5-text-input">
                             </div>
                         </div>
                     @endforeach
@@ -126,7 +119,7 @@
                         </label>
                         <div class="col-md-7">
                             <input type="hidden" value="{{$meal_system->id}}" name="meal_systems[]">
-                            <input required value="0" name="meal_system_price[]" class="form-control" type="number" id="html5-text-input">
+                            <input required min="1" value="0" name="meal_system_price[]" class="form-control" type="number" id="html5-text-input">
                         </div>
                     </div>
                 @endforeach

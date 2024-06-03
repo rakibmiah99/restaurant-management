@@ -20,8 +20,13 @@ class Hotel extends Model
         }
     }
 
+
+    public function halls(){
+        return $this->hasMany(Hall::class, 'hotel_id', 'id');
+    }
+
     public static function GenerateUniqueCode(){
-        $model = MealPrice::orderBy('id', 'desc')->first();
+        $model = Hotel::orderBy('id', 'desc')->first();
         $code = "1000";
         if ($model){
             $code = $model->code+1;

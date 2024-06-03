@@ -2,16 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\CompanyExport;
 use App\Exports\HotelExport;
-use App\Http\Requests\Company\CompanyCreateRequest;
-use App\Http\Requests\Company\CompanyUpdateRequest;
 use App\Http\Requests\Hotel\CreateHotelRequest;
 use App\Http\Requests\Hotel\UpdateHotelRequest;
-use App\Models\Company;
-use App\Models\Country;
 use App\Models\Hotel;
-use App\Models\MealPrice;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -29,6 +23,21 @@ class HotelController extends Controller
             abort(404);
         }
         return response()->json($hotel);
+    }
+
+    public function hotelWiseHalls($id){
+        $hotel = Hotel::find($id);
+        if (!$hotel){
+            abort(404);
+        }
+        $halls = $hotel->halls;
+        $htmls = '<select name="hall_id" required id="hall_id" class="form-control"><option value="">' . __('page.select') . '</option>';
+        foreach ($halls as $hall) {
+            $htmls .= "<option value='$hall->id'>$hall->name</option>";
+        }
+        $htmls .= '</select>';
+
+        echo $htmls;
     }
 
     public function create(Request $request): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
@@ -97,6 +106,5 @@ class HotelController extends Controller
         else if($request->get('export-type') == "pdf"){
             return Excel::download(new HotelExport(), 'hotel.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
         }
-
     }
 }

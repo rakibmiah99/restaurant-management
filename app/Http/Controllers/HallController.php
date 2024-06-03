@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\HotelExport;
-use App\Http\Requests\Hotel\CreateHotelRequest;
-use App\Http\Requests\Hotel\UpdateHotelRequest;
+use App\Exports\HallExport;
+use App\Http\Requests\Hall\CreateHallRequest;
+use App\Http\Requests\Hall\UpdateHallRequest;
 use App\Models\Hall;
 use App\Models\Hotel;
 use Illuminate\Http\Request;
@@ -23,27 +23,30 @@ class HallController extends Controller
         if (!$hall){
             abort(404);
         }
-        return response()->json($hall->load(['hotel', 'meal_times.meal_system']));
+        return response()->json($hall->load(['hotel']));
     }
+
 
     public function create(Request $request): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
     {
-        return view('hotel.create');
+        $hotels = Hotel::all();
+        return view('hall.create', compact('hotels'));
     }
 
     public function edit($id, Request $request): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
     {
-        $hotel = Hotel::find($id);
-        if (!$hotel){
+        $hall = Hall::find($id);
+        if (!$hall){
             abort(404);
         }
-        return view('hotel.edit', compact('hotel'));
+        $hotels = Hotel::all();
+        return view('hall.edit', compact('hall', 'hotels'));
     }
 
 
-    public function store(CreateHotelRequest $request){
+    public function store(CreateHallRequest $request){
         try {
-            Hotel::create($request->validated());
+            Hall::create($request->validated());
             return redirect()->back()->with('success', 'Hall Created Successfully');
         }
         catch (\Exception $exception){
@@ -52,12 +55,12 @@ class HallController extends Controller
     }
 
 
-    public function update($id, UpdateHotelRequest $request){
-        $hotel = Hotel::find($id);
-        if (!$hotel){
+    public function update($id, UpdateHallRequest $request){
+        $hall = Hall::find($id);
+        if (!$hall){
             abort(404);
         }
-        $hotel->update($request->validated());
+        $hall->update($request->validated());
         return redirect()->back()->with('success', 'Hall Updated Successfully');
     }
 
@@ -87,11 +90,10 @@ class HallController extends Controller
     //for export to pdf and Excel file
     public function export(Request $request){
         if ($request->get('export-type') == "excel"){
-            return Excel::download(new HotelExport(), 'hotel.xlsx');
+            return Excel::download(new HallExport(), 'hall.xlsx');
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new HotelExport(), 'hotel.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new HallExport(), 'hall.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
         }
-
     }
 }

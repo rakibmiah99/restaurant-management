@@ -34,14 +34,16 @@
 }
 
 
-.meal-price-card:hover h1{
+.meal-price-card:hover h1, .meal-price-card:hover h2, .meal-price-card:hover h3{
     color: white;
 }
-.meal-price-card h1{
+.meal-price-card h1,h2,h3{
     color: #696cff;
     font-weight: bold;
 }
-
+.meal-price-card img{
+    object-fit: cover;
+}
 
 .dropdown-item{
     font-size: 12px;

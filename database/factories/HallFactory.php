@@ -27,6 +27,16 @@ class HallFactory extends Factory
             'status' => fake()->randomElement([true, false]),
             'hotel_id' => fake()->randomElement(Hotel::pluck('id')),
             'created_by' => fake()->randomElement(User::pluck('id')),
+            'b_start' => fake()->time(),
+            'b_end' => fake()->time(),
+            'l_start' => fake()->time(),
+            'l_end' => fake()->time(),
+            'd_start' => fake()->time(),
+            'd_end' => fake()->time(),
+            's_start' => fake()->time(),
+            's_end' => fake()->time(),
+            'i_start' => fake()->time(),
+            'i_end' => fake()->time(),
         ];
     }
 }

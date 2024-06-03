@@ -18,6 +18,16 @@ return new class extends Migration
             $table->integer('capacity');
             $table->boolean('status')->default(true);
             $table->unsignedBigInteger('hotel_id');
+            $table->time('b_start')->comment('breakfast start time');
+            $table->time('b_end')->comment('breakfast end time');
+            $table->time('l_start')->comment('Lunch start time');
+            $table->time('l_end')->comment('Lunch end time');
+            $table->time('d_start')->comment('Dinner start time');
+            $table->time('d_end')->comment('Dinner end time');
+            $table->time('s_start')->comment('Seheri start time');
+            $table->time('s_end')->comment('Seheri end time');
+            $table->time('i_start')->comment('Iftar start time');
+            $table->time('i_end')->comment('Iftar end time');
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->softDeletes();

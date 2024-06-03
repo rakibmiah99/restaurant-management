@@ -32,9 +32,9 @@ Route::middleware(['auth.check', 'localization'])->prefix('/')->group(function (
 
     Route::prefix('hotel')->name('hotel.')->group(function (){
         Route::get('/', [\App\Http\Controllers\HotelController::class, 'index'])->name('index');
-        Route::get('/choose', [\App\Http\Controllers\HotelController::class, 'choose'])->name('choose');
         Route::get('/create', [\App\Http\Controllers\HotelController::class, 'create'])->name('create');
         Route::get('/show/{id}', [\App\Http\Controllers\HotelController::class, 'show'])->name('show');
+        Route::get('/halls/{id}', [\App\Http\Controllers\HotelController::class, 'hotelWiseHalls'])->name('getHalls');
         Route::get('/edit/{id}', [\App\Http\Controllers\HotelController::class, 'edit'])->name('edit');
         Route::get('/changeStatus/{id}', [\App\Http\Controllers\HotelController::class, 'changeStatus'])->name('changeStatus');
         Route::post('/update/{id}', [\App\Http\Controllers\HotelController::class, 'update'])->name('update');
@@ -46,7 +46,6 @@ Route::middleware(['auth.check', 'localization'])->prefix('/')->group(function (
 
     Route::prefix('hall')->name('hall.')->group(function (){
         Route::get('/', [\App\Http\Controllers\HallController::class, 'index'])->name('index');
-        Route::get('/choose', [\App\Http\Controllers\HallController::class, 'choose'])->name('choose');
         Route::get('/create', [\App\Http\Controllers\HallController::class, 'create'])->name('create');
         Route::get('/show/{id}', [\App\Http\Controllers\HallController::class, 'show'])->name('show');
         Route::get('/edit/{id}', [\App\Http\Controllers\HallController::class, 'edit'])->name('edit');
@@ -57,7 +56,22 @@ Route::middleware(['auth.check', 'localization'])->prefix('/')->group(function (
         Route::get('/export', [\App\Http\Controllers\HallController::class, 'export'])->name('export');
     });
 
+    Route::prefix('order')->name('order.')->group(function (){
+        Route::get('/', [\App\Http\Controllers\OrderController::class, 'index'])->name('index');
+        Route::get('/choose', [\App\Http\Controllers\OrderController::class, 'choose'])->name('choose');
+        Route::get('/choose', [\App\Http\Controllers\OrderController::class, 'choose'])->name('choose');
+        Route::get('/create', [\App\Http\Controllers\OrderController::class, 'create'])->name('create');
+        Route::get('/show/{id}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
+        Route::get('/edit/{id}', [\App\Http\Controllers\OrderController::class, 'edit'])->name('edit');
+        Route::get('/changeStatus/{id}', [\App\Http\Controllers\OrderController::class, 'changeStatus'])->name('changeStatus');
+        Route::post('/update/{id}', [\App\Http\Controllers\OrderController::class, 'update'])->name('update');
+        Route::post('/store', [\App\Http\Controllers\OrderController::class, 'store'])->name('store');
+        Route::post('/delete/{id}', [\App\Http\Controllers\OrderController::class, 'delete'])->name('delete');
+        Route::get('/export', [\App\Http\Controllers\OrderController::class, 'export'])->name('export');
+    });
 
+
+    Route::get('meal-systems-by-meal-price', [\App\Http\Controllers\MealPriceController::class, 'mealSystemByMealPrice'])->name('meal-system-by-meal-price');
     Route::get('change-lang/{lang}', [\App\Http\Controllers\LangController::class, 'change'])->name('lang.change');
 });
 

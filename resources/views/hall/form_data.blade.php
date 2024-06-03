@@ -1,61 +1,105 @@
 @php $is_edit = isset($is_edit) ? $is_edit : false;  @endphp
 
-<div class="mb-3 row">
-    <label class="col-md-2 col-form-label">
-        {{__('hotel_name')}}
-        <x-required/>
-        <x-input-error name="name"/>
-    </label>
-    <div class="col-md-10">
-        <input required value="{{$is_edit ? $hotel->name:  old('name')}}" name="name" class="form-control" type="text">
-    </div>
-</div>
-<div class="mb-3 row">
-    <label for="html5-text-input" class="col-md-2 col-form-label">
-        {{__('page.hotel_code')}}
-        <x-required/>
-        <x-input-error name="code"/>
-    </label>
-    <div class="col-md-10">
-        <input readonly required value="{{$is_edit ? $hotel->code :\App\Models\Hotel::GenerateUniqueCode()}}" name="code" class="form-control" type="text" id="html5-text-input">
-    </div>
-</div>
+<x-input-select2
+    :title="__('page.hotel_name')"
+    :is_required="true"
+    :array="$hotels"
+    name="hotel_id"
+    :value="$is_edit ? $hall->hotel_id : old('hotel_id')"
+/>
 
-<div class="mb-3 row">
-    <label for="html5-url-input" class="col-md-2 col-form-label">
-        {{__('page.phone')}}
-        <x-required/>
-        <x-input-error name="phone"/>
-    </label>
-    <div class="col-md-10">
-        <input required class="form-control" name="phone" type="tel"  value="{{$is_edit ? $hotel->email : old('phone')}}" id="html5-url-input">
-    </div>
-</div>
-<div class="mb-3 row">
-    <label for="html5-url-input" class="col-md-2 col-form-label">{{__('page.email')}}</label>
-    <div class="col-md-10">
-        <input class="form-control" name="email"  value="{{$is_edit ? $hotel->email :  old('email')}}" type="email">
-    </div>
-</div>
-<div class="mb-3 row">
-    <label for="html5-tel-input" class="col-md-2 col-form-label">{{__('page.address')}}</label>
-    <div class="col-md-10">
-        <input class="form-control"  type="text" name="address"  value="{{$is_edit ? $hotel->address : old('address')}}">
-    </div>
-</div>
 
-<div class="mb-3 row">
-    <label for="html5-datetime-local-input" class="col-md-2 col-form-label">{{__('page.hotel_status')}}</label>
-    <div class="col-md-10">
-        <div class="col-md">
-            <div class="form-check form-check-inline mt-1">
-                <input  @if($is_edit ? $hotel->status : old('status') ) checked @endif class="form-check-input" type="radio" name="status" id="inlineRadio1" value="1">
-                <label class="form-check-label" for="inlineRadio1">{{__('page.active')}}</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input @if($is_edit ? !$hotel->status : !old('status')) checked @endif class="form-check-input" type="radio" name="status" id="inlineRadio2" value="0">
-                <label class="form-check-label" for="inlineRadio2">{{__('page.inactive')}}</label>
-            </div>
-        </div>
-    </div>
-</div>
+<x-input
+    :title="__('page.hall_name')"
+    name="name"
+    :required="true"
+    :value="$is_edit ? $hall->name:  old('name')"
+/>
+
+<x-input
+    :title="__('page.hall_code')"
+    name="code"
+    :required="true"
+    :readonly="true"
+    :value="$is_edit ? $hall->code :\App\Models\Hotel::GenerateUniqueCode()"
+/>
+
+<x-input
+    :title="__('page.capacity')"
+    name="capacity"
+    type="number"
+    :required="true"
+    :value="$is_edit ? $hall->capacity : old('capacity')"
+/>
+<x-input
+    :title="__('page.breakfast_start_time')"
+    name="b_start"
+    type="time"
+    :required="true"
+    :value="$is_edit ? date('H:i', strtotime($hall->b_start)) : old('b_start')"
+/>
+<x-input
+    :title="__('page.breakfast_end_time')"
+    name="b_end"
+    type="time"
+    :required="true"
+    :value="$is_edit ? date('H:i', strtotime($hall->b_end)) : old('b_end')"
+/>
+<x-input
+    :title="__('page.lunch_start_time')"
+    name="l_start"
+    type="time"
+    :required="true"
+    :value="$is_edit ? date('H:i', strtotime($hall->l_start)) : old('l_start')"
+/>
+<x-input
+    :title="__('page.lunch_end_time')"
+    name="l_end"
+    type="time"
+    :required="true"
+    :value="$is_edit ? date('H:i', strtotime($hall->l_end)) : old('l_end')"
+/>
+
+<x-input
+    :title="__('page.dinner_start_time')"
+    name="d_start"
+    type="time"
+    :required="true"
+    :value="$is_edit ? date('H:i', strtotime($hall->d_start)) : old('d_start')"
+/>
+<x-input
+    :title="__('page.dinner_end_time')"
+    name="d_end"
+    type="time"
+    :required="true"
+    :value="$is_edit ? date('H:i', strtotime($hall->d_end)) : old('d_end')"
+/>
+<x-input
+    :title="__('page.seheri_start_time')"
+    name="s_start"
+    type="time"
+    :required="true"
+    :value="$is_edit ? date('H:i', strtotime($hall->s_start)) : old('s_start')"
+/>
+<x-input
+    :title="__('page.seheri_end_time')"
+    name="s_end"
+    type="time"
+    :required="true"
+    :value="$is_edit ? date('H:i', strtotime($hall->s_end)) : old('s_end')"
+/>
+<x-input
+    :title="__('page.iftar_start_time')"
+    name="i_start"
+    type="time"
+    :required="true"
+    :value="$is_edit ? date('H:i', strtotime($hall->i_start)) : old('i_start')"
+/>
+<x-input
+    :title="__('page.iftar_start_time')"
+    name="i_end"
+    type="time"
+    :required="true"
+    :value="$is_edit ? date('H:i', strtotime($hall->i_end)) : old('i_end')"
+/>
+<x-input-status :value="$is_edit ? $hall->status : old('status')" :title="__('page.hotel_status')"/>

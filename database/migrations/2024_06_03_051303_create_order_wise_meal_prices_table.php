@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('hall_meal_times', function (Blueprint $table) {
+        Schema::create('order_wise_meal_prices', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('hall_id');
-            $table->unsignedBigInteger('meal_system_id')->nullable();
-            $table->time('start_time');
-            $table->time('end_time');
-            $table->foreign('hall_id')->on('halls')->references('id')->cascadeOnDelete();
+            $table->unsignedBigInteger('order_id');
+            $table->unsignedBigInteger('meal_system_id');
+            $table->double('price', 10,2);
+            $table->foreign('order_id')->on('orders')->references('id')->cascadeOnDelete();
             $table->foreign('meal_system_id')->on('meal_systems')->references('id')->cascadeOnDelete();
             $table->timestamps();
         });
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('hall_meal_times');
+        Schema::dropIfExists('order_wise_meal_prices');
     }
 };

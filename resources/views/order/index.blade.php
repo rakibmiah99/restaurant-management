@@ -1,8 +1,7 @@
-
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-           <x-card-header :url="route('hall.create')" :name="__('page.halls')" :url-name="__('page.create')"/>
+           <x-card-header :url="route('order.choose')" :name="__('page.orders')" :url-name="__('page.create')"/>
             <div class="mt-3">
                 <x-filter-data export-url="hall.export" translate-from="db.hall" :columns="$columns"/>
 
@@ -12,7 +11,7 @@
                         <tr>
                             <th>{{__('page.sl')}}</th>
                             @foreach(request()->columns ?? $columns  as $column)
-                                <th>{{__('db.hall.'.$column)}}</th>
+                                <th>{{__('db.order.'.$column)}}</th>
                             @endforeach
                             <th>{{__('page.action')}}</th>
                         </tr>
@@ -24,25 +23,9 @@
                                     @foreach(request()->columns ?? $columns as $column)
                                         @if($column == "status")
                                             <td>{{$item->$column ? \App\Enums\Status::ACTIVE->value : \App\Enums\Status::INACTIVE->value }}</td>
-                                        @elseif($column == "hotel_id")
-                                            <td>{{$item->hotel?->name}}</td>
-                                        @elseif(
-                                                $column == 'b_start' ||
-                                                $column == 'b_end' ||
-                                                $column == 'l_start' ||
-                                                $column == 'l_end' ||
-                                                $column == 'd_start' ||
-                                                $column == 'd_end' ||
-                                                $column == 's_start' ||
-                                                $column == 's_end' ||
-                                                $column == 'i_start' ||
-                                                $column == 'i_end'
-                                            )
-                                            <td>{{\App\Helper::ConvertTo12HourFormat($item->$column)}}</td>
                                         @else
                                             <td>{{$item->$column}}</td>
                                         @endif
-
                                     @endforeach
 
                                     <td>
@@ -72,8 +55,6 @@
         </div>
     </div>
 
-
-
     <x-view-modal size="modal-lg">
         <div class="table-responsive mt-2 text-nowrap">
             <table class="table">
@@ -89,7 +70,6 @@
                 </tbody>
             </table>
         </div>
-
     </x-view-modal>
 </x-main-layout>
 

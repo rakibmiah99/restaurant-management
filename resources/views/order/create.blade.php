@@ -1,12 +1,10 @@
-@php $is_edit = request()->segment(2) == "edit"  @endphp
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-            <x-card-header :name="__('page.meal_price')" :url="route('meal_price.index')" :url-name="__('page.back')"/>
-            <form action="{{route('meal_price.update', request()->id)}}" method="post" class="card-body">
+            <x-card-header :name="__('page.orders')" :url="route('order.index')" :url-name="__('page.back')"/>
+            <form action="{{route('order.store')}}" method="post" class="card-body">
                 @csrf
-
-                @include('meal_price.form_data', compact('is_edit'))
+                @include('order.form_data')
 
                 <div class="mb-3 d-flex justify-content-center">
                     <button type="submit" class="btn btn-primary">
@@ -19,3 +17,4 @@
         </div>
     </div>
 </x-main-layout>
+

@@ -39,6 +39,22 @@ class MealPriceController extends Controller
     }
 
 
+    function mealSystemByMealPrice(Request $request){
+        $meal_price_id = $request->meal_price_ids;
+
+        $GLOBALS['htmls'] = '<select name="hall_id" required id="hall_id" class="form-control select-2"><option value="">' . __('page.select') . '</option>';
+        MealSystemForMealPrice::whereIn('meal_price_id', $meal_price_id)->get()->each(function ($mealSystemForMealPrice){
+            $GLOBALS['htmls'] .= "<option price='$mealSystemForMealPrice->price' value='$mealSystemForMealPrice->id'>";
+            $GLOBALS['htmls'].= $mealSystemForMealPrice->meal_system->name ." - ".ucwords($mealSystemForMealPrice->meal_system->type);
+            $GLOBALS['htmls'].= "</option>";
+        });
+
+        $GLOBALS['htmls'] .= '</select>';
+
+        echo $GLOBALS['htmls'];
+    }
+
+
     public function choose(){
         return view('meal_price.choose');
     }

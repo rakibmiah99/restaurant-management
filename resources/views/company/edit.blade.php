@@ -20,12 +20,5 @@
         </div>
     </div>
 </x-main-layout>
-@include('company.common_script')
-<script>
-    $('#countriesId').val('{{$company->country_id}}')
-    $('#mealPriceId').val({{$company->meal_price?->id}})
-    $('#mealPriceCode').val('{{$company->meal_price?->code}}')
 
-
-</script>
 

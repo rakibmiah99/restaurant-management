@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use App\Model;
+use App\Observers\HallObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+#[ObservedBy([HallObserver::class])]
 class Hall extends Model
 {
     use HasFactory;
