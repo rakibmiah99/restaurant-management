@@ -1,5 +1,4 @@
-@php $is_edit = isset($is_edit) ? $is_edit : false;  @endphp
-
+@php $is_edit = isset($is_edit) ? $is_edit : false;@endphp
 <div class="row">
     <div class="col-md-4">
         <x-input
@@ -8,7 +7,7 @@
             name="order_number"
             :required="true"
             :readonly="true"
-            :value="$is_edit ? $hall->code :\App\Models\Order::GenerateOrderNumber()"
+            :value="$is_edit ? $order->order_number :\App\Models\Order::GenerateOrderNumber()"
         />
     </div>
     <div class="col-md-4">
@@ -19,7 +18,7 @@
             type="date"
             :required="true"
             :readonly="false"
-            :value="$is_edit ? $hall->code : old('order_date')"
+            :value="$is_edit ? $order->order_date : old('order_date')"
         />
     </div>
     <div class="col-md-4">
@@ -33,12 +32,12 @@
             :array="$companies"
             name="company_id"
             :with_code="true"
-            :value="$is_edit ? $order->hotel_id : old('company_id')"
+            :value="$is_edit ? $order->company_id : old('company_id')"
             :code="$is_edit ? $order->company?->code : false"
             :key="2"
         />
     </div>
-    @if(request()->get('order-type') == \App\Enums\OrderType::NORMAL->value || request()->get('order-type') == \App\Enums\OrderType::BOTH->value )
+    @if(request()->get('order-type') == \App\Enums\OrderType::NORMAL->value || request()->get('order-type') == \App\Enums\OrderType::BOTH->value || !request()->get('order-type') )
         <div class="col-md-4">
             <x-input-select2
                 mode="vertical"
@@ -48,12 +47,12 @@
                 name="mpi_for_normal"
                 :with_code="true"
                 :value="$is_edit ? $order->mpi_for_normal : false"
-                :code="$is_edit ? $order->mpi_for_normal?->code : false"
+                :code="$is_edit ? $order?->meal_price_for_normal?->code : false"
                 :key="3"
             />
         </div>
     @endif
-    @if(request()->get('order-type') == \App\Enums\OrderType::RAMADAN->value || request()->get('order-type') == \App\Enums\OrderType::BOTH->value )
+    @if(request()->get('order-type') == \App\Enums\OrderType::RAMADAN->value || request()->get('order-type') == \App\Enums\OrderType::BOTH->value || !request()->get('order-type'))
         <div class="col-md-4">
             <x-input-select2
                 mode="vertical"
@@ -62,8 +61,8 @@
                 :array="$mealPricesRamadan"
                 name="mpi_for_ramadan"
                 :with_code="true"
-                :value="$is_edit ? $order->mpi_for_normal : false"
-                :code="$is_edit ? $order->mpi_for_normal?->code : false"
+                :value="$is_edit ? $order->mpi_for_ramadan : old('mpi_for_ramadan')"
+                :code="$is_edit ? $order?->meal_price_for_ramadan?->code : false"
                 :key="4"
             />
         </div>
@@ -99,7 +98,7 @@
             mode="vertical"
             :title="__('page.hall')"
             :is_required="true"
-            :array="[]"
+            :array="$is_edit ? $order->hotel->halls : []"
             name="hall_id"
             :value="$is_edit ? $order->hall_id : old('hall_id')"
             input-size="col-md-9"
@@ -126,7 +125,7 @@
             :is_required="false"
             :array="[]"
             name="meal_system_for_meal_price"
-            :value="$is_edit ? $company->country_id : ''"
+            :value="''"
             input-size="col-md-8"
             label-size="col-md-4"
         />
@@ -152,7 +151,32 @@
             </tr>
         </thead>
         <tbody id="order_meal_price">
-
+            @if($is_edit)
+                @foreach($order->meal_systems as $meal_system_info)
+                    <tr type="{{$meal_system_info->meal_system->type}}">
+                        <td style="width: 26%;">
+                            {{$meal_system_info->meal_system->name."-".$meal_system_info->meal_system->type}}
+                            <input type="hidden" value="{{$meal_system_info->meal_system_for_meal_price_id}}" class="meal_system_price_id" name="meal_system_price_id[]"/>
+                        </td>
+                        <td style="width: 18%">
+                            <input type='number' value="{{$meal_system_info->number_of_guest}}"  required class='form-control' name='guest[]'/>
+                        </td>
+                        <td style="width: 14%">
+                            <input type='date' value="{{$meal_system_info->from_date}}" required class='form-control' name='from_date[]'/>
+                        </td>
+                        <td style="width: 14%">
+                            <input type='date' required value="{{$meal_system_info->to_date}}" class="form-control" name='to_date[]'/>
+                        </td>
+                        <td style="width: 8%">{{$meal_system_info->price}}</td>
+                        <td style="width: 14%">0</td>
+                        <td style="width: 6%">
+                            <button type="button" class="btn btn-sm remove-meal-system rounded-pill btn-icon btn-danger text-white">
+                                <span class="tf-icons bx bx-x"></span>
+                            </button>
+                        </td>
+                    </tr>
+                @endforeach
+            @endif
         </tbody>
     </table>
 </div>
@@ -171,18 +195,35 @@
         console.log(url)
     })
 
-    let mpi_ramadan_id;
-    let mpi_normal_id;
     $('#mpi_for_normal').on('change',function (){
-        mpi_normal_id = $(this).val();
+        let type = '{{\App\MealSystemType::NORMAL->value}}';
+        removeTypeWiseMealSystems(type)
         callMealPriceWiseMealSystem();
     })
     $('#mpi_for_ramadan').on('change',function (){
-        mpi_ramadan_id = $(this).val();
+        let type = '{{\App\MealSystemType::RAMADAN->value}}';
+        removeTypeWiseMealSystems(type)
         callMealPriceWiseMealSystem()
     })
 
+    @if($is_edit)
+        callMealPriceWiseMealSystem();
+    @endif
+
+
+    function removeTypeWiseMealSystems(type){
+        let tr = $('tr');
+        for(let i = 0; i < tr.length; i++){
+            let el = tr.eq(i);
+            if(el.attr('type') == type){
+                el.remove();
+            }
+        }
+    }
+
     function callMealPriceWiseMealSystem(){
+        let mpi_normal_id = $('#mpi_for_normal').val();
+        let mpi_ramadan_id = $('#mpi_for_ramadan').val();
         axios.get('{{route('meal-system-by-meal-price')}}', {
             params: {
                 meal_price_ids: [mpi_normal_id, mpi_ramadan_id]
@@ -202,6 +243,7 @@
 
         let selected_meal_system = $('#meal_system_for_meal_price').val();
         let price = $('#meal_system_for_meal_price option:selected').attr('price');
+        let type = $('#meal_system_for_meal_price option:selected').attr('type');
         let name = $('#meal_system_for_meal_price option:selected').text();
 
         if (!selected_meal_system){
@@ -215,9 +257,8 @@
         }
         else{
             let tr = `
-                <tr>
-
-                    <td style="width: 26%;" ">
+                <tr type="${type}">
+                    <td style="width: 26%;">
                         ${name}
                         <input type="hidden" value="${selected_meal_system}" class="meal_system_price_id" name="meal_system_price_id[]"/>
                     </td>

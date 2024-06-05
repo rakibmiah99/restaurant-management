@@ -58,7 +58,8 @@ Route::middleware(['auth.check', 'localization'])->prefix('/')->group(function (
 
     Route::prefix('order')->name('order.')->group(function (){
         Route::get('/', [\App\Http\Controllers\OrderController::class, 'index'])->name('index');
-        Route::get('/choose', [\App\Http\Controllers\OrderController::class, 'choose'])->name('choose');
+        Route::get('/modify-guest/{id}', [\App\Http\Controllers\OrderController::class, 'modifyGuest'])->name('modify');
+        Route::post('/modify-guest/{id}', [\App\Http\Controllers\OrderController::class, 'updateModifyGuest'])->name('modify.save');
         Route::get('/choose', [\App\Http\Controllers\OrderController::class, 'choose'])->name('choose');
         Route::get('/create', [\App\Http\Controllers\OrderController::class, 'create'])->name('create');
         Route::get('/show/{id}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');

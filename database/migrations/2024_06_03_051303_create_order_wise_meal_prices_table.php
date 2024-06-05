@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('meal_system_id');
+            $table->unsignedBigInteger('meal_system_for_meal_price_id');
             $table->double('price', 10,2);
             $table->foreign('order_id')->on('orders')->references('id')->cascadeOnDelete();
             $table->foreign('meal_system_id')->on('meal_systems')->references('id')->cascadeOnDelete();
+            $table->foreign('meal_system_for_meal_price_id')->on('meal_system_for_meal_price')->references('id')->cascadeOnDelete();
             $table->timestamps();
         });
     }

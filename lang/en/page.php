@@ -55,8 +55,9 @@
         'to_date' => 'To Date',
         'price' => 'Price',
         'total_days' => 'Total Days',
-
-
+        'modify_guest' => 'Modify Guest',
+        'order_info' => 'Order Info',
+        'filter' => 'Filter',
         'active' => 'Active',
         'inactive' => 'InActive',
         'save' => 'Save',

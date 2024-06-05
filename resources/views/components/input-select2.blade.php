@@ -1,6 +1,7 @@
 @php
     $mode = $attributes->get('mode') ?? 'horizontal'; //vertical,horizontal
     $name = $attributes->get('name');
+    $size = $attributes->get('size');
     $array = $attributes->get('array');
     $column = $attributes->get('column') ?? 'id';
     $display_column = $attributes->get('column') ?? 'name';
@@ -25,7 +26,7 @@
 @if(!$with_code)
 
     <div class="mb-3 {{$mode == "horizontal" ? 'row' : ''}}">
-        <label for="{{$name}}" class="{{$label_size}} col-form-label">
+        <label @if($size) style="font-size: 10px" @endif for="{{$name}}" class="{{$label_size}} col-form-label">
             {{$title}}
             @if($is_required)
                 <x-required/>
@@ -34,10 +35,10 @@
 
         </label>
         <div class="{{$input_size}}">
-            <select @if($is_required) required @endif name="{{$name}}" class="form-select select-2" id="{{$name}}">
+            <select @if($is_required) required @endif name="{{$name}}" class="form-select {{$size}} select-2" id="{{$name}}">
                 <option value="">{{__('page.select')}}</option>
                 @foreach($array as $item)
-                    <option @if(old('country_id' == $item->$column)) selected @endif value="{{$item->$column}}">{{$item->$display_column}}</option>
+                    <option value="{{$item->$column}}">{{$item->$display_column}}</option>
                 @endforeach
             </select>
         </div>
@@ -54,7 +55,7 @@
 
 @if($with_code)
     <div class="mb-3 {{$mode == "horizontal" ? 'row' : ''}}">
-        <label for="{{$name}}" class="{{$mode == "horizontal" ? 'col-md-2' : ''}} col-form-label">
+        <label @if($size) style="font-size: 10px" @endif for="{{$name}}" class="{{$mode == "horizontal" ? 'col-md-2' : ''}} col-form-label">
             {{$title}}
             @if($is_required)
                 <x-required/>
@@ -63,10 +64,10 @@
         </label>
 @if($mode == "vertical") <div class="d-flex "> @endif
             <div class="{{$mode == "horizontal" ? 'col-md-2' : 'w-25'}} pe-1">
-                <input class="form-control" type="text" name="{{$name}}-code"  value="{{$code ?? old($name."-code")}}" id="{{$name}}-code">
+                <input class="form-control {{$size ? 'form-control-sm': ''}}" type="text" name="{{$name}}-code"  value="{{$code ?? old($name."-code")}}" id="{{$name}}-code">
             </div>
             <div class="{{$mode == "horizontal" ? 'col-md-8' : 'w-75'}}  ps-0">
-                <select @if($is_required) required @endif  name="{{$name}}" class="form-select select-2" id="{{$name}}">
+                <select @if($is_required) required @endif  name="{{$name}}" class="form-select {{$size}} select-2" id="{{$name}}">
                     <option value="">{{__('page.select')}}</option>
                     @foreach($array as $item)
                         <option code="{{$item->code}}" value="{{$item->$column}}">{{$item->$display_column}}</option>

@@ -1,12 +1,12 @@
-@php $is_edit = request()->segment(2) == "edit"  @endphp
+@php $is_edit = request()->segment(2) ?? false  @endphp
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-            <x-card-header :name="__('page.halls')" :url="route('hall.index')" :url-name="__('page.back')"/>
-            <form action="{{route('hall.update', request()->id)}}" method="post" c class="card-body">
+            <x-card-header :name="__('page.orders')" :url="route('order.index')" :url-name="__('page.back')"/>
+            <form action="{{route('order.update', request()->id)}}" method="post" class="card-body">
                 @csrf
 
-                @include('hall.form_data', compact('is_edit'))
+                @include('order.form_data', compact('is_edit'))
 
                 <div class="mb-3 row">
                     <label for="html5-datetime-local-input" class="col-md-2 col-form-label"></label>

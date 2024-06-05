@@ -24,6 +24,7 @@ return new class extends Migration
             $table->unsignedBigInteger('country_id');
             $table->unsignedBigInteger('mpi_for_normal')->comment('mpi=meal price id')->nullable();
             $table->unsignedBigInteger('mpi_for_ramadan')->comment('mpi=meal price id')->nullable();
+            $table->enum('order_type', \App\Enums\OrderType::toArray())->default(\App\Enums\OrderType::NORMAL->value);
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->softDeletes();

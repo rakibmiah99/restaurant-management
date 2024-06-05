@@ -1,6 +1,7 @@
 @php
     $mode = $attributes->get('mode') ?? 'horizontal'; //vertical,horizontal
     $name = $attributes->get('name');
+    $size = $attributes->get('size');
     $title = $attributes->get('title');
     $value = $attributes->get('value');
     $type = $attributes->get('type') ?? "text";
@@ -17,7 +18,7 @@
 
 @endphp
 <div class="mb-3 {{$mode == 'horizontal' ? 'row' : '' }}" >
-    <label for="{{$name}}" class="{{ $label_size  }} col-form-label">
+    <label @if($size) style="font-size: 10px"  @endif for="{{$name}}" class="{{ $label_size  }} col-form-label">
         {{$title}}
 
         @if($required)
@@ -30,9 +31,10 @@
             @if($required) required @endif
             @if($readonly) readonly @endif
             @if($disabled) disabled @endif
-            class="form-control" name="{{$name}}"
+            class="form-control {{$size}}" name="{{$name}}"
             type="{{$type}}"
             value="{{$value}}"
-            id="{{$name}}">
+            id="{{$name}}"
+        >
     </div>
 </div>

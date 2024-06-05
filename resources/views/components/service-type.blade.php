@@ -1,5 +1,5 @@
 @php
-    $service_type = $attributes->get('service_type') ?? old('service_type');
+    $service_type = $attributes->get('value') ?? old('service_type');
     $required = $attributes->get('required') ?? false;
 @endphp
 
@@ -11,11 +11,10 @@
     </label>
     <div class="">
         <select @if($required) required @endif  name="service_type" id="service_type" class="form-select">
-            <option>{{__('page.select')}}</option>
+            <option value="">{{__('page.select')}}</option>
             @foreach(\App\ServiceType::toArray() as $type)
                 <option
-                    @if($service_type == $type) selected @endif
-                value="{{$type}}"
+                    @if($service_type == $type) selected @endif value="{{$type}}"
                 >{{$type}}</option>
             @endforeach
         </select>

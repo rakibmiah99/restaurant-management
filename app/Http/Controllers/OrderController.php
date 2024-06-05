@@ -8,6 +8,7 @@ use App\Http\Requests\Hall\UpdateHallRequest;
 use App\Http\Requests\Order\CreateOrderRequest;
 use App\Models\Company;
 use App\Models\Country;
+use App\Models\DateAndMealSWiseMonitor;
 use App\Models\Hall;
 use App\Models\Hotel;
 use App\Models\MealPrice;
@@ -31,9 +32,212 @@ class OrderController extends Controller
     }
 
     public function choose(){
+
         return view('order.choose');
     }
 
+    public function modifyGuest($id, Request $request){
+
+        if($request->from_date < date('Y-m-d')){
+            $request->from_date = date('Y-m-d');
+        }
+
+
+        $order = Order::find($id);
+
+        $startDate = Carbon::create($request->from_date);
+        $endDate = Carbon::create($request->to_date);
+
+        // Calculate the difference in days
+        $dateDifference = $startDate->diffInDays($endDate);
+
+
+        // Create a period instance for the range
+        $period = CarbonPeriod::create($startDate, $endDate);
+
+//        return $order->meal_price_wise_meal_systems;
+        $date_wise_meals =  $order->date_and_meal_wise_order_monitor->whereBetween('meal_date', [$request->from_date, $request->to_date]);
+        if ($request->meal_system){
+            $date_wise_meals = $date_wise_meals->where('order_meal_system_id', $request->meal_system);
+        }
+        $GLOBALS['date_wise_meal_data'] = [];
+        // Loop through each day in the range
+        foreach ($period as $date) {
+            // Perform operations for each day
+            $date = $date->format('Y-m-d') ;
+            $meal_data = $date_wise_meals->where('meal_date', $date);
+
+            if (!$meal_data->count()){
+                $GLOBALS['date_wise_meal_data'] [] = (object)[
+                    'number_of_guest' => 0,
+                    'meal_system_type' => '',
+                    'meal_date' => $date,
+                    'meal_system_name' => '',
+                    'meal_system_for_meal_price_id' => null,
+                    'order_meal_system_id' => null,
+                    'price' => 0,
+                ];
+            }
+            else{
+                $meal_data->each(function ($item){
+                    $GLOBALS['date_wise_meal_data'] [] = (object)[
+                        'number_of_guest' => $item->number_of_guest,
+                        'meal_system_type' => $item->meal_system_type,
+                        'meal_date' => $item->meal_date,
+                        'meal_system_name' => $item->meal_system->name."-".$item->meal_system->type,
+                        'order_meal_system_id' => $item->meal_system->id,
+                        'meal_system_for_meal_price_id' => $item->meal_system_for_meal_price_id,
+                        'price' => $item->price,
+                    ];
+                });
+            }
+
+
+        }
+        $date_wise_meal_data =  $GLOBALS['date_wise_meal_data'];
+
+//        return $order->meal_price_wise_meal_systems;
+
+        if (!$order){
+            abort(404);
+        }
+        $meal_systems = MealSystem::get()->map(function ($item){
+           $item->name = $item->name."-".$item->type;
+           return $item;
+        });
+        return view('order.modify_guest', compact('order', 'meal_systems', 'date_wise_meal_data'));
+    }
+
+
+    public function updateModifyGuest($id, Request $request){
+        DB::beginTransaction();
+        try {
+            $order = Order::find($id);
+            $meal_dates = $request->meal_date;
+            $number_of_guests = $request->number_of_guest;
+            $from_meal_systems = $request->from_meal_system_id;
+            $to_meal_systems = $request->to_meal_system;
+            $orderMonitorData = [];
+            for ($i = 0; $i < count($meal_dates); $i++){
+                $date = $meal_dates[$i];
+                $guest = $number_of_guests[$i];
+                $from_meal_system = $from_meal_systems[$i];
+                $to_meal_system = $to_meal_systems[$i];
+                if (!$to_meal_system || !$date || !$guest){
+                    continue;
+                }
+
+
+
+                // Find existing meal system by from_meal_system_id and get first guest number
+                $from_order_monitor = $order->order_monitoring->where('meal_date', $date)
+                    ->where('order_meal_system_id', $from_meal_system)
+                    ->first();
+
+                $fromExistGuest = ($from_meal_system == $to_meal_system) ?  0 :  ($from_order_monitor?->number_of_guest ?? 0);
+
+
+                // Find existing meal system by to_meal_system_id and get first guest number
+                $order_monitor = $order->order_monitoring->where('meal_date', $date)
+                    ->where('order_meal_system_id', $to_meal_system)
+                    ->first();
+
+
+                $existGuest = ($from_meal_system == $to_meal_system) ?  0 :  ($order_monitor?->number_of_guest ?? 0);
+
+                // Remove previous monitoring data
+                OrderMonitoring::where([
+                    'order_id' => $order->id,
+                    'meal_date' =>  $date,
+                    'order_meal_system_id' => $from_meal_system
+                ])->delete();
+
+                // Remove existing monitoring data for the new meal system
+                OrderMonitoring::where([
+                    'order_id' => $order->id,
+                    'meal_date' =>  $date,
+                    'order_meal_system_id' => $to_meal_system
+                ])->delete();
+                if ($from_order_monitor?->number_of_guest > $guest && $from_meal_system != $to_meal_system){
+
+                    /** for update from meal system */
+                    //get allowed meal systems
+                    $meal_system = MealSystem::find($from_meal_system);
+                    $allowed_meal_system = $meal_system->allowMealSystem;
+
+                    // Prepare data for batch insertion
+                    foreach ($allowed_meal_system as $meal){
+                        $orderMonitorData [] = [
+                            'order_id' => $order->id,
+                            'meal_system_type' => $meal_system->type,
+                            'number_of_guest' => $fromExistGuest-$guest,
+                            'meal_date' => $date,
+                            'order_meal_system_id' => $meal_system->id,
+                            'meal_system_id' => $meal->id,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+                    }
+
+
+                    /** for update to meal system */
+                    //get allowed meal systems
+                    $meal_system = MealSystem::find($to_meal_system);
+                    $allowed_meal_system = $meal_system->allowMealSystem;
+
+                    // Prepare data for batch insertion
+                    foreach ($allowed_meal_system as $meal){
+                        $orderMonitorData [] = [
+                            'order_id' => $order->id,
+                            'meal_system_type' => $meal_system->type,
+                            'number_of_guest' => $existGuest+$guest,
+                            'meal_date' => $date,
+                            'order_meal_system_id' => $meal_system->id,
+                            'meal_system_id' => $meal->id,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+                    }
+
+                }
+
+                else{
+                    //get allowed meal systems
+                    $meal_system = MealSystem::find($to_meal_system);
+                    $allowed_meal_system = $meal_system->allowMealSystem;
+
+                    // Prepare data for batch insertion
+                    foreach ($allowed_meal_system as $meal){
+                        $orderMonitorData [] = [
+                            'order_id' => $order->id,
+                            'meal_system_type' => $meal_system->type,
+                            'number_of_guest' => $existGuest+$guest,
+                            'meal_date' => $date,
+                            'order_meal_system_id' => $meal_system->id,
+                            'meal_system_id' => $meal->id,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+                    }
+                }
+
+
+
+            }
+
+            // Insert new monitoring data
+            OrderMonitoring::insert($orderMonitorData);
+            DB::commit();
+            return redirect()->back()->with(['success' => 'updated']);
+        }
+        catch (\Exception $exception){
+            DB::rollBack();
+
+            dd($exception->getMessage());
+            return redirect()->back()->with(['error' => 'Update failed: ' . $exception->getMessage()]);
+        }
+
+    }
     public function show($id){
         $hall = Hall::find($id);
         if (!$hall){
@@ -60,12 +264,23 @@ class OrderController extends Controller
 
     public function edit($id, Request $request): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
     {
-        $hall = Hall::find($id);
-        if (!$hall){
+        $order = Order::find($id);
+        if (!$order){
             abort(404);
         }
         $hotels = Hotel::all();
-        return view('hall.edit', compact('hall', 'hotels'));
+        $companies = Company::all();
+        $countries = Country::all();
+        $mealPricesNormal = MealPrice::where('type', 'normal')->get();
+        $mealPricesRamadan = MealPrice::where('type', 'ramadan')->get();
+        return view('order.edit', compact(
+            'order',
+            'hotels',
+            'companies',
+            'countries',
+            'mealPricesRamadan',
+            'mealPricesNormal'
+        ));
     }
 
 
@@ -94,15 +309,20 @@ class OrderController extends Controller
             foreach ($request->meal_system_price_id as $key=>$id){
                 //make order wise meal system data ;
                 $meal_system_for_meal_price = MealSystemForMealPrice::find($id);
-                $meal_system_price = $meal_system_for_meal_price->price;
+                if (!$meal_system_for_meal_price){
+                    //handle error here
+                    dd('error');
+                }
+                /*$meal_system_price = $meal_system_for_meal_price->price;*/
                 $meal_system_id = $meal_system_for_meal_price->meal_system_id;
                 $meal_system = MealSystem::find($meal_system_id);
                 $allow_meal = $meal_system->allowMealSystem;
-                $orderWiseMealPricesData [] = [
+                /*$orderWiseMealPricesData [] = [
+                    'meal_system_for_meal_price_id' => $id,
                     'price' => $meal_system_price,
                     'meal_system_id' => $meal_system_id,
                     'order_id' => $order->id
-                ];
+                ];*/
 
                 //make order monitoring data
                 $from_date = $request->from_date[$key];
@@ -139,6 +359,7 @@ class OrderController extends Controller
             return redirect()->back()->with('success', 'Hall Created Successfully');
         }
         catch (\Exception $exception){
+            dd($exception->getMessage());
             return redirect()->back()->with('error', $exception->getMessage())->withInput($request->all());
         }
     }
