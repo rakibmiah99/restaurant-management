@@ -17,9 +17,11 @@ return new class extends Migration
                 om.order_id,
                 min(om.meal_date) as from_date,
                 max(om.meal_date) as to_date,
+                count(distinct om.meal_date) as days,
                 om.number_of_guest,
                 om.order_meal_system_id,
                 op.meal_system_for_meal_price_id,
+
                 op.price
             from order_monitorings as om
             join order_wise_meal_prices as op

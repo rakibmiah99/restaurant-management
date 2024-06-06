@@ -37,35 +37,54 @@
             :key="2"
         />
     </div>
-    @if(request()->get('order-type') == \App\Enums\OrderType::NORMAL->value || request()->get('order-type') == \App\Enums\OrderType::BOTH->value || !request()->get('order-type') )
-        <div class="col-md-4">
-            <x-input-select2
-                mode="vertical"
-                :title="__('page.meal_price_normal')"
-                :is_required="true"
-                :array="$mealPricesNormal"
-                name="mpi_for_normal"
-                :with_code="true"
-                :value="$is_edit ? $order->mpi_for_normal : false"
-                :code="$is_edit ? $order?->meal_price_for_normal?->code : false"
-                :key="3"
-            />
-        </div>
+    @if(
+        request()->get('order-type') == \App\Enums\OrderType::NORMAL->value ||
+        request()->get('order-type') == \App\Enums\OrderType::BOTH->value ||
+        !request()->get('order-type')
+    )
+        @if(
+            !request()->get('edit-with') ||
+            request()->get('edit-with') == "meal-system"
+        )
+            <div class="col-md-4">
+                <x-input-select2
+                    mode="vertical"
+                    :title="__('page.meal_price_normal')"
+                    :is_required="true"
+                    :array="$mealPricesNormal"
+                    name="mpi_for_normal"
+                    :with_code="true"
+                    :value="$is_edit ? $order->mpi_for_normal : false"
+                    :code="$is_edit ? $order?->meal_price_for_normal?->code : false"
+                    :key="3"
+                />
+            </div>
+        @endif
     @endif
-    @if(request()->get('order-type') == \App\Enums\OrderType::RAMADAN->value || request()->get('order-type') == \App\Enums\OrderType::BOTH->value || !request()->get('order-type'))
-        <div class="col-md-4">
-            <x-input-select2
-                mode="vertical"
-                :title="__('page.meal_price_ramadan')"
-                :is_required="true"
-                :array="$mealPricesRamadan"
-                name="mpi_for_ramadan"
-                :with_code="true"
-                :value="$is_edit ? $order->mpi_for_ramadan : old('mpi_for_ramadan')"
-                :code="$is_edit ? $order?->meal_price_for_ramadan?->code : false"
-                :key="4"
-            />
-        </div>
+    @if(
+        request()->get('order-type') == \App\Enums\OrderType::RAMADAN->value ||
+        request()->get('order-type') == \App\Enums\OrderType::BOTH->value ||
+        !request()->get('order-type')
+    )
+        @if(
+           !request()->get('edit-with') ||
+           request()->get('edit-with') == "meal-system"
+       )
+            <div class="col-md-4">
+                <x-input-select2
+                    mode="vertical"
+                    :title="__('page.meal_price_ramadan')"
+                    :is_required="true"
+                    :array="$mealPricesRamadan"
+                    name="mpi_for_ramadan"
+                    :with_code="true"
+                    :value="$is_edit ? $order->mpi_for_ramadan : old('mpi_for_ramadan')"
+                    :code="$is_edit ? $order?->meal_price_for_ramadan?->code : false"
+                    :key="4"
+                />
+            </div>
+
+        @endif
     @endif
 
     <div class="col-md-4">
@@ -118,6 +137,11 @@
 />
 
 <x-input-status :value="$is_edit ? $order->status : old('status')" :title="__('page.hotel_status')"/>
+@if(
+  !request()->get('edit-with') ||
+  request()->get('edit-with') == "meal-system"
+)
+
 <div class="row">
     <div class="col-md-6 mb-3">
         <x-input-select2
@@ -140,46 +164,47 @@
 <div class="mt-5 mb-5 d-flex justify-content-center">
     <table class="table table-bordered  rounded-5 " style="width: 90%">
         <thead>
-            <tr>
-                <th>{{__('page.meal_system')}}</th>
-                <th>{{__('page.number_of_guest')}}</th>
-                <th>{{__('page.from_date')}}</th>
-                <th>{{__('page.to_date')}}</th>
-                <th>{{__('page.price')}}</th>
-                <th>{{__('page.total_days')}}</th>
-                <th></th>
-            </tr>
+        <tr>
+            <th>{{__('page.meal_system')}}</th>
+            <th>{{__('page.number_of_guest')}}</th>
+            <th>{{__('page.from_date')}}</th>
+            <th>{{__('page.to_date')}}</th>
+            <th>{{__('page.price')}}</th>
+            <th>{{__('page.total_days')}}</th>
+            <th></th>
+        </tr>
         </thead>
         <tbody id="order_meal_price">
-            @if($is_edit)
-                @foreach($order->meal_systems as $meal_system_info)
-                    <tr type="{{$meal_system_info->meal_system->type}}">
-                        <td style="width: 26%;">
-                            {{$meal_system_info->meal_system->name."-".$meal_system_info->meal_system->type}}
-                            <input type="hidden" value="{{$meal_system_info->meal_system_for_meal_price_id}}" class="meal_system_price_id" name="meal_system_price_id[]"/>
-                        </td>
-                        <td style="width: 18%">
-                            <input type='number' value="{{$meal_system_info->number_of_guest}}"  required class='form-control' name='guest[]'/>
-                        </td>
-                        <td style="width: 14%">
-                            <input type='date' value="{{$meal_system_info->from_date}}" required class='form-control' name='from_date[]'/>
-                        </td>
-                        <td style="width: 14%">
-                            <input type='date' required value="{{$meal_system_info->to_date}}" class="form-control" name='to_date[]'/>
-                        </td>
-                        <td style="width: 8%">{{$meal_system_info->price}}</td>
-                        <td style="width: 14%">0</td>
-                        <td style="width: 6%">
-                            <button type="button" class="btn btn-sm remove-meal-system rounded-pill btn-icon btn-danger text-white">
-                                <span class="tf-icons bx bx-x"></span>
-                            </button>
-                        </td>
-                    </tr>
-                @endforeach
-            @endif
+        @if($is_edit && !$order->is_modified)
+            @foreach($order->meal_systems as $meal_system_info)
+                <tr type="{{$meal_system_info->meal_system->type}}">
+                    <td style="width: 26%;">
+                        {{$meal_system_info->meal_system->name."-".$meal_system_info->meal_system->type}}
+                        <input type="hidden" value="{{$meal_system_info->meal_system_for_meal_price_id}}" class="meal_system_price_id" name="meal_system_price_id[]"/>
+                    </td>
+                    <td style="width: 18%">
+                        <input type='number' value="{{$meal_system_info->number_of_guest}}"  required class='form-control' name='guest[]'/>
+                    </td>
+                    <td style="width: 14%">
+                        <input type='date' value="{{$meal_system_info->from_date}}" required class='form-control' name='from_date[]'/>
+                    </td>
+                    <td style="width: 14%">
+                        <input type='date' required value="{{$meal_system_info->to_date}}" class="form-control" name='to_date[]'/>
+                    </td>
+                    <td style="width: 8%">{{$meal_system_info->price}}</td>
+                    <td style="width: 14%">{{$meal_system_info->days}}</td>
+                    <td style="width: 6%">
+                        <button type="button" class="btn btn-sm remove-meal-system rounded-pill btn-icon btn-danger text-white">
+                            <span class="tf-icons bx bx-x"></span>
+                        </button>
+                    </td>
+                </tr>
+            @endforeach
+        @endif
         </tbody>
     </table>
 </div>
+@endif
 
 <script>
     $('#hotel_id').on('change', function (){

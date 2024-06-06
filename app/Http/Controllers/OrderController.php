@@ -110,9 +110,13 @@ class OrderController extends Controller
 
 
     public function updateModifyGuest($id, Request $request){
+        $order = Order::find($id);
+        if (!$order){
+            abort(404);
+        }
+
         DB::beginTransaction();
         try {
-            $order = Order::find($id);
             $meal_dates = $request->meal_date;
             $number_of_guests = $request->number_of_guest;
             $from_meal_systems = $request->from_meal_system_id;
@@ -262,12 +266,16 @@ class OrderController extends Controller
         ));
     }
 
-    public function edit($id, Request $request): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
+    public function edit($id, Request $request)
     {
         $order = Order::find($id);
         if (!$order){
             abort(404);
         }
+
+
+//        return $order->is_modified;
+
         $hotels = Hotel::all();
         $companies = Company::all();
         $countries = Country::all();
@@ -313,16 +321,10 @@ class OrderController extends Controller
                     //handle error here
                     dd('error');
                 }
-                /*$meal_system_price = $meal_system_for_meal_price->price;*/
+
                 $meal_system_id = $meal_system_for_meal_price->meal_system_id;
                 $meal_system = MealSystem::find($meal_system_id);
                 $allow_meal = $meal_system->allowMealSystem;
-                /*$orderWiseMealPricesData [] = [
-                    'meal_system_for_meal_price_id' => $id,
-                    'price' => $meal_system_price,
-                    'meal_system_id' => $meal_system_id,
-                    'order_id' => $order->id
-                ];*/
 
                 //make order monitoring data
                 $from_date = $request->from_date[$key];

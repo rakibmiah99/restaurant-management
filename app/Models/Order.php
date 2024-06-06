@@ -60,6 +60,16 @@ class Order extends Model
     }
 
 
+    public function getIsModifiedAttribute(){
+        //get duplicates meal systems
+        $duplicates =  $this->meal_systems->groupBy('order_meal_system_id')->filter(function ($group){
+            return $group->count() > 1;
+        });
+
+        return $duplicates->count() > 0;
+    }
+
+
     public function getAllMealPriceAttribute(){
         $data = collect([]);
         return $data->concat(
