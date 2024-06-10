@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\HallExport;
+use App\Helper;
 use App\Http\Requests\Hall\CreateHallRequest;
 use App\Http\Requests\Hall\UpdateHallRequest;
 use App\Http\Requests\Order\CreateOrderRequest;
@@ -20,6 +21,7 @@ use App\Models\OrderWiseMealPrice;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -31,8 +33,27 @@ class OrderController extends Controller
         return view('order.index', compact('data', 'columns'));
     }
 
-    public function choose(){
+    public function showQR($id)
+    {
+        $order = Order::find($id);
+        if (!$order){
+            abort(404);
+        }
 
+        $per_page_data = 10;
+        $data =  $this->getGuestPosition($order);
+        $data = Helper::Paginate($data, $per_page_data);
+
+
+        return view('order.show_qr', compact('data', 'order', 'per_page_data'));
+    }
+
+    public function showGuestQr($code)
+    {
+        return self::DecryptGuestPosition($code);
+    }
+
+    public function choose(){
         return view('order.choose');
     }
 
@@ -44,6 +65,7 @@ class OrderController extends Controller
 
 
         $order = Order::find($id);
+
 
         $startDate = Carbon::create($request->from_date);
         $endDate = Carbon::create($request->to_date);
@@ -224,8 +246,6 @@ class OrderController extends Controller
                         ];
                     }
                 }
-
-
 
             }
 
@@ -408,4 +428,57 @@ class OrderController extends Controller
             return Excel::download(new HallExport(), 'hall.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
+
+
+
+
+
+
+    public function getGuestPosition($order){
+        $GLOBALS['guest'] = [];
+        $company = $order->company->name;
+        $order->meal_systems->each(function($item, $index) use($company){
+            $number_of_guest = $item->number_of_guest;
+            $meal_system_id = $item->order_meal_system_id;
+            $order_id = $item->order_id;
+
+            $guest_names = [];
+
+            for($i =0; $i < $number_of_guest; $i++){
+                $guest_names [] = [
+                    'name' => "Guest".$order_id.$index.$i,
+                    'code' => self::EncryptGuestPosition($order_id,$index,$meal_system_id,$i),
+                ];
+            }
+
+            $GLOBALS['guest'] [] = [
+                'company' => $company,
+                'meal_system' => $item->meal_system->name,
+                'names' => $guest_names
+            ];
+
+        });
+
+        $meal_system_wise_guest = collect($GLOBALS['guest']);
+
+        return  $all_guest_name =  $meal_system_wise_guest->flatMap->names;
+    }
+
+
+
+    public static function EncryptGuestPosition($order_id,$index,$meal_system_id,$i){
+        return Crypt::encrypt($order_id.$index.$meal_system_id.$i);
+    }
+    public static function DecryptGuestPosition($enCryptData){
+        $data = Crypt::decrypt($enCryptData);
+        return (object)[
+            'order_id' => $data[0],
+            'index' => $data[1],
+            'meal_system_id' => $data[2],
+            'position' => $data[3],
+        ];
+    }
+
+
+
 }

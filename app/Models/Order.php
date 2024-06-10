@@ -70,6 +70,11 @@ class Order extends Model
     }
 
 
+    public function getTodayMealPriceWiseMealSystemsAttribute(){
+        $hall_available_meal =  $this->hall->getMealSystemAttribute()->pluck('id');
+        return $this->getMealPriceWiseMealSystemsAttribute()->whereIn('id', $hall_available_meal);
+    }
+
     public function getAllMealPriceAttribute(){
         $data = collect([]);
         return $data->concat(

@@ -58,6 +58,8 @@ Route::middleware(['auth.check', 'localization'])->prefix('/')->group(function (
 
     Route::prefix('order')->name('order.')->group(function (){
         Route::get('/', [\App\Http\Controllers\OrderController::class, 'index'])->name('index');
+        Route::get('/show-qr/{id}', [\App\Http\Controllers\OrderController::class, 'showQR'])->name('showQR');
+        Route::get('/show-guest-qr/{code}', [\App\Http\Controllers\OrderController::class, 'showGuestQr'])->name('showGuestQr');
         Route::get('/modify-guest/{id}', [\App\Http\Controllers\OrderController::class, 'modifyGuest'])->name('modify');
         Route::post('/modify-guest/{id}', [\App\Http\Controllers\OrderController::class, 'updateModifyGuest'])->name('modify.save');
         Route::get('/choose', [\App\Http\Controllers\OrderController::class, 'choose'])->name('choose');

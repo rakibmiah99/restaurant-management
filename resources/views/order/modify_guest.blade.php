@@ -158,11 +158,21 @@
                         <td style="width: 25%">
                             <select name="to_meal_system[]" class="form-control">
                                 <option value="">{{__('page.select')}}</option>
-                                @foreach($order->meal_price_wise_meal_systems as $meal_system)
-                                    <option @if(request()->get('meal_system') == $meal_system->id) selected @endif value="{{$meal_system->id}}">
-                                        {{$meal_system->name}}
-                                    </option>
-                                @endforeach
+                                @if($item->meal_date == date('Y-m-d'))
+                                    @foreach($order->today_meal_price_wise_meal_systems as $meal_system)
+                                        <option @if(request()->get('meal_system') == $meal_system->id) selected @endif value="{{$meal_system->id}}">
+                                            {{$meal_system->name}}
+                                        </option>
+                                    @endforeach
+                                @else
+                                    @foreach($order->meal_price_wise_meal_systems as $meal_system)
+                                        <option @if(request()->get('meal_system') == $meal_system->id) selected @endif value="{{$meal_system->id}}">
+                                            {{$meal_system->name}}
+                                        </option>
+                                    @endforeach
+                                @endif
+
+
                             </select>
                         </td>
                     </tr>

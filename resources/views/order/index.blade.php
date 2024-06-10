@@ -35,6 +35,7 @@
                                             </button>
                                             <div class="dropdown-menu" style="">
                                                 <a class="dropdown-item view-btn" href="{{route('order.modify', $item->id)}}"><i class='bx bx-low-vision'></i>{{__('page.modify_guest')}}</a>
+                                                <a class="dropdown-item view-btn" href="{{route('order.showQR', $item->id)}}"><i class='bx bx-low-vision'></i>{{__('page.show_qr')}}</a>
                                                 <a data-bs-toggle="modal" data-bs-target="#viewModal" class="dropdown-item view-btn" href="javascript:void(0);" url="{{route('order.show', $item->id)}}"><i class='bx bx-low-vision'></i>{{__('page.view')}}</a>
                                                 <a class="dropdown-item" href="{{route('order.edit', $item->id)}}"><i class="bx bx-edit-alt me-1"></i>{{__('page.edit')}}</a>
                                                 <a class="dropdown-item" href="{{route('order.changeStatus', $item->id)}}"><i class='bx bx-checkbox-minus'></i> {{$item->status ? __('page.inactive') : __('page.active') }}</a>

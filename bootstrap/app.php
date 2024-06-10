@@ -11,6 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->use([
+            \App\Http\Middleware\SetTimeZoneMiddleware::class
+        ]);
         $middleware->alias([
             'auth.check' => \App\Http\Middleware\AuthMiddleware::class,
             'localization' => \App\Http\Middleware\LocalizationMiddleware::class

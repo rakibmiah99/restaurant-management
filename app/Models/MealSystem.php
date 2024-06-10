@@ -10,6 +10,7 @@ class MealSystem extends Model
     use HasFactory;
 
 
+
     public function getAllowMealSystemAttribute(){
         $mealSystemIdsMap = [
             1 => [5, 6, 7],
@@ -42,5 +43,27 @@ class MealSystem extends Model
         }
 
         return $meals;
+    }
+
+
+    public static function GetAllForNormal(){
+        $ids =  [1,2,3,4,5,6,7];
+        return MealSystem::whereIn('id', $ids)->get();
+    }
+    public static function GetAfterBreakfast(){
+        $ids = [2,3];
+        return MealSystem::whereIn('id', $ids)->get();
+    }
+    public static function GetAfterLunch(){
+        $ids = [];
+        return MealSystem::whereIn('id', $ids)->get();
+    }
+    public static function GetAllForRamadan(){
+        $ids = [8,9,10];
+        return MealSystem::whereIn('id', $ids)->get();
+    }
+    public static function GetAfterSeheri(){
+        $ids = [8,9];
+        return MealSystem::whereIn('id', $ids)->get();
     }
 }

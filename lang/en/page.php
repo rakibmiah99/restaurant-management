@@ -70,6 +70,7 @@
         'sl' => 'SL',
         'select' => 'Select',
         'add' => 'add',
+        'show_qr' => 'Show QR',
 
 
 
