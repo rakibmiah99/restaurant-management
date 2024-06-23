@@ -64,7 +64,7 @@
 
         <x-menu-item-dropdown
             :name="__('menu.order_management')"
-            :active="$segment1 == 'order' || $segment1 == 'order-monitoring'"
+            :active="$segment1 == 'order' || $segment1 == 'order-monitoring' || $segment1 == 'complete-orders' "
             :child="[
                 [
                     'active' => $segment1 == 'order',
@@ -77,7 +77,8 @@
                     'name' => __('menu.order_monitoring')
                 ],
                 [
-                    'url' => 'd',
+                    'active' => $segment1 == 'complete-orders',
+                    'url' => route('order.complete'),
                     'name' => __('menu.complete_order')
                 ],
                 [
@@ -103,7 +104,8 @@
                     'name' => __('menu.hall_report')
                 ],
                 [
-                    'url' => 'd',
+                    'url' => route('report.kitchen'),
+                    'active' => $segment2 == 'kitchen',
                     'name' => __('menu.kitchen_report')
                 ],
                 [
@@ -120,7 +122,8 @@
                     'name' => __('menu.invoice_report')
                 ],
                 [
-                    'url' => 'd',
+                    'url' => route('report.packaging'),
+                    'active' => $segment2 == 'packaging',
                     'name' => __('menu.packaging_report')
                 ],
             ]

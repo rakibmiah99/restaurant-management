@@ -1,23 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Exports\ExportHallReport;
-use App\Exports\ExportHotelReport;
-use App\Exports\ExportKitchenReport;
-use App\Exports\ExportOrderReport;
-use App\Exports\HotelReportExport;
-use App\Exports\OrderMonitorExport;
-use App\Helper;
 use App\Models\Company;
 use App\Models\Country;
 use App\Models\Hall;
 use App\Models\Hotel;
-use App\Models\MealSystem;
 use App\Models\Order;
 use App\Models\OrderMonitoring;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
@@ -84,6 +74,8 @@ class ReportController extends Controller
             return Excel::download(new \App\Exports\PDF\ExportOrderReport(), 'order_export.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
+
+
     public function kitchen()
     {
         $data = OrderMonitoring::KitchenQuery()->paginate(10);
@@ -101,6 +93,24 @@ class ReportController extends Controller
         }
         else if($request->get('export-type') == "pdf"){
             return Excel::download(new \App\Exports\PDF\ExportKitchenReport(), 'kitchen_export.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        }
+    }
+
+    public function packaging()
+    {
+        $data = OrderMonitoring::PackagingQuery()->paginate(10);
+        $columns = array_keys(__('db.report.packaging'));
+        $countries = Country::get();
+        $hotels = Hotel::get();
+        return view('reports.packaging.index', compact('columns', 'data','countries', 'hotels'));
+    }
+
+    public function export_packaging(Request $request){
+        if ($request->get('export-type') == "excel"){
+            return Excel::download(new \App\Exports\PDF\ExportPackagingReport(), 'packaging_export.xlsx');
+        }
+        else if($request->get('export-type') == "pdf"){
+            return Excel::download(new \App\Exports\PDF\ExportPackagingReport(), 'packaging_export.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
 }

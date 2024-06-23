@@ -1,12 +1,13 @@
 
 <!DOCTYPE html>
 <html
-    lang="en"
-    class="light-style layout-menu-fixed"
-    dir="ltr"
+    lang="{{app()->getLocale() == "en" ? 'en' : 'ar'}}"
+    dir="{{app()->getLocale() == "en" ? 'ltr' : 'rtl'}}"
+    class="{{session('theme') == "light" ? 'light-style' : 'dark-style'}} layout-menu-fixed"
+
     data-theme="theme-default"
     data-assets-path="../assets/"
-    data-template="vertical-menu-template-free"
+    data-template="vertical-menu-template"
 >
 <head>
     <x-header/>

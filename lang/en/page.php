@@ -73,10 +73,7 @@
         'select' => 'Select',
         'add' => 'add',
         'show_qr' => 'Show QR',
-
-
-
-
+        'generate' => 'Generate',
 
 
         'this_meal_system_already_exist' => 'this meal system already',

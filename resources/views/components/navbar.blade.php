@@ -23,8 +23,12 @@
         </div>
         <!-- /Search -->
 
+
+
+
+
         <div class="ms-auto d-flex align-items-center">
-            <div  class="btn-group lang-btn d-inline me-5">
+            <div  class="btn-group lang-btn d-inline me-3">
                 <button type="button" class="btn btn-outline-primary rounded-0 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     @if(app()->getLocale() == 'en')
                         <img height="15px"  class="me-2 d-inline-block" src="{{asset('/assets/us.jpg')}}"/>
@@ -50,9 +54,38 @@
 
                 </ul>
             </div>
+
+
+            <div class="nav-item dropdown-style-switcher dropdown me-3">
+                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="false">
+                    @if(session('theme') == \App\Enums\Theme::LIGHT->value)
+                        <i class="bx bx-sm bx-sun"></i>
+                    @else
+                        <i class="bx bx-sm bx-moon"></i>
+                    @endif
+
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-styles">
+                    <li>
+                        <a class="dropdown-item" href="{{route('theme.change', \App\Enums\Theme::LIGHT->value)}}" data-theme="light">
+                            <span class="align-middle"><i class="bx bx-sun me-2"></i>Light</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{{route('theme.change', \App\Enums\Theme::DARK->value)}}" data-theme="dark">
+                            <span class="align-middle"><i class="bx bx-moon me-2"></i>Dark</span>
+                        </a>
+                    </li>
+{{--                    <li>--}}
+{{--                        <a class="dropdown-item" href="{{route('theme.change', \App\Enums\Theme::SYSTEM->value)}}" data-theme="system">--}}
+{{--                            <span class="align-middle"><i class="bx bx-desktop me-2"></i>System</span>--}}
+{{--                        </a>--}}
+{{--                    </li>--}}
+                </ul>
+            </div>
+
             <ul class="navbar-nav  flex-row align-items-center">
                 <!-- Place this tag where you want the button to render. -->
-
 
 
                 <!-- User -->

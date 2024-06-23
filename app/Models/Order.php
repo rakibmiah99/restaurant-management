@@ -192,7 +192,32 @@ class Order extends Model
     {
         return $this->order_monitoring->unique('meal_date')->count();
     }
+    public function getTotalEatenMealAttribute()
+    {
+        return $this->meal_entries->count();
+    }
 
+
+
+    public function getIsCompleteAttribute()
+    {
+        $status = false;
+
+        $today = date('Y-m-d');
+        if ($today > $this->getLastMealDateAttribute()){
+            $status = true;
+        }
+        else if ($this->getTotalMealAttribute() == $this->getTotalEatenMealAttribute()){
+            $status = true;
+        }
+        return $status;
+    }
+
+
+    public function getTestAttribute()
+    {
+        return $this->getTotalMealAttribute();
+    }
     public function getAvailableMealSystemsAttribute(){
 
         return $data = $this->date_and_meal_wise_order_monitor()

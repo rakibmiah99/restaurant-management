@@ -12,4 +12,8 @@ class LangController extends Controller
         \request()->session()->put('lang', $lang);
         return redirect()->back();
     }
+    function changeTheme($name, Request $request){
+        $request->session()->put('theme', $name);
+        return redirect()->back();
+    }
 }

@@ -26,6 +26,11 @@
 <!-- Core CSS -->
 <link rel="stylesheet" href="{{asset("assets/vendor/css/core.css")}}" class="template-customizer-core-css" />
 <link rel="stylesheet" href="{{asset("assets/vendor/css/theme-default.css")}}" class="template-customizer-theme-css" />
+@if(session('theme') == "dark")
+    <link rel="stylesheet" href="{{asset("assets/vendor/css/core.dark.css")}}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{{asset("assets/vendor/css/theme-default.dark.css")}}" class="template-customizer-theme-css" />
+@endif
+<link rel="stylesheet" href="{{asset("assets/vendor/css/api.css")}}" class="template-customizer-theme-css" />
 <link rel="stylesheet" href="{{asset("assets/css/demo.css")}}" />
 <link rel="stylesheet" href="{{asset("assets/css/style.css")}}" />
 
@@ -56,6 +61,23 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+@if(session('theme') == \App\Enums\Theme::DARK->value)
+    <style>
+        .select2-container--default .select2-selection--single {
+            background-color: #2b2c40;
+            border: 1px solid #444564;
+
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered{
+            color: #a3a4cc;
+        }
+        .select2-dropdown{
+            background-color: #2b2c40;
+        }
+    </style>
+@endif
+
 <script>
 
     function convertTo12HourFormat(time24) {
