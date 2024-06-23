@@ -27,45 +27,31 @@ class Hall extends Model
         return $this->belongsTo(Hotel::class, 'hotel_id', 'id');
     }
 
-    public function meal_times(){
-        return $this->hasMany(HallMealTime::class, 'hall_id', 'id');
-    }
 
-
-    function getRunningMealNameAttribute()
+    function getRunningMealAttribute()
     {
-        $meal_type = "";
+        $meal_system_id = null;
         $starting_time = null;
         $ending_time = null;
         $now =  date('H:i:s');
         if( $this->b_start <= $now && $this->b_end > $now){
-            $meal_type = 'breakfast';
-            $starting_time = $this->break_fast_starting_time;
-            $ending_time = $this->break_fast_ending_time;
+            $meal_system_id = 5;
         }
         else if($this->l_start <= $now && $this->l_end > $now){
-            $meal_type = 'lunch';
-            $starting_time = $this->lunch_starting_time;
-            $ending_time = $this->lunch_ending_time;
+            $meal_system_id = 6;
         }
         else if($this->d_start <= $now && $this->d_end > $now){
-            $meal_type = 'dinner';
-            $starting_time = $this->dinner_starting_time;
-            $ending_time = $this->dinner_ending_time;
+            $meal_system_id = 7;
         }
         else if($this->s_start <= $now && $this->s_end > $now){
-            $meal_type = 'dinner';
-            $starting_time = $this->dinner_starting_time;
-            $ending_time = $this->dinner_ending_time;
+            $meal_system_id = 9;
         }
         else if($this->i_start <= $now && $this->d_end > $now){
-            $meal_type = 'dinner';
-            $starting_time = $this->dinner_starting_time;
-            $ending_time = $this->dinner_ending_time;
+            $meal_system_id = 10;
         }
 
 
-        return $meal_type;
+        return $meal_system_id;
 
     }
 
@@ -90,7 +76,7 @@ class Hall extends Model
             if($now < $this->s_start){
                 $meal_systems = MealSystem::GetAllForRamadan();
             }
-            else if($now < $this->s_end){
+            else if($now < $this->i_start){
                 $meal_systems = MealSystem::GetAfterSeheri();
             }
         }

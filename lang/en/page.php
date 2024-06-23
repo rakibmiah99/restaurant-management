@@ -51,6 +51,8 @@
         'meal_price_normal' => "Meal Price - (Normal)",
         'meal_price_ramadan' => "Meal Price - (Ramadan)",
         'number_of_guest' => 'Guest',
+        'from_meal_date' => 'From Meal Date',
+        'to_meal_date' => 'To Meal Date',
         'from_date' => 'From Date',
         'to_date' => 'To Date',
         'price' => 'Price',

@@ -1,4 +1,8 @@
-
+@php
+    $segment1 = request()->segment(1);
+    $segment2 = request()->segment(2);
+    $segment3 = request()->segment(3);
+@endphp
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
         <a href="index.html" class="app-brand-link">
@@ -20,10 +24,10 @@
         <x-menu-item url="" :name="__('dashboard')"/>
         <x-menu-item-dropdown
             :name="__('menu.company_management')"
-            :active="request()->segment(1) == 'company'"
+            :active="$segment1 == 'company'"
             :child="[
                 [
-                    'active' => request()->segment(1) == 'company',
+                    'active' => $segment1 == 'company',
                     'url' => route('company.index'),
                     'name' => __('menu.company')
                 ]
@@ -31,10 +35,10 @@
         "/>
         <x-menu-item-dropdown
             :name="__('menu.meal_management')"
-            :active="request()->segment(1) == 'meal-price'"
+            :active="$segment1 == 'meal-price'"
             :child="[
                 [
-                    'active' => request()->segment(1) == 'meal-price',
+                    'active' => $segment1 == 'meal-price',
                     'url' => route('meal_price.index'),
                     'name' => __('menu.meal_price')
                 ]
@@ -43,15 +47,15 @@
 
         <x-menu-item-dropdown
             :name="__('menu.hotel_management')"
-            :active="request()->segment(1) == 'hotel' || request()->segment(1) == 'hall'"
+            :active="$segment1 == 'hotel' || $segment1 == 'hall'"
             :child="[
                 [
-                    'active' => request()->segment(1) == 'hotel',
+                    'active' => $segment1 == 'hotel',
                     'url' => route('hotel.index'),
                     'name' => __('menu.hotel')
                 ],
                 [
-                    'active' => request()->segment(1) == 'hall',
+                    'active' => $segment1 == 'hall',
                     'url' => route('hall.index'),
                     'name' => __('menu.hall')
                 ],
@@ -60,15 +64,16 @@
 
         <x-menu-item-dropdown
             :name="__('menu.order_management')"
-            :active="request()->segment(1) == 'order'"
+            :active="$segment1 == 'order' || $segment1 == 'order-monitoring'"
             :child="[
                 [
-                    'active' => request()->segment(1) == 'order',
+                    'active' => $segment1 == 'order',
                     'url' => route('order.index'),
                     'name' => __('menu.orders')
                 ],
                 [
-                    'url' => 'd',
+                    'active' => $segment1 == 'order-monitoring',
+                    'url' => route('order_monitoring.index'),
                     'name' => __('menu.order_monitoring')
                 ],
                 [
@@ -85,13 +90,16 @@
 
         <x-menu-item-dropdown
             :name="__('menu.reports')"
+            :active="$segment1 == 'report'"
             :child="[
                 [
-                    'url' => 'd',
+                    'url' => route('report.hotel'),
+                    'active' => $segment2 == 'hotel',
                     'name' => __('menu.hotel_report')
                 ],
                 [
-                    'url' => 'd',
+                    'url' => route('report.hall'),
+                    'active' => $segment2 == 'hall',
                     'name' => __('menu.hall_report')
                 ],
                 [
@@ -103,7 +111,8 @@
                     'name' => __('menu.revenue_report')
                 ],
                 [
-                    'url' => 'd',
+                    'url' => route('report.order'),
+                    'active' => $segment2 == 'order',
                     'name' => __('menu.order_report')
                 ],
                 [

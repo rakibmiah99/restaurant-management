@@ -72,14 +72,29 @@ Route::middleware(['auth.check', 'localization'])->prefix('/')->group(function (
         Route::post('/delete/{id}', [\App\Http\Controllers\OrderController::class, 'delete'])->name('delete');
         Route::get('/export', [\App\Http\Controllers\OrderController::class, 'export'])->name('export');
     });
+    Route::prefix('order-monitoring')->name('order_monitoring.')->group(function (){
+        Route::get('/', [\App\Http\Controllers\OrderMonitoringController::class, 'index'])->name('index');
+        Route::get('/export', [\App\Http\Controllers\OrderMonitoringController::class, 'export'])->name('export');
+    });
+    Route::prefix('report')->name('report.')->group(function (){
+        Route::get('/hotel', [\App\Http\Controllers\ReportController::class, 'hotel'])->name('hotel');
+        Route::get('/export-hotel', [\App\Http\Controllers\ReportController::class, 'export_hotel'])->name('export.hotel');
 
+        Route::get('/hall', [\App\Http\Controllers\ReportController::class, 'hall'])->name('hall');
+        Route::get('/export-hall', [\App\Http\Controllers\ReportController::class, 'export_hall'])->name('export.hall');
+
+        Route::get('/order', [\App\Http\Controllers\ReportController::class, 'order'])->name('order');
+        Route::get('/export-order', [\App\Http\Controllers\ReportController::class, 'export_order'])->name('export.order');
+
+        Route::get('/kitchen', [\App\Http\Controllers\ReportController::class, 'kitchen'])->name('kitchen');
+        Route::get('/export-kitchen', [\App\Http\Controllers\ReportController::class, 'export_kitchen'])->name('export.kitchen');
+    });
 
     Route::get('meal-systems-by-meal-price', [\App\Http\Controllers\MealPriceController::class, 'mealSystemByMealPrice'])->name('meal-system-by-meal-price');
     Route::get('change-lang/{lang}', [\App\Http\Controllers\LangController::class, 'change'])->name('lang.change');
 });
 
-
-
+Route::get('/taken-meal/{token}',  [\App\Http\Controllers\MealEntryController::class, 'take'])->name('take_meal');
 
 Route::get('/login', [\App\Http\Controllers\AuthController::class, 'loginPage'])->name('loginPage');
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');

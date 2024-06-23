@@ -7,14 +7,14 @@
             <option @if(request()->perpage == 100) selected @endif value="100">100</option>
         </select>
         <a
-            href="{{route($attributes->get('export-url'), array_merge(request()->only(['q', 'columns', 'export-type' => 'pdf']), ['export-type' => 'pdf']))}}"
+            href="{{route($attributes->get('export-url'), array_merge(request()->all(), ['export-type' => 'pdf']))}}"
             type="button"
             class="btn btn-sm btn-icon ms-2 btn-outline-danger "
         >
             <i class='bx bxs-file-pdf'></i>
         </a>
         <a
-            href="{{route($attributes->get('export-url'), array_merge(request()->only(['q', 'columns']), ['export-type' => 'excel']))}}"
+            href="{{route($attributes->get('export-url'), array_merge(request()->all(), ['export-type' => 'excel']))}}"
             type="button" class="btn btn-icon btn-sm ms-2 btn-outline-success "
         >
             <i class='bx bx-spreadsheet' ></i>
@@ -46,5 +46,9 @@
 
     <!-- searchData function in main layout script -->
     <input value="{{request()->q}}" name="q" onkeyup="searchData()" style="width: 150px" id="searchInput" class="form-control d-inline form-control-sm" type="text" placeholder="search">
+
+    @foreach(request()->except(['perpage', 'columns', 'q']) as $input_name=>$value)
+        <input type="hidden" name="{{$input_name}}" value="{{$value}}"/>
+    @endforeach
 
 </form>

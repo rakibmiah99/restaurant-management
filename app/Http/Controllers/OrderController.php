@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\HallExport;
+use App\Exports\OrderExport;
 use App\Helper;
 use App\Http\Requests\Hall\CreateHallRequest;
 use App\Http\Requests\Hall\UpdateHallRequest;
@@ -24,6 +25,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class OrderController extends Controller
 {
@@ -35,6 +37,9 @@ class OrderController extends Controller
 
     public function showQR($id)
     {
+
+//        return Crypt::decrypt('eyJpdiI6IlgwcE93MUp6aWRaNy9LTm81M2Vab0E9PSIsInZhbHVlIjoib1lTZ3JESHNNeHhiQUlKNFgwRHJCQT09IiwibWFjIjoiNTFiYzQ0NjFmNTcyNjE2YTIwYTkwMjJlMTYwMjk1ZmVjZmIxYjg2ZWY5NDUzOWRkNTYxYjViMGU4Yjk2M2M1YiIsInRhZyI6IiJ9');
+
         $order = Order::find($id);
         if (!$order){
             abort(404);
@@ -50,7 +55,11 @@ class OrderController extends Controller
 
     public function showGuestQr($code)
     {
-        return self::DecryptGuestPosition($code);
+        $data =  self::DecryptGuestPosition($code);
+        $qr = QrCode::size(150)->generate(route('take_meal', $code));
+        $guest_name = self::makeGuestName($data->order_id, $data->index, $data->meal_system_id, $data->position);
+
+        return view('order.show_guest_qr', compact('data', 'qr', 'guest_name', 'code'));
     }
 
     public function choose(){
@@ -398,23 +407,23 @@ class OrderController extends Controller
 
 
     public function delete($id){
-        $hall = Hall::find($id);
-        if (!$hall){
+        $order = Order::find($id);
+        if (!$order){
             abort(404);
         }
-        $hall->delete();
+        $order->delete();
 
         return redirect()->back()->with('success', "Hall Deleted Successfully");
     }
 
     public function changeStatus($id){
-        $hall = Hall::find($id);
-        if (!$hall){
+        $order = Order::find($id);
+        if (!$order){
             abort(404);
         }
 
-        $hall->status = !$hall->status;
-        $hall->save();
+        $order->status = !$order->status;
+        $order->save();
         return redirect()->back()->with('success', "status successfully updated");
     }
 
@@ -422,10 +431,10 @@ class OrderController extends Controller
     //for export to pdf and Excel file
     public function export(Request $request){
         if ($request->get('export-type') == "excel"){
-            return Excel::download(new HallExport(), 'hall.xlsx');
+            return Excel::download(new \App\Exports\PDF\OrderExport(), 'orders.xlsx');
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new HallExport(), 'hall.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new \App\Exports\PDF\OrderExport(), 'orders.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
 
@@ -446,7 +455,7 @@ class OrderController extends Controller
 
             for($i =0; $i < $number_of_guest; $i++){
                 $guest_names [] = [
-                    'name' => "Guest".$order_id.$index.$i,
+                    'name' => self::makeGuestName($order_id,$index,$meal_system_id,$i),
                     'code' => self::EncryptGuestPosition($order_id,$index,$meal_system_id,$i),
                 ];
             }
@@ -466,11 +475,21 @@ class OrderController extends Controller
 
 
 
-    public static function EncryptGuestPosition($order_id,$index,$meal_system_id,$i){
-        return Crypt::encrypt($order_id.$index.$meal_system_id.$i);
+    public static function makeGuestName($order_id,$index,$meal_system_id,$i)
+    {
+        return "Guest".$order_id.$index.$meal_system_id.$i;
     }
-    public static function DecryptGuestPosition($enCryptData){
+
+    public static function EncryptGuestPosition($order_id,$index,$meal_system_id,$i){
+        return Crypt::encrypt($order_id."-".$index."-".$meal_system_id."-".$i);
+    }
+    public static function DecryptGuestPosition($enCryptData, $positionOnly = false){
         $data = Crypt::decrypt($enCryptData);
+        $data = explode("-", $data);
+        if($positionOnly){
+            return implode('-',$data);
+        }
+
         return (object)[
             'order_id' => $data[0],
             'index' => $data[1],

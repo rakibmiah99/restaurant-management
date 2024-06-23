@@ -110,7 +110,24 @@
             $('#{{$name}}').val({{$value}})
             $('#{{$name}}-code').val('{{$code}}')
         @endif
+
+
+        //input size
+        @if($size)
+            selectedEl{{$key}}.select2();
+        // Customizing input size to small
+        selectedEl{{$key}}.next('.select2-container').find('.select2-selection--single').css({
+            'height': '30px', // Adjust the height as needed
+        });
+        selectedEl{{$key}}.next('.select2-container').find('.select2-selection--single .select2-selection__rendered').css({
+            'line-height': '28px', // Adjust the line height as needed
+        });
+        selectedEl{{$key}}.next('.select2-container').find('.select2-selection--single .select2-selection__arrow').css({
+            'height': '28px', // Adjust the arrow height as needed
+        });
+        @endif
     </script>
 @endif
+
 
 

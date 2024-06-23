@@ -2,22 +2,26 @@
 
 namespace App\Exports;
 
+use App\Enums\ExportFormat;
 use App\Models\Hotel;
+use App\Trait\ExportTrait;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithStyles;
 
-class HotelExport implements FromCollection, WithHeadings
+class HotelExport implements FromCollection, WithHeadings, ShouldAutoSize, WithColumnWidths, WithStyles, WithEvents
 {
-    public array $valid_column = [];
+
+    use ExportTrait;
     public function __construct()
     {
-        $table_columns = (new Hotel())->getColumns();
-        foreach (request()->columns ?? $table_columns as $column){
-            if (in_array($column, $table_columns)){
-                $this->valid_column [] = $column;
-            }
-        }
-
+        $columns = (new Hotel())->getColumns();
+        $this->headings = 'db.hotel';
+        $this->setValidColumn($columns);
+        $this->title = 'Hotel List';
     }
 
     /**
@@ -27,11 +31,5 @@ class HotelExport implements FromCollection, WithHeadings
     {
         return Hotel::filter()->get($this->valid_column);
     }
-
-    public function headings(): array
-    {
-        return array_map(function($column){
-            return __('db.hotel.'.$column);
-        },$this->valid_column);
-    }
+    
 }

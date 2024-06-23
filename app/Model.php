@@ -19,6 +19,8 @@ class Model extends \Illuminate\Database\Eloquent\Model
             'created_at',
             'updated_at'
         ];
-        return $selectedColumns = array_diff($columns, $exclude);
+        $selectedColumns = array_diff($columns, $exclude);
+
+        return $selectedColumns = array_merge($selectedColumns, $this->attributes_as_column ?? []);
     }
 }

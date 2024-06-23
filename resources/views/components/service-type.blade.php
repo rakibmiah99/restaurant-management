@@ -6,8 +6,10 @@
 <div class="">
     <label for="html5-url-input" class=" col-form-label">
         {{__('page.service_type')}}
-        <x-required/>
-        <x-input-error name="service_type" />
+        @if($required)
+            <x-required/>
+            <x-input-error name="service_type" />
+        @endif
     </label>
     <div class="">
         <select @if($required) required @endif  name="service_type" id="service_type" class="form-select">

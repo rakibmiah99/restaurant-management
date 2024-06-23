@@ -92,11 +92,10 @@ class CompanyController extends Controller
     //for export to pdf and Excel file
     public function export(Request $request){
         if ($request->get('export-type') == "excel"){
-            return Excel::download(new CompanyExport(), 'company.xlsx');
+            return Excel::download(new \App\Exports\PDF\CompanyExport(), 'company.xlsx');
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new CompanyExport(), 'company.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new \App\Exports\PDF\CompanyExport(), 'company.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
         }
-
     }
 }

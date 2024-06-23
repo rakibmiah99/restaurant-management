@@ -3,7 +3,7 @@
         <div class="card">
            <x-card-header :url="route('order.choose')" :name="__('page.orders')" :url-name="__('page.create')"/>
             <div class="mt-3">
-                <x-filter-data export-url="hall.export" translate-from="db.order" :columns="$columns"/>
+                <x-filter-data export-url="order.export" translate-from="db.order" :columns="$columns"/>
 
                 <div style="min-height: 400px" class="table-responsive mt-2 text-nowrap">
                     <table class="table">
@@ -23,6 +23,18 @@
                                     @foreach(request()->columns ?? $columns as $column)
                                         @if($column == "status")
                                             <td>{{$item->$column ? \App\Enums\Status::ACTIVE->value : \App\Enums\Status::INACTIVE->value }}</td>
+                                        @elseif($column == "hall_id")
+                                            <td>{{$item->hall?->name}}</td>
+                                        @elseif($column == "company_id")
+                                            <td>{{$item->company?->name}}</td>
+                                        @elseif($column == "hotel_id")
+                                            <td>{{$item->hotel?->name}}</td>
+                                        @elseif($column == "country_id")
+                                            <td>{{$item->country?->name}}</td>
+                                        @elseif($column == "mpi_for_normal")
+                                            <td>{{$item->meal_price_for_normal?->name}}</td>
+                                        @elseif($column == "mpi_for_ramadan")
+                                            <td>{{$item->meal_price_for_ramadan?->name}}</td>
                                         @else
                                             <td>{{$item->$column}}</td>
                                         @endif

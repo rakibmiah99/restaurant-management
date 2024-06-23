@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ExportFormat;
 use App\Exports\HotelExport;
 use App\Http\Requests\Hotel\CreateHotelRequest;
 use App\Http\Requests\Hotel\UpdateHotelRequest;
@@ -101,10 +102,10 @@ class HotelController extends Controller
     //for export to pdf and Excel file
     public function export(Request $request){
         if ($request->get('export-type') == "excel"){
-            return Excel::download(new HotelExport(), 'hotel.xlsx');
+            return Excel::download(new \App\Exports\PDF\HotelExport(), 'hotel.xlsx');
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new HotelExport(), 'hotel.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new \App\Exports\PDF\HotelExport(), 'hotel.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
 }

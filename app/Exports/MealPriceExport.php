@@ -3,21 +3,26 @@
 namespace App\Exports;
 
 use App\Models\MealPrice;
+use App\Trait\ExportTrait;
+use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithStyles;
 
-class MealPriceExport implements FromCollection, WithHeadings
+class MealPriceExport implements FromCollection, WithHeadings, WithColumnWidths, ShouldAutoSize, WithStyles, WithEvents
 {
+    use ExportTrait;
     public array $valid_column = [];
     public function __construct()
     {
-
-        $table_columns = (new MealPrice())->getColumns();
-        foreach (request()->columns ?? $table_columns as $column){
-            if (in_array($column, $table_columns)){
-                $this->valid_column [] = $column;
-            }
-        }
+        $columns = (new MealPrice())->getColumns();
+        $this->headings = 'db.meal_price';
+        $this->setValidColumn($columns);
+        $this->title = 'Company List';
     }
 
     /**
@@ -28,10 +33,4 @@ class MealPriceExport implements FromCollection, WithHeadings
         return MealPrice::filter()->get($this->valid_column);
     }
 
-    public function headings(): array
-    {
-        return array_map(function($column){
-            return __('db.meal_price.'.$column);
-        },$this->valid_column);
-    }
 }

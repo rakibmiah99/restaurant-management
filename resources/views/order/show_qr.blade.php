@@ -26,7 +26,7 @@
                                 <td>{{$order->company?->name}}</td>
                                 <td>{{$item['name']}}</td>
                                 <td>
-                                    <button  data-bs-target="#viewModal"  url="{{route('order.showGuestQr', $item['code'])}}"  class="btn view-btn btn-sm btn-outline-primary">
+                                    <button data-bs-toggle="modal"  data-bs-target="#viewModal"  url="{{route('order.showGuestQr', $item['code'])}}"  class="btn view-btn btn-sm btn-outline-primary">
                                         <i class='bx bx-show'></i>
                                     </button>
                                 </td>
@@ -45,19 +45,8 @@
     </div>
 
     <x-view-modal size="modal-lg">
-        <div class="table-responsive mt-2 text-nowrap">
-            <table class="table">
-                <tbody id="data" class="table-border-bottom-0">
-{{--                @foreach($columns as $column)--}}
-{{--                    <tr>--}}
-{{--                        <th>{{__('db.order.'.$column)}}</th>--}}
-{{--                        <th>:</th>--}}
-{{--                        <td id="v-{{$column}}"></td>--}}
-{{--                    </tr>--}}
-{{--                @endforeach--}}
+        <div id="show_guest_qr" class="d-flex flex-column align-items-center ">
 
-                </tbody>
-            </table>
         </div>
     </x-view-modal>
 </x-main-layout>
@@ -74,7 +63,8 @@
             .then(function (response){
                 modalLoaderOFF();
                 const data = response.data;
-
+                $('#show_guest_qr').empty();
+                $('#show_guest_qr').append(data);
             })
             .catch(function (error){
 

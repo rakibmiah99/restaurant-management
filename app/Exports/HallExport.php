@@ -3,21 +3,24 @@
 namespace App\Exports;
 
 use App\Models\Hall;
+use App\Trait\ExportTrait;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithStyles;
 
-class HallExport implements FromCollection, WithHeadings
+class HallExport implements FromCollection, WithHeadings, WithColumnWidths, ShouldAutoSize, WithStyles, WithEvents
 {
-    public array $valid_column = [];
+    use ExportTrait;
     public function __construct()
     {
-        $table_columns = (new Hall())->getColumns();
-        foreach (request()->columns ?? $table_columns as $column){
-            if (in_array($column, $table_columns)){
-                $this->valid_column [] = $column;
-            }
-        }
-
+        $columns = (new Hall())->getColumns();
+        $this->headings = 'db.hall';
+        $this->setValidColumn($columns);
+        $this->title = 'Company List';
     }
 
     /**
@@ -26,12 +29,5 @@ class HallExport implements FromCollection, WithHeadings
     public function collection()
     {
         return Hall::filter()->get($this->valid_column);
-    }
-
-    public function headings(): array
-    {
-        return array_map(function($column){
-            return __('db.hall.'.$column);
-        },$this->valid_column);
     }
 }
