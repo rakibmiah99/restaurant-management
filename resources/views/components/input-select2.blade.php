@@ -4,7 +4,7 @@
     $size = $attributes->get('size');
     $array = $attributes->get('array');
     $column = $attributes->get('column') ?? 'id';
-    $display_column = $attributes->get('column') ?? 'name';
+    $display_column = $attributes->get('display_column') ?? 'name';
     $is_required = $attributes->get('is_required');
     $title = $attributes->get('title');
     $value = $attributes->get('value');

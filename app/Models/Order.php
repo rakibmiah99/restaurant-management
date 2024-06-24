@@ -236,6 +236,7 @@ class Order extends Model
             //formatting and return data
             return  (object)[
               'name' => $meal_system->name."-".$meal_system->type,
+              'meal_system_id' => $meal_system->id,
               'days' => $meal_system_data->count('meal_date'),
               'count_of_meal' => $total_guest,
               'price' => $price,

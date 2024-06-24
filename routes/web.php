@@ -79,6 +79,25 @@ Route::middleware(['auth.check', 'localization'])->prefix('/')->group(function (
     });
 
 
+    Route::prefix('invoice')->name('invoice.')->group(function (){
+        Route::get('/', [\App\Http\Controllers\InvoiceController::class, 'index'])->name('index');
+        Route::get('/create/{order_id?}', [\App\Http\Controllers\InvoiceController::class, 'create'])->name('create');
+        Route::get('/show/{id}', [\App\Http\Controllers\InvoiceController::class, 'show'])->name('show');
+        Route::get('/edit/{id}', [\App\Http\Controllers\InvoiceController::class, 'edit'])->name('edit');
+        Route::get('/changeStatus/{id}', [\App\Http\Controllers\InvoiceController::class, 'changeStatus'])->name('changeStatus');
+        Route::post('/update/{id}', [\App\Http\Controllers\InvoiceController::class, 'update'])->name('update');
+        Route::post('/store', [\App\Http\Controllers\InvoiceController::class, 'store'])->name('store');
+        Route::post('/delete/{id}', [\App\Http\Controllers\InvoiceController::class, 'delete'])->name('delete');
+        Route::get('/export', [\App\Http\Controllers\InvoiceController::class, 'export'])->name('export');
+    });
+
+    Route::prefix('company-settings')->name('settings.')->group(function (){
+        Route::get('/', [\App\Http\Controllers\CompanySettingsController::class, 'companySettings'])->name('company');
+        Route::post('/update', [\App\Http\Controllers\CompanySettingsController::class, 'companySettingsUpdate'])->name('company.update');
+    });
+
+
+
     Route::prefix('order-monitoring')->name('order_monitoring.')->group(function (){
         Route::get('/', [\App\Http\Controllers\OrderMonitoringController::class, 'index'])->name('index');
         Route::get('/export', [\App\Http\Controllers\OrderMonitoringController::class, 'export'])->name('export');

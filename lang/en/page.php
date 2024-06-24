@@ -74,8 +74,11 @@
         'add' => 'add',
         'show_qr' => 'Show QR',
         'generate' => 'Generate',
-
-
+        'invoices' => 'Invoices',
+        'invoice_number' => 'Invoice Number',
+        'invoice_date' => 'Invoice Date',
+        'total_meal' => 'Total Meal',
+        'total_price' => 'Total Price',
         'this_meal_system_already_exist' => 'this meal system already',
         'this_meal_system_has_no_price.' => 'this meal system has no price',
         'please_select_a_meal_system' => 'please select a meal system'

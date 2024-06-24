@@ -39,7 +39,7 @@
                                     @endforeach
 
                                     <td>
-                                        <a href="#" class="btn btn-sm btn-primary">{{__('page.generate')}}</a>
+                                        <a href="{{route('invoice.create', $item->id)}}" class="btn btn-sm btn-primary">{{__('page.generate')}}</a>
                                     </td>
                                 </tr>
                             @endforeach
