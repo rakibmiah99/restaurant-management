@@ -2,7 +2,7 @@
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-           <x-card-header :url="route('invoice.create')" :name="__('page.companies')" :url-name="__('page.create')"/>
+           <x-card-header :url="route('invoice.create')" :name="__('page.invoices')" :url-name="__('page.create')"/>
             <div class="mt-3">
                 <x-filter-data export-url="invoice.export" translate-from="db.invoice" :columns="$columns"/>
 
@@ -40,10 +40,14 @@
                                                 <i class="bx bx-dots-vertical-rounded"></i>
                                             </button>
                                             <div class="dropdown-menu" style="">
-                                                <a data-bs-toggle="modal" data-bs-target="#viewModal" class="dropdown-item view-btn" href="javascript:void(0);" url="{{route('company.show', $item->id)}}"><i class='bx bx-low-vision'></i>{{__('page.view')}}</a>
-                                                <a class="dropdown-item" href="{{route('company.edit', $item->id)}}"><i class="bx bx-edit-alt me-1"></i>{{__('page.edit')}}</a>
-                                                <a class="dropdown-item" href="{{route('company.changeStatus', $item->id)}}"><i class='bx bx-checkbox-minus'></i> {{$item->status ? __('page.inactive') : __('page.active') }}</a>
-                                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" url="{{route('company.delete', $item->id)}}"  class="dropdown-item delete-btn" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>{{__('page.delete')}}</a>
+                                                <a data-bs-toggle="modal" data-bs-target="#viewModal" class="dropdown-item view-btn" href="javascript:void(0);" url="{{route('invoice.show', $item->id)}}"><i class='bx bx-low-vision'></i>{{__('page.view')}}</a>
+                                                @if(!$item->is_close)
+                                                    <a class="dropdown-item" href="{{route('invoice.edit', $item->id)}}"><i class="bx bx-edit-alt me-1"></i>{{__('page.edit')}}</a>
+                                                @endif
+                                                <a class="dropdown-item" href="{{route('invoice.changeStatus', $item->id)}}"><i class='bx bx-checkbox-minus'></i> {{$item->is_close ? __('page.closed') : __('page.make_to_close') }}</a>
+                                                @if(!$item->is_close)
+                                                    <a data-bs-toggle="modal" data-bs-target="#deleteModal" url="{{route('invoice.delete', $item->id)}}"  class="dropdown-item delete-btn" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>{{__('page.delete')}}</a>
+                                                @endif
                                             </div>
                                         </div>
                                     </td>
@@ -63,21 +67,8 @@
 
 
 
-    <x-view-modal size="modal-lg">
-        <div class="table-responsive mt-2 text-nowrap">
-            <table class="table">
-                <tbody id="data" class="table-border-bottom-0">
-                    @foreach($columns as $column)
-                        <tr>
-                            <th>{{__('db.invoice.'.$column)}}</th>
-                            <th>:</th>
-                            <td id="v-{{$column}}"></td>
-                        </tr>
-                    @endforeach
-
-                </tbody>
-            </table>
-        </div>
+    <x-view-modal size="modal-xl">
+        <div id="modal-body"></div>
     </x-view-modal>
 </x-main-layout>
 
@@ -93,14 +84,7 @@
         .then(function (response){
             modalLoaderOFF();
             const data = response.data;
-
-            for(let property in data){
-                let id = '#v-'+property;
-                console.log(data[property])
-                $(id).html(data[property])
-
-
-            }
+            $('#modal-body').html(data);
         })
         .catch(function (error){
 

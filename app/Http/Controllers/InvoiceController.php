@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Company\CompanyCreateRequest;
 use App\Http\Requests\Company\CompanyUpdateRequest;
 use App\Http\Requests\Invoice\InvoiceCreateRequest;
+use App\Http\Requests\Invoice\InvoiceUpdateRequest;
 use App\Models\Company;
 use App\Models\CompanySetting;
 use App\Models\Country;
@@ -25,11 +26,11 @@ class InvoiceController extends Controller
     }
 
     public function show($id){
-        $company =  Company::find($id);
-        if (!$company){
-            abort(500, 'ff');
+        $invoice =  Invoice::find($id);
+        if (!$invoice){
+            abort(404);
         }
-        return response()->json($company);
+        return view('invoice.show', compact('invoice'));
     }
 
     public function create(Request $request)
@@ -51,15 +52,22 @@ class InvoiceController extends Controller
         return view('invoice.create', compact('orders','order', 'total', 'total_with_tax', 'tax_amount', 'tax_percentage', 'available_meal_systems'));
     }
 
-    public function edit($id, Request $request): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
+    public function edit($id, Request $request)
     {
-        $company = Company::find($id);
-        if (!$company){
-            abort(404);
+
+        $invoice_id = $request->id;
+        $invoice = Invoice::find($invoice_id);
+        if (!$invoice){
+            abort(404, 'not fond');
         }
-        $countries = Country::get();
-        $meal_prices = MealPrice::active()->get();
-        return view('invoice.edit', compact('countries', 'meal_prices', 'company'));
+        $order = $invoice->order;
+        $available_meal_systems =  $invoice?->invoice_data;
+        //calculation start
+        $tax_percentage = $invoice->tax;
+        $total =  $invoice->total_price;
+        $tax_amount = $invoice->tax_amount;
+        $total_with_tax = $invoice->total_with_tax;
+        return view('invoice.edit', compact('invoice','order', 'total', 'total_with_tax', 'tax_amount', 'tax_percentage', 'available_meal_systems'));
     }
 
 
@@ -103,45 +111,60 @@ class InvoiceController extends Controller
     }
 
 
-    public function update($id, CompanyUpdateRequest $request){
-        $company = Company::find($id);
-        if (!$company){
-            abort(404);
+    public function update($id, InvoiceUpdateRequest $request){
+        DB::beginTransaction();
+        $invoice = Invoice::find($id);
+        if (!$invoice){
+            abort(404, 'not fond');
         }
-        $company->update($request->validated());
-        return redirect()->back()->with('success', 'Company Updated Successfully');
+        try {
+            $invoice->invoice_date = $request->invoice_date;
+            $invoice->discount = $request->discount;
+            $invoice->save();
+            for ($i =0; $i < count($request->meal_system_id); $i++){
+                $meal_system_id = $request->meal_system_id[$i];
+                $price = $request->price[$i];
+                $invoice->invoice_data()->where('meal_system_id', $meal_system_id)->update(['price' => $price]);
+            }
+            DB::commit();
+            return $this->successMessage('Updated Successfully');
+        }
+        catch (\Exception $exception){
+            DB::rollBack();
+            return $this->errorMessage($exception->getMessage());
+        }
     }
 
 
     public function delete($id){
-        $company =  Company::find($id);
-        if (!$company){
+        $invoice =  Invoice::find($id);
+        if (!$invoice){
             abort(404);
         }
-        $company->delete();
+        $invoice->delete();
 
-        return redirect()->back()->with('success', "Company Deleted Successfully");
+        return $this->successMessage('Deleted Successfully');
     }
 
     public function changeStatus($id){
-        $company =  Company::find($id);
-        if (!$company){
+        $invoice =  Invoice::find($id);
+        if (!$invoice){
             abort(404);
         }
 
-        $company->status = !$company->status;
-        $company->save();
-        return redirect()->back()->with('success', "status successfully updated");
+        $invoice->is_close = !$invoice->is_close;
+        $invoice->save();
+        return $this->successMessage('Status Changed Successfully');
     }
 
 
     //for export to pdf and Excel file
     public function export(Request $request){
         if ($request->get('export-type') == "excel"){
-            return Excel::download(new \App\Exports\PDF\CompanyExport(), 'company.xlsx');
+            return Excel::download(new \App\Exports\PDF\InvoiceExport(), 'company.xlsx');
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new \App\Exports\PDF\CompanyExport(), 'company.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new \App\Exports\PDF\InvoiceExport(), 'company.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
 }

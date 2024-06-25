@@ -2,17 +2,31 @@
 
 <div class="row">
     <div class="col-md-6">
-        <x-input-select2
-            :title="__('page.order_number')"
-            :is_required="true"
-            :array="$orders"
-            label-size="col-md-4"
-            input-size="col-md-8"
-            name="order_id"
-            display_column="order_number"
-            :value="$is_edit ? $company->country_id : $order?->id"
-            :key="1"
-        />
+        @if($is_edit)
+            <x-input
+                :title="__('page.order_number')"
+                label-size="col-md-4"
+                input-size="col-md-8"
+                name="order_number"
+                type="text"
+                :required="true"
+                :readonly="true"
+                :value="$invoice->order?->order_number"
+            />
+        @else
+            <x-input-select2
+                :title="__('page.order_number')"
+                :is_required="true"
+                :array="$orders"
+                label-size="col-md-4"
+                input-size="col-md-8"
+                name="order_id"
+                display_column="order_number"
+                :value="$is_edit ? $company->country_id : $order?->id"
+                :key="1"
+            />
+        @endif
+
     </div>
     <div class="col-md-6">
         <x-input
@@ -23,7 +37,7 @@
             type="date"
             :required="true"
             :readonly="true"
-            :value="$is_edit ? $company->unique_id : $order?->order_date"
+            :value="$order?->order_date"
         />
     </div>
     <div class="col-md-6">
@@ -35,7 +49,7 @@
             type="text"
             :required="true"
             :readonly="true"
-            :value="$is_edit ? $company->unique_id :\App\Models\Invoice::GenerateInvoiceNumber()"
+            :value="$is_edit ? $invoice->invoice_number :\App\Models\Invoice::GenerateInvoiceNumber()"
         />
     </div>
     <div class="col-md-6">
@@ -47,7 +61,7 @@
             type="date"
             :required="true"
             :readonly="false"
-            :value="$is_edit ? $company->unique_id :\App\Models\Company::GenerateUniqueID()"
+            :value="$is_edit ? $invoice->invoice_date : date('Y-m-d')"
         />
     </div>
     <div class="col-md-6">
@@ -59,7 +73,7 @@
             type="text"
             :required="true"
             :readonly="true"
-            :value="$is_edit ? $company->unique_id : $order?->company?->code"
+            :value="$order?->company?->code"
         />
     </div>
     <div class="col-md-6">
@@ -71,7 +85,7 @@
             type="text"
             :required="true"
             :readonly="true"
-            :value="$is_edit ? $company->unique_id : $order?->company?->name"
+            :value="$order?->company?->name"
         />
     </div>
     <div class="col-md-6">
@@ -83,7 +97,7 @@
             type="text"
             :required="true"
             :readonly="true"
-            :value="$is_edit ? $company->unique_id : $order?->country?->name"
+            :value="$order?->country?->name"
         />
     </div>
     <div class="col-md-6">
@@ -95,7 +109,7 @@
             type="text"
             :required="true"
             :readonly="true"
-            :value="$is_edit ? $company->unique_id : $order?->service_type"
+            :value="$order?->service_type"
         />
     </div>
     <div class="col-md-12">
@@ -107,7 +121,7 @@
             type="text"
             :required="true"
             :readonly="true"
-            :value="$is_edit ? $company->unique_id : $order?->order_note"
+            :value="$order?->order_note"
         />
     </div>
 </div>
@@ -123,10 +137,10 @@
     @foreach($available_meal_systems as $item)
         <tr>
             <input type="hidden" value="{{$item->meal_system_id}}" required name="meal_system_id[]">
-            <td>{{$item->name}}</td>
-            <td>{{$item->count_of_meal}}</td>
+            <td>{{$is_edit ? $item->meal_system->name : $item->name}}</td>
+            <td>{{ $is_edit ? $item->total_meal : $item->count_of_meal}}</td>
             <td>
-                <input total-meal="{{$item->count_of_meal}}" value="{{$item->price}}" class="form-control price" required min="1" name="price[]">
+                <input total-meal="{{$is_edit ? $item->total_meal : $item->count_of_meal}}" value="{{$item->price}}" class="form-control price" required min="1" name="price[]">
             </td>
             <td class="total_price">{{$item->total_price}}</td>
         </tr>
@@ -142,7 +156,7 @@
             type="number"
             :required="true"
             :readonly="false"
-            :value="0"
+            :value="$is_edit ? $invoice->discount : 0"
         />
     </div>
     <div class="col-md-4">

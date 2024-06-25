@@ -85,6 +85,8 @@
         'total_discount' => 'Total Discount',
         'total_tax' => 'Total Tax',
         'total_amount' => 'Total Amount',
+        'closed' => 'closed',
+        'make_to_close' => 'make to close',
 
 
         'how_long_hours_order_will_editing_be_unavailable' => 'How Long Hour Order will be Edited',
