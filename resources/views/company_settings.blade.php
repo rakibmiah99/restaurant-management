@@ -1,7 +1,7 @@
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-            <x-card-header :name="__('page.hotels')" :url="route('hotel.index')" :url-name="__('page.back')"/>
+            <x-card-header :name="__('page.company_settings')" :url="route('settings.company')" :url-name="__('page.back')"/>
             <form action="{{route('settings.company.update')}}" method="post"  class="card-body">
                 @csrf
                 <x-input

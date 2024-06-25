@@ -16,7 +16,6 @@ class CompanySettingsController extends Controller
 
     public function companySettingsUpdate(CompanySettingsRequest $request)
     {
-
         try {
             $settings = CompanySetting::first();
             if ($settings){

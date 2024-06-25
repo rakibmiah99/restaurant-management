@@ -120,15 +120,15 @@
         <th>{{__('page.price')}}</th>
         <th>{{__('page.total_price')}}</th>
     </tr>
-    @foreach($order->available_meal_systems as $item)
+    @foreach($available_meal_systems as $item)
         <tr>
             <input type="hidden" value="{{$item->meal_system_id}}" required name="meal_system_id[]">
             <td>{{$item->name}}</td>
             <td>{{$item->count_of_meal}}</td>
             <td>
-                <input value="{{$item->price}}" class="form-control" required min="1" name="price[]">
+                <input total-meal="{{$item->count_of_meal}}" value="{{$item->price}}" class="form-control price" required min="1" name="price[]">
             </td>
-            <td>{{$item->total_price}}</td>
+            <td class="total_price">{{$item->total_price}}</td>
         </tr>
     @endforeach
 </table>
@@ -147,13 +147,14 @@
     </div>
     <div class="col-md-4">
         <x-input
+            after-label="<span value='{{$tax_percentage}}' id='tax_percentage'>({{$tax_percentage}}%)</span>"
             mode="vertical"
             :title="__('page.total_tax')"
             name="tax"
             type="number"
             :required="true"
-            :readonly="false"
-            :value="0"
+            :readonly="true"
+            :value="$tax_amount"
         />
     </div>
     <div class="col-md-4">
@@ -164,17 +165,78 @@
             type="number"
             :required="true"
             :readonly="true"
-            :value="0"
+            :value="$total_with_tax"
         />
     </div>
 </div>
 @endif
 <script>
+
     $('#order_id').on('change', function (){
         let order_id = $(this).val();
         let url = "{{route('invoice.create', 'order_id')}}".replace('order_id', order_id);
         console.log(url)
         location.href = url;
     })
+
+
+    $('.price').on('keyup', function (){
+        calculation();
+    });
+
+    $('#discount').on('keyup', function (){
+        calculation();
+    })
+
+
+
+
+
+
+
+    function calculation(){
+        let total_price_elements = $('.total_price');
+        let tax_percentage = $('#tax_percentage').attr('value');
+        let discount = $('#discount').val();
+        let price_elements = $('.price');
+
+
+        for(let i =0; i< price_elements.length; i++){
+            let price_el = price_elements.eq(i);
+            let price = price_el.val();
+            let tr = price_el.parent().parent();
+            let total_price_el = tr.find('.total_price');
+            let total_meal = price_el.attr('total-meal');
+            total_price_el.html(price * total_meal);
+        }
+
+        let total_price = 0;
+        for(let i = 0; i < total_price_elements.length; i++){
+            let price = total_price_elements.eq(i).html();
+            total_price += parseFloat(price);
+        }
+
+        tax_percentage = parseFloat(tax_percentage);
+        //get total price after discount
+        total_price -= discount;
+        //get percentage amount
+        let tax_amount = (total_price * tax_percentage) / 100;
+
+        //get total price with tax amount
+        total_price+=tax_amount;
+
+
+        $('#tax').val(tax_amount)
+        $('#total').val(total_price)
+
+    }
+
+
+    calculation();
+
+
+
+
+
 </script>
 

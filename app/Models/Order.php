@@ -246,8 +246,6 @@ class Order extends Model
     }
 
 
-
-
     static function GenerateOrderNumber()
     {
         $order_number = Order::orderBy('id', 'desc')->first()?->order_number;

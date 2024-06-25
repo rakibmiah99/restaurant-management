@@ -3,6 +3,7 @@
     $name = $attributes->get('name');
     $size = $attributes->get('size');
     $title = $attributes->get('title');
+    $after_label = $attributes->get('after-label');
     $value = $attributes->get('value');
     $type = $attributes->get('type') ?? "text";
     $input_size = "";
@@ -20,7 +21,7 @@
 <div class="mb-3 {{$mode == 'horizontal' ? 'row' : '' }}" >
     <label @if($size) style="font-size: 10px"  @endif for="{{$name}}" class="{{ $label_size  }} col-form-label">
         {{$title}}
-
+        @php echo $after_label; @endphp
         @if($required)
             <x-required/>
             <x-input-error name="{{$name}}"/>

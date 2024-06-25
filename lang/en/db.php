@@ -74,6 +74,17 @@
             'exit_date' => 'exit date',
             'order_type' => 'order type',
         ],
+        'invoice' => [
+            'invoice_number' => 'invoice number',
+            'invoice_date' => 'invoice date',
+            'order_number' => 'order number',
+            'hotel_id' => 'hotel',
+            'hall_id' => 'hall',
+            'total_price' => 'sub total',
+            'discount' => 'discount',
+            'tax_amount' => 'tax',
+            'total_with_tax' => 'total',
+        ],
         'order_monitoring' => [
             'order_number' => "Order Number",
             'meal_date' => "Meal Date",

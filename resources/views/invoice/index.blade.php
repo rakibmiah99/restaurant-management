@@ -2,9 +2,9 @@
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-           <x-card-header :url="route('company.create')" :name="__('page.companies')" :url-name="__('page.create')"/>
+           <x-card-header :url="route('invoice.create')" :name="__('page.companies')" :url-name="__('page.create')"/>
             <div class="mt-3">
-                <x-filter-data export-url="company.export" translate-from="db.company" :columns="$columns"/>
+                <x-filter-data export-url="invoice.export" translate-from="db.invoice" :columns="$columns"/>
 
                 <div class="table-responsive mt-2 text-nowrap">
                     <table class="table">
@@ -12,7 +12,7 @@
                         <tr>
                             <th>{{__('page.sl')}}</th>
                             @foreach(request()->columns ?? $columns  as $column)
-                                <th>{{__('db.company.'.$column)}}</th>
+                                <th>{{__('db.invoice.'.$column)}}</th>
                             @endforeach
                             <th>{{__('page.action')}}</th>
                         </tr>
@@ -22,8 +22,12 @@
                                 <tr>
                                     <td>{{$key+1}}</td>
                                     @foreach(request()->columns ?? $columns as $column)
-                                        @if($column == "status")
-                                            <td>{{$item->$column ? \App\Enums\Status::ACTIVE->value : \App\Enums\Status::INACTIVE->value }}</td>
+                                        @if($column == "order_number")
+                                            <td>{{$item->order?->order_number}}</td>
+                                        @elseif($column == "hotel_id")
+                                            <td>{{$item->order?->hotel?->name}}</td>
+                                        @elseif($column == "hall_id")
+                                            <td>{{$item->order?->hall?->name}}</td>
                                         @else
                                             <td>{{$item->$column}}</td>
                                         @endif
@@ -65,7 +69,7 @@
                 <tbody id="data" class="table-border-bottom-0">
                     @foreach($columns as $column)
                         <tr>
-                            <th>{{__('db.company.'.$column)}}</th>
+                            <th>{{__('db.invoice.'.$column)}}</th>
                             <th>:</th>
                             <td id="v-{{$column}}"></td>
                         </tr>

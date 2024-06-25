@@ -3,6 +3,7 @@
         'companies' => 'Companies',
         'company_code' => 'Company Code',
         'company_name' => 'Company Name',
+        'company_website' => 'Company Website',
         'country' => 'Country',
         'meal_price' => 'Meal Price',
         'company_email' => 'Company Email',
@@ -79,6 +80,14 @@
         'invoice_date' => 'Invoice Date',
         'total_meal' => 'Total Meal',
         'total_price' => 'Total Price',
+        'tax' => 'Tax',
+        'company_settings' => 'Company Settings',
+        'total_discount' => 'Total Discount',
+        'total_tax' => 'Total Tax',
+        'total_amount' => 'Total Amount',
+
+
+        'how_long_hours_order_will_editing_be_unavailable' => 'How Long Hour Order will be Edited',
         'this_meal_system_already_exist' => 'this meal system already',
         'this_meal_system_has_no_price.' => 'this meal system has no price',
         'please_select_a_meal_system' => 'please select a meal system'

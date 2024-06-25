@@ -25,6 +25,7 @@ class InvoiceCreateRequest extends FormRequest
             'order_id' => 'required|exists:orders,id',
             'invoice_date' => 'required|date',
             'invoice_number' => 'required|unique:invoices,invoice_number',
+            'discount' => 'required|numeric',
             'meal_system_id' => 'required|array',
             'meal_system_id.*' => 'required|exists:meal_systems,id',
             'price' => 'required|array',
