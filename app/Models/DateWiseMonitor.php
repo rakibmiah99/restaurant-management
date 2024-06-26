@@ -13,17 +13,19 @@ class DateWiseMonitor extends Model
     public function scopeFilter(Builder $builder)
     {
         $request = request();
-        $builder->with(['order' => function ($order) use($request) {
-            if ($hotel_id = $request->get('hotel')){
-                $order->where('hotel_id', $hotel_id);
-            }
-            if ($hall_id = $request->get('hall')){
-                $order->where('hall_id', $hall_id);
-            }
-            if ($country_id = $request->get('country')){
-                $order->where('country_id', $country_id);
-            }
-        }, 'meal_entries'])->whereDate('meal_date', '>=', date('Y-m-d'))
+        $builder->with(['order', 'meal_entries'])
+            ->whereHas('order', function ($order) use($request) {
+                if ($hotel_id = $request->get('hotel')){
+                    $order->where('hotel_id', $hotel_id);
+                }
+                if ($hall_id = $request->get('hall')){
+                    $order->where('hall_id', $hall_id);
+                }
+                if ($country_id = $request->get('country')){
+                    $order->where('country_id', $country_id);
+                }
+            })
+            ->whereDate('meal_date', '>=', date('Y-m-d'))
             ->orderBy('meal_date')
             ->orderBy('order_id', 'desc');
 

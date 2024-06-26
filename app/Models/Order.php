@@ -184,6 +184,10 @@ class Order extends Model
     {
         return $this->meal_systems->min('from_date');
     }
+    public function getDaysAttribute()
+    {
+        return $this->meal_systems->sum('days');
+    }
     public function getLastMealDateAttribute()
     {
         return $this->meal_systems->max('to_date');
@@ -244,6 +248,7 @@ class Order extends Model
             ];
         })->filter();
     }
+
 
 
     static function GenerateOrderNumber()

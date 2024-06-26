@@ -64,7 +64,7 @@
 
         />
     </div>
-    @foreach(request()->except(['from_date', 'to_date', 'hotel', 'hall', 'country']) as $input_name=>$value)
+    @foreach(request()->except(['from_date', 'to_date', 'hotel', 'hall', 'country','meal_system']) as $input_name=>$value)
         @if(is_array($value))
             @foreach($value as $item)
                 <input type="hidden" name="{{$input_name}}[]" value="{{$item}}"/>

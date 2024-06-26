@@ -66,4 +66,5 @@ class MealSystem extends Model
         $ids = [8,9];
         return MealSystem::whereIn('id', $ids)->get();
     }
+
 }

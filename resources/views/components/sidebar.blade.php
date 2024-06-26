@@ -5,7 +5,7 @@
 @endphp
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
-        <a href="index.html" class="app-brand-link">
+        <a href="/" class="app-brand-link">
               <span class="app-brand-logo demo">
                 <img height="50px" src="{{asset('assets/logo.png')}}"/>
               </span>
@@ -20,9 +20,9 @@
     <div class="menu-inner-shadow"></div>
 
     <ul class="menu-inner py-1">
-
-        <x-menu-item url="" :name="__('dashboard')"/>
+        <x-menu-item icon="bx bx-grid-alt bx-sm" url="/" :name="__('dashboard')"/>
         <x-menu-item-dropdown
+            bi-icon="bi-window"
             :name="__('menu.company_management')"
             :active="$segment1 == 'company'"
             :child="[
@@ -34,6 +34,7 @@
             ]
         "/>
         <x-menu-item-dropdown
+            bi-icon="bi-cookie"
             :name="__('menu.meal_management')"
             :active="$segment1 == 'meal-price'"
             :child="[
@@ -46,6 +47,7 @@
         "/>
 
         <x-menu-item-dropdown
+            bi-icon="bi-building-gear"
             :name="__('menu.hotel_management')"
             :active="$segment1 == 'hotel' || $segment1 == 'hall'"
             :child="[
@@ -63,6 +65,7 @@
         "/>
 
         <x-menu-item-dropdown
+            bi-icon="bi-list-check"
             :name="__('menu.order_management')"
             :active="$segment1 == 'order' || $segment1 == 'order-monitoring' || $segment1 == 'complete-orders' || $segment1 == 'invoice' "
             :child="[
@@ -91,6 +94,7 @@
 
 
         <x-menu-item-dropdown
+            bi-icon="bi-graph-up-arrow"
             :name="__('menu.reports')"
             :active="$segment1 == 'report'"
             :child="[
@@ -110,7 +114,8 @@
                     'name' => __('menu.kitchen_report')
                 ],
                 [
-                    'url' => 'd',
+                    'url' => route('report.revenue'),
+                    'active' => $segment2 == 'revenue',
                     'name' => __('menu.revenue_report')
                 ],
                 [
@@ -119,7 +124,8 @@
                     'name' => __('menu.order_report')
                 ],
                 [
-                    'url' => 'd',
+                    'url' => route('report.invoice'),
+                    'active' => $segment2 == 'invoice',
                     'name' => __('menu.invoice_report')
                 ],
                 [
@@ -132,6 +138,7 @@
 
 
         <x-menu-item-dropdown
+            bi-icon="bi-gear"
             :name="__('menu.settings')"
             :active="$segment1 == 'company-settings'"
             :child="[
@@ -144,6 +151,7 @@
         "/>
 
         <x-menu-item-dropdown
+            bi-icon="bi-braces-asterisk"
             :name="__('menu.roles_management')"
             :child="[
                 [
@@ -158,6 +166,7 @@
         "/>
 
         <x-menu-item-dropdown
+            bi-icon="bi-activity"
             :name="__('menu.user_activity')"
             :child="[
                 [

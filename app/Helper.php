@@ -52,4 +52,31 @@ class Helper
     }
 
 
+    /**
+     * Calculates the growth percentage between two values.
+     *
+     * If $old_value is not zero, computes the percentage growth from $old_value to $new_value.
+     * If $old_value is zero, returns $new_value.
+     *
+     * @param float $new_value The new value (current value).
+     * @param float $old_value The old value (previous value).
+     * @return float|int The growth percentage if $old_value is not zero, otherwise returns $new_value.
+     */
+
+    public static function GetGrowth($new_value, $old_value)
+    {
+        /** law of two year percentage change
+         *
+         *
+         *      new value - old value
+         *    ------------------------ *  100
+         *          old value
+         *
+         *
+         */
+
+        return $old_value ? (($new_value - $old_value) / $old_value ) * 100 : $new_value;
+    }
+
+
 }

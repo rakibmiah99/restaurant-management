@@ -112,8 +112,16 @@ Route::middleware(['auth.check', 'localization'])->prefix('/')->group(function (
         Route::get('/order', [\App\Http\Controllers\ReportController::class, 'order'])->name('order');
         Route::get('/export-order', [\App\Http\Controllers\ReportController::class, 'export_order'])->name('export.order');
 
+        Route::get('/invoice', [\App\Http\Controllers\ReportController::class, 'invoice'])->name('invoice');
+        Route::get('/export-invoice', [\App\Http\Controllers\ReportController::class, 'export_invoice'])->name('export.invoice');
+
+        Route::get('/revenue', [\App\Http\Controllers\ReportController::class, 'revenue'])->name('revenue');
+        Route::get('/export-revenue', [\App\Http\Controllers\ReportController::class, 'export_revenue'])->name('export.revenue');
+
         Route::get('/kitchen', [\App\Http\Controllers\ReportController::class, 'kitchen'])->name('kitchen');
         Route::get('/export-kitchen', [\App\Http\Controllers\ReportController::class, 'export_kitchen'])->name('export.kitchen');
+
+
         Route::get('/packaging', [\App\Http\Controllers\ReportController::class, 'packaging'])->name('packaging');
         Route::get('/export-packaging', [\App\Http\Controllers\ReportController::class, 'export_packaging'])->name('export.packaging');
 

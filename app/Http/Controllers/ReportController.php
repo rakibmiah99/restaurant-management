@@ -5,6 +5,7 @@ use App\Models\Company;
 use App\Models\Country;
 use App\Models\Hall;
 use App\Models\Hotel;
+use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\OrderMonitoring;
 use Illuminate\Http\Request;
@@ -72,6 +73,43 @@ class ReportController extends Controller
         }
         else if($request->get('export-type') == "pdf"){
             return Excel::download(new \App\Exports\PDF\ExportOrderReport(), 'order_export.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        }
+    }
+
+    public function invoice()
+    {
+        $columns = array_keys(__('db.report.invoice'));
+        $hotels = Hotel::get();
+        $companies = Company::get();
+//        return Order::latest()->first()->order_monitoring->unique('meal_date')->count();
+        $data = Invoice::ReportFilter()->paginate(10);
+        return view('reports.invoice.index', compact('columns', 'data', 'hotels', 'companies'));
+    }
+
+    public function export_invoice(Request $request){
+        if ($request->get('export-type') == "excel"){
+            return Excel::download(new \App\Exports\PDF\ExportInvoiceReport(), 'invoice_export.xlsx');
+        }
+        else if($request->get('export-type') == "pdf"){
+            return Excel::download(new \App\Exports\PDF\ExportInvoiceReport(), 'invoice_export.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        }
+    }
+    public function revenue()
+    {
+        $columns = array_keys(__('db.report.revenue'));
+        $hotels = Hotel::get();
+        $companies = Company::get();
+//        return Order::latest()->first()->order_monitoring->unique('meal_date')->count();
+        $data = Invoice::ReportFilter()->paginate(10);
+        return view('reports.revenue.index', compact('columns', 'data', 'hotels', 'companies'));
+    }
+
+    public function export_revenue(Request $request){
+        if ($request->get('export-type') == "excel"){
+            return Excel::download(new \App\Exports\PDF\ExportRevenueReport(), 'revenue_export.xlsx');
+        }
+        else if($request->get('export-type') == "pdf"){
+            return Excel::download(new \App\Exports\PDF\ExportRevenueReport(), 'revenue_export.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
 

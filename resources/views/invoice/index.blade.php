@@ -40,7 +40,7 @@
                                                 <i class="bx bx-dots-vertical-rounded"></i>
                                             </button>
                                             <div class="dropdown-menu" style="">
-                                                <a data-bs-toggle="modal" data-bs-target="#viewModal" class="dropdown-item view-btn" href="javascript:void(0);" url="{{route('invoice.show', $item->id)}}"><i class='bx bx-low-vision'></i>{{__('page.view')}}</a>
+                                                <a {{--data-bs-toggle="modal" data-bs-target="#viewModal"--}} class="dropdown-item view-btn" url="javascript:void(0);" href="{{route('invoice.show', $item->id)}}"><i class='bx bx-low-vision'></i>{{__('page.view')}}</a>
                                                 @if(!$item->is_close)
                                                     <a class="dropdown-item" href="{{route('invoice.edit', $item->id)}}"><i class="bx bx-edit-alt me-1"></i>{{__('page.edit')}}</a>
                                                 @endif
