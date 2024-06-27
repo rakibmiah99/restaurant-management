@@ -7,10 +7,9 @@
                     <div class="d-flex align-items-end row">
                         <div class="col-sm-7">
                             <div class="card-body">
-                                <h5 class="card-title text-primary">Congratulations John! 🎉</h5>
+                                <h5 class="card-title text-primary">{{__('page.congratulations')." ".auth()->user()->name}} ! 🎉</h5>
                                 <p class="mb-4">
-                                    You have done <span class="fw-bold">72%</span> more sales today. Check your new badge in
-                                    your profile.
+                                    {{__('page.you_are_login_as')}} <span class="fw-bold">supper admin</span>
                                 </p>
 
                                 <a href="javascript:;" class="btn btn-sm btn-outline-primary">View Badges</a>
@@ -19,7 +18,7 @@
                         <div class="col-sm-5 text-center text-sm-left">
                             <div class="card-body pb-0 px-0 px-md-4">
                                 <img
-                                    src="../assets/img/illustrations/man-with-laptop-light.png"
+                                    src="{{asset('assets/img/illustrations/man-with-laptop-light.png')}}"
                                     height="140"
                                     alt="View Badge User"
                                     data-app-dark-img="illustrations/man-with-laptop-dark.png"

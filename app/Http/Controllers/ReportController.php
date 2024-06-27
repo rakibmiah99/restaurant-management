@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Helper;
 use App\Models\Company;
 use App\Models\Country;
 use App\Models\Hall;
@@ -20,7 +21,7 @@ class ReportController extends Controller
         $countries = Country::get();
         $companies = Company::get();
         $halls = request()->get('hotel') ? Hall::where('hotel_id', request()->get('hotel') )->get() : [];
-        $data = Order::ReportFilter()->paginate(10);
+        $data = Order::ReportFilter()->paginate(Helper::PerPage())->withQueryString();
 
         return view('reports.hotel.index', compact('columns', 'data', 'hotels', 'countries', 'companies', 'halls'));
     }
@@ -42,7 +43,7 @@ class ReportController extends Controller
         $countries = Country::get();
         $companies = Company::get();
         $halls = request()->get('hotel') ? Hall::where('hotel_id', request()->get('hotel') )->get() : [];
-        $data = Order::ReportFilter()->paginate(10);
+        $data = Order::ReportFilter()->paginate(Helper::PerPage())->withQueryString();
         return view('reports.hall.index', compact('columns', 'data', 'hotels', 'countries', 'companies', 'halls'));
     }
 
@@ -63,7 +64,7 @@ class ReportController extends Controller
         $companies = Company::get();
 //        return Order::latest()->first()->order_monitoring->unique('meal_date')->count();
         $halls = request()->get('hotel') ? Hall::where('hotel_id', request()->get('hotel') )->get() : [];
-        $data = Order::ReportFilter()->paginate(10);
+        $data = Order::ReportFilter()->paginate(Helper::PerPage())->withQueryString();
         return view('reports.order.index', compact('columns', 'data', 'hotels', 'countries', 'companies', 'halls'));
     }
 
@@ -82,7 +83,7 @@ class ReportController extends Controller
         $hotels = Hotel::get();
         $companies = Company::get();
 //        return Order::latest()->first()->order_monitoring->unique('meal_date')->count();
-        $data = Invoice::ReportFilter()->paginate(10);
+        $data = Invoice::ReportFilter()->paginate(Helper::PerPage())->withQueryString();
         return view('reports.invoice.index', compact('columns', 'data', 'hotels', 'companies'));
     }
 
@@ -100,7 +101,7 @@ class ReportController extends Controller
         $hotels = Hotel::get();
         $companies = Company::get();
 //        return Order::latest()->first()->order_monitoring->unique('meal_date')->count();
-        $data = Invoice::ReportFilter()->paginate(10);
+        $data = Invoice::ReportFilter()->paginate(Helper::PerPage())->withQueryString();
         return view('reports.revenue.index', compact('columns', 'data', 'hotels', 'companies'));
     }
 
@@ -116,7 +117,7 @@ class ReportController extends Controller
 
     public function kitchen()
     {
-        $data = OrderMonitoring::KitchenQuery()->paginate(10);
+        $data = OrderMonitoring::KitchenQuery()->paginate(Helper::PerPage())->withQueryString();
         $columns = array_keys(__('db.report.kitchen'));
         $countries = Country::get();
         return view('reports.kitchen.index', compact('columns', 'data','countries'));
@@ -136,7 +137,7 @@ class ReportController extends Controller
 
     public function packaging()
     {
-        $data = OrderMonitoring::PackagingQuery()->paginate(10);
+        $data = OrderMonitoring::PackagingQuery()->paginate(Helper::PerPage())->withQueryString();
         $columns = array_keys(__('db.report.packaging'));
         $countries = Country::get();
         $hotels = Hotel::get();

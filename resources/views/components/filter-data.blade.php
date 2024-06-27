@@ -1,10 +1,9 @@
 <form class="d-flex px-2 justify-content-between" id="search-form">
     <div class="d-flex align-items-center">
         <select name="perpage" onchange="$('#search-form').trigger('submit')" style="width: 150px" class="form-select form-select-sm">
-            <option @if(request()->perpage == 10) selected @endif value="10">10</option>
-            <option @if(request()->perpage == 30) selected @endif value="30">30</option>
-            <option @if(request()->perpage == 50) selected @endif value="50">50</option>
-            <option @if(request()->perpage == 100) selected @endif value="100">100</option>
+            @foreach(config('page.page_view_options') as $item)
+                <option @if(request()->perpage == $item) selected @endif value="{{$item}}">{{$item}}</option>
+            @endforeach
         </select>
         <a
             href="{{route($attributes->get('export-url'), array_merge(request()->all(), ['export-type' => 'pdf']))}}"

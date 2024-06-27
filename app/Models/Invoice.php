@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Status;
 use App\Model;
 use App\Observers\InvoiceObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -17,6 +18,25 @@ class Invoice extends Model
     public function scopeFilter(Builder $builder){
         $request = request();
         $builder->with(['order', 'invoice_data']);
+        if ($q = trim($request->q)) {
+            foreach (array_keys(__('db.invoice')) as $column){
+                if ($column == 'order_number'){
+                    $builder->orWhereRelation('order', 'order_number', 'LIKE', "%{$q}%");
+                }
+                else if ($column == 'hotel_id'){
+                    $builder->orWhereRelation('order.hotel', 'name', 'LIKE', "%{$q}%");
+                }
+                else if ($column == 'hall_id'){
+                    $builder->orWhereRelation('order.hall', 'name', 'LIKE', "%{$q}%");
+                }
+                else if ($column == 'invoice_number'){
+                    $builder->orWhere('invoice_number', 'LIKE', "%{$q}%");
+                }
+                else if ($column == 'invoice_date'){
+                    $builder->orWhereDate('invoice_date', $q);
+                }
+            }
+        }
     }
 
     public function scopeReportFilter(Builder $builder){

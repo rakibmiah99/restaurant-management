@@ -7,14 +7,18 @@ use Illuminate\Container\Container;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
+
 class Helper
 {
+
+
+    public int $perpage = 1;
     /**
      * Create a new class instance.
      */
     public function __construct()
     {
-        //
+
     }
 
     static public function ConvertTo12HourFormat($time24) {
@@ -77,6 +81,25 @@ class Helper
 
         return $old_value ? (($new_value - $old_value) / $old_value ) * 100 : $new_value;
     }
+
+
+    public static function GenerateFileName($name, $extension): string
+    {
+        return $name."_".Carbon::now()->format('Y_m_d_H_i').".".$extension;
+    }
+
+    public static function PerPage()
+    {
+        return request()->perpage ?? config('page.per_page_view');
+    }
+
+    public static function PageIndex()
+    {
+        $page_number = request()->page ?? 1;
+        $index = ($page_number - 1)  *  self::PerPage();
+        return $index+1;
+    }
+
 
 
 }

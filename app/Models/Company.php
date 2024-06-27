@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Observers\CategoryObserver;
+use App\Enums\Status;
 use App\Observers\CompanyObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,8 +17,23 @@ class Company extends Model
 
     public function scopeFilter(Builder $builder){
         $request = request();
-        if ($q = $request->q){
-            $builder->where('name', 'like', '%'.$q."%");
+        if ($q = trim($request->q)) {
+            foreach ($this->getColumns() as $column){
+                if ($column == 'country_id'){
+                    $builder->orWhereRelation('country', 'name', 'like', '%'.$q."%");
+                }
+                elseif ($column == 'meal_price_id'){
+                    $builder->orWhereRelation('meal_price', 'name', 'like', '%'.$q."%");
+                }
+                elseif ($column == 'status' && (strtolower($q) == strtolower(Status::ACTIVE->value) || strtolower($q) == strtolower(Status::INACTIVE->value))){
+                    $status = strtolower($q) == strtolower(Status::ACTIVE->value) ? 1 : 0;
+                    $builder->orWhere('status', $status);
+                }
+                else{
+                    $builder->orWhere($column, 'like', '%'.$q."%");
+                }
+
+            }
         }
     }
 

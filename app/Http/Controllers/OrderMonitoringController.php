@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\OrderExport;
 use App\Exports\OrderMonitorExport;
+use App\Helper;
 use App\Models\Country;
 use App\Models\DateWiseMonitor;
 use App\Models\Hall;
@@ -22,7 +23,7 @@ class OrderMonitoringController extends Controller
         $countries = Country::get();
         $meal_systems = MealSystem::get();
         $halls = request()->get('hotel') ? Hall::where('hotel_id', request()->get('hotel') )->get() : [];
-        $data =  DateWiseMonitor::filter()->paginate($request->perpage ?? 10);
+        $data =  DateWiseMonitor::InputFilter()->filter()->paginate(Helper::PerPage())->withQueryString();
         return view('order_monitoring.index', compact('data', 'columns', 'hotels', 'countries', 'meal_systems', 'halls'));
     }
 

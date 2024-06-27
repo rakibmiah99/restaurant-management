@@ -13,6 +13,7 @@ class HotelExport implements FromView
     use PDFExportTrait;
     public function __construct()
     {
+        $this->title = __('page.hotel_list');
         $this->handle_size = 4;
         $this->headings = 'db.hotel';
         $columns = (new Hotel())->getColumns();
@@ -25,6 +26,7 @@ class HotelExport implements FromView
         $columns = $this->valid_column;
         $headings = $this->headings;
         $per_cell =  $this->perCell();
-        return view('exports.hotel', compact('data','columns', 'per_cell', 'headings'));
+        $title = $this->title;
+        return view('exports.hotel', compact('data','title','columns', 'per_cell', 'headings'));
     }
 }

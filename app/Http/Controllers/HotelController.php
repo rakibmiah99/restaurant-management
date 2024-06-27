@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\ExportFormat;
 use App\Exports\HotelExport;
+use App\Helper;
 use App\Http\Requests\Hotel\CreateHotelRequest;
 use App\Http\Requests\Hotel\UpdateHotelRequest;
 use App\Models\Hotel;
@@ -14,7 +15,7 @@ class HotelController extends Controller
 {
     public function index(Request $request){
         $columns = (new Hotel())->getColumns();
-        $data = Hotel::filter()->paginate($request->perpage ?? 10)->withQueryString();
+        $data = Hotel::filter()->paginate(Helper::PerPage())->withQueryString();
         return view('hotel.index', compact('data', 'columns'));
     }
 
@@ -102,10 +103,10 @@ class HotelController extends Controller
     //for export to pdf and Excel file
     public function export(Request $request){
         if ($request->get('export-type') == "excel"){
-            return Excel::download(new \App\Exports\PDF\HotelExport(), 'hotel.xlsx');
+            return Excel::download(new \App\Exports\PDF\HotelExport(), Helper::GenerateFileName('hotel', ExportFormat::XLSX->value));
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new \App\Exports\PDF\HotelExport(), 'hotel.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new \App\Exports\PDF\HotelExport(), Helper::GenerateFileName('hotel', ExportFormat::PDF->value), \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
 }

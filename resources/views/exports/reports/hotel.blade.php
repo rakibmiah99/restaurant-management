@@ -1,4 +1,4 @@
-<x-export-layout :per_cell="$per_cell" :columns="$columns" :headings="$headings">
+<x-export-layout :title="$title"  :per_cell="$per_cell" :columns="$columns" :headings="$headings">
     @foreach ($data as $key=>$item)
         <tr>
             <td style="font-size: 9px" width="5">{{$key+1}}</td>

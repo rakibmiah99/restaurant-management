@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Status;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,6 +38,47 @@ class DateWiseMonitor extends Model
             $builder->whereBetween('meal_date', [$request->get('from_date'), $request->get('to_date')]);
         }
     }
+
+
+    public function scopeInputFilter(Builder $builder){
+        $request = request();
+        if ($q = trim($request->q)) {
+            $meal_system_id = null;
+            $meal_system_name = strtolower($q);
+            if ($meal_system_name == "breakfast"){
+                $meal_system_id = 5;
+            }
+            else if ($meal_system_name == "lunch"){
+                $meal_system_id = 6;
+            }
+            else if ($meal_system_name == "dinner"){
+                $meal_system_id = 7;
+            }
+            else if ($meal_system_name == "seheri"){
+                $meal_system_id = 9;
+            }
+            else if ($meal_system_name == "iftar"){
+                $meal_system_id = 10;
+            }
+
+            foreach (array_keys(__('db.order_monitoring')) as $column){
+                if ($column == 'order_number'){
+                    $builder->orWhereRelation('order','order_number', 'like', "%{$q}%");
+                }
+                elseif ($column == 'meal_date'){
+                    $builder->orWhereDate('meal_date', $q);
+                }
+                elseif ($column == 'meal_date'){
+                    $builder->orWhereDate('meal_date', $q);
+                }
+                elseif ($column == 'meal_system_id' && $meal_system_id){
+                    $builder->orWhere('meal_system_id', $meal_system_id);
+                }
+
+            }
+        }
+    }
+
 
     public function order()
     {

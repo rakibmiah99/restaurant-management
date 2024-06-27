@@ -8,7 +8,7 @@ use Barryvdh\Debugbar\Facades\Debugbar;
 class Model extends \Illuminate\Database\Eloquent\Model
 {
 
-    public function getColumns(): array
+    public function getColumns($final_exclude = []): array
     {
         $columns =  $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());
         $exclude = [
@@ -20,7 +20,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
             'updated_at'
         ];
         $selectedColumns = array_diff($columns, $exclude);
-
-        return $selectedColumns = array_merge($selectedColumns, $this->attributes_as_column ?? []);
+        $selectedColumns = array_merge($selectedColumns, $this->attributes_as_column ?? []);
+        return $selectedColumns = array_diff($selectedColumns, $final_exclude);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper;
 use App\Http\Requests\Company\CompanyCreateRequest;
 use App\Http\Requests\Company\CompanyUpdateRequest;
 use App\Http\Requests\Invoice\InvoiceCreateRequest;
@@ -21,7 +22,7 @@ class InvoiceController extends Controller
 {
     public function index(Request $request){
         $columns = array_keys(__('db.invoice'));
-        $data = Invoice::filter()->paginate($request->perpage ?? 10)->withQueryString();
+        $data = Invoice::filter()->paginate(Helper::PerPage())->withQueryString();
         return view('invoice.index', compact('data', 'columns'));
     }
 

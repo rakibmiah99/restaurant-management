@@ -13,6 +13,7 @@ class MealPriceExport implements FromView
     use PDFExportTrait;
     public function __construct()
     {
+        $this->title = __('page.meal_price_list');
         $this->headings = 'db.meal_price';
         $columns = (new MealPrice())->getColumns();
         $this->setValidColumns($columns);
@@ -24,6 +25,7 @@ class MealPriceExport implements FromView
         $columns = $this->valid_column;
         $headings = $this->headings;
         $per_cell =  $this->perCell();
-        return view('exports.meal_price', compact('data','columns', 'per_cell', 'headings'));
+        $title = $this->title;
+        return view('exports.meal_price', compact('data','title','columns', 'per_cell', 'headings'));
     }
 }

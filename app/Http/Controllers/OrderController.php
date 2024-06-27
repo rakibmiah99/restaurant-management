@@ -31,7 +31,7 @@ class OrderController extends Controller
 {
     public function index(){
         $columns = (new Order())->getColumns();
-        $data = Order::filter()->paginate($request->perpage ?? 10)->withQueryString();
+        $data = Order::filter()->paginate(Helper::PerPage())->withQueryString();
         return view('order.index', compact('data', 'columns'));
     }
 

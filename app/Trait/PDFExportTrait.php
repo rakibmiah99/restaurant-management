@@ -6,6 +6,7 @@ trait PDFExportTrait
 {
     public array $valid_column = [];
     public string $headings;
+    public string $title;
     public int $handle_size = 0;
     public function setValidColumns($columns)
     {

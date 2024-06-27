@@ -97,6 +97,12 @@
         'next_7_days_orders' => 'Next 7 Days Orders',
         'today_orders' => 'Today Orders',
         'complete_orders' => 'Complete Orders',
+        'congratulations' => 'Congratulations',
+        'company_list' => 'Company List',
+        'meal_price_list' => 'Meal Price List',
+        'hotel_list' => 'Hotel List',
+
+        'you_are_login_as' => 'You are logged in as',
         'this_week_meal_chart' => 'This Week Meal Chart',
         'how_long_hours_order_will_editing_be_unavailable' => 'How Long Hour Order will be Edited',
         'this_meal_system_already_exist' => 'this meal system already',

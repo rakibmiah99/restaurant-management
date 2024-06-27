@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Alkoumi\LaravelHijriDate\Hijri;
+use App\Enums\Status;
 use App\Model;
 use App\Observers\OrderObserver;
-use Dflydev\DotAccessData\Data;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,9 +18,38 @@ class Order extends Model
 
     protected array $attributes_as_column = ['total_guest', 'entry_date', 'exit_date'];
 
+    public function scopeFilter(Builder $builder){
+        $request = request();
+        if ($q = trim($request->q)) {
+            foreach ($this->getColumns($this->attributes_as_column) as $column){
+                if ($column == 'country_id'){
+                    $builder->orWhereRelation('country', 'name', 'like', '%'.$q."%");
+                }
+                elseif ($column == 'company_id'){
+                    $builder->orWhereRelation('company', 'name', 'like', '%'.$q."%");
+                }
+                elseif ($column == 'hotel_id'){
+                    $builder->orWhereRelation('hotel', 'name', 'like', '%'.$q."%");
+                }
+                elseif ($column == 'hall_id'){
+                    $builder->orWhereRelation('hall', 'name', 'like', '%'.$q."%");
+                }
+                elseif ($column == 'mpi_for_normal'){
+                    $builder->orWhereRelation('meal_price_for_normal', 'name', 'like', '%'.$q."%");
+                }
+                elseif ($column == 'mpi_for_ramadan'){
+                    $builder->orWhereRelation('meal_price_for_ramadan', 'name', 'like', '%'.$q."%");
+                }
+                elseif ($column == 'status' && (strtolower($q) == strtolower(Status::ACTIVE->value) || strtolower($q) == strtolower(Status::INACTIVE->value))){
+                    $status = strtolower($q) == strtolower(Status::ACTIVE->value) ? 1 : 0;
+                    $builder->orWhere('status', $status);
+                }
+                else{
+                    $builder->orWhere($column, 'like', '%'.$q."%");
+                }
 
-    public function scopeFilter(){
-
+            }
+        }
     }
 
     public function scopeReportFilter(Builder $builder)

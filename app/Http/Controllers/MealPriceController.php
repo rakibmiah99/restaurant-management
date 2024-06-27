@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ExportFormat;
 use App\Exports\CompanyExport;
 use App\Exports\MealPriceExport;
+use App\Helper;
 use App\Http\Requests\Company\CompanyCreateRequest;
 use App\Http\Requests\Company\CompanyUpdateRequest;
 use App\Http\Requests\MealPrice\CreateMealPriceRequest;
@@ -22,7 +24,7 @@ class MealPriceController extends Controller
 {
     public function index(Request $request){
         $columns = (new MealPrice())->getColumns();
-        $data = MealPrice::filter()->paginate($request->perpage ?? 10)->withQueryString();
+        $data = MealPrice::filter()->paginate(Helper::PerPage())->withQueryString();
         return view('meal_price.index', compact('data', 'columns'));
     }
 
@@ -183,10 +185,10 @@ class MealPriceController extends Controller
     //for export to pdf and Excel file
     public function export(Request $request){
         if ($request->get('export-type') == "excel"){
-            return Excel::download(new \App\Exports\PDF\MealPriceExport(), 'meal_price.xlsx');
+            return Excel::download(new \App\Exports\PDF\MealPriceExport(), Helper::GenerateFileName('meal_price', ExportFormat::XLSX->value));
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new \App\Exports\PDF\MealPriceExport(), 'meal_price.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new \App\Exports\PDF\MealPriceExport(), Helper::GenerateFileName('meal_price', ExportFormat::PDF->value), \Maatwebsite\Excel\Excel::DOMPDF);
         }
 
     }

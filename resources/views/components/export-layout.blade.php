@@ -1,5 +1,6 @@
 @php
     $per_cell = $attributes->get('per_cell');
+    $title = $attributes->get('title');
     $columns = $attributes->get('columns');
     $headings = $attributes->get('headings');
 @endphp
@@ -18,7 +19,7 @@
         <td align="center" colspan="{{count($columns)+1}}">
             <img src="{{public_path('assets/logo.png')}}"  alt="logo" height="50" width="50"/>
             <br>
-            Title
+            {{$title}}
             <br>
             {{date('d M,Y h:i:s A')}}
             <br>

@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\CompanyExport;
+use App\Enums\ExportFormat;
+use App\Helper;
 use App\Http\Requests\Company\CompanyCreateRequest;
 use App\Http\Requests\Company\CompanyUpdateRequest;
 use App\Models\Company;
@@ -15,7 +16,7 @@ class CompanyController extends Controller
 {
     public function index(Request $request){
         $columns = (new Company())->getColumns();
-        $data = Company::filter()->paginate($request->perpage ?? 10)->withQueryString();
+        $data = Company::filter()->paginate(Helper::PerPage())->withQueryString();
         return view('company.index', compact('data', 'columns'));
     }
 
@@ -92,10 +93,10 @@ class CompanyController extends Controller
     //for export to pdf and Excel file
     public function export(Request $request){
         if ($request->get('export-type') == "excel"){
-            return Excel::download(new \App\Exports\PDF\CompanyExport(), 'company.xlsx');
+            return Excel::download(new \App\Exports\PDF\CompanyExport(), Helper::GenerateFileName('company', ExportFormat::XLSX->value));
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new \App\Exports\PDF\CompanyExport(), 'company.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new \App\Exports\PDF\CompanyExport(), Helper::GenerateFileName('company', ExportFormat::PDF->value), \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
 }

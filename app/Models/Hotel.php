@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Status;
 use App\Model;
 use App\Observers\HotelObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -15,8 +16,16 @@ class Hotel extends Model
     protected $guarded = [];
     public function scopeFilter(Builder $builder){
         $request = request();
-        if ($q = $request->q){
-            $builder->where('name', 'like', '%'.$q."%");
+        if ($q = trim($request->q)) {
+            foreach ($this->getColumns() as $column){
+                if ($column == 'status' && (strtolower($q) == strtolower(Status::ACTIVE->value) || strtolower($q) == strtolower(Status::INACTIVE->value))){
+                    $status = strtolower($q) == strtolower(Status::ACTIVE->value) ? 1 : 0;
+                    $builder->orWhere('status', $status);
+                }
+                else{
+                    $builder->orWhere($column, 'like', '%'.$q."%");
+                }
+            }
         }
     }
 

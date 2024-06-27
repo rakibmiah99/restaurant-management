@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\HallExport;
+use App\Helper;
 use App\Http\Requests\Hall\CreateHallRequest;
 use App\Http\Requests\Hall\UpdateHallRequest;
 use App\Models\Hall;
@@ -14,7 +15,7 @@ class HallController extends Controller
 {
     public function index(){
         $columns = (new Hall())->getColumns();
-        $data = Hall::filter()->paginate($request->perpage ?? 10)->withQueryString();
+        $data = Hall::filter()->paginate(Helper::PerPage())->withQueryString();
         return view('hall.index', compact('data', 'columns'));
     }
 

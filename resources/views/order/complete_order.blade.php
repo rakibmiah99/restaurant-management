@@ -17,9 +17,10 @@
                         </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
+                            @php $index = \App\Helper::PageIndex() @endphp
                             @foreach ($data as $key=>$item)
                                 <tr>
-                                    <td>{{$key+1}}</td>
+                                    <td>{{$index++}}</td>
                                     @foreach(request()->columns ?? $columns as $column)
                                        @if($column == "hall")
                                             <td>{{$item->hall?->name}}</td>

@@ -11,7 +11,7 @@ class CompleteOrderController extends Controller
 {
     public function index(){
         $orders =  Order::with(['hotel', 'hall', 'meal_systems', 'country', 'order_monitoring'])->get()->where('is_complete', true);
-        $data = Helper::Paginate($orders, 10)->withQueryString();
+        $data = Helper::Paginate($orders, Helper::PerPage())->withQueryString();
 //        return Order::latest()->first()->test;
         $columns = array_keys(__('db.complete_order'));
 //        $data = Order::filter()->paginate($request->perpage ?? 10)->withQueryString();
