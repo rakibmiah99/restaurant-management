@@ -4,16 +4,22 @@ namespace App\Models;
 
 use App\Enums\Status;
 use App\Model;
+use App\Models\Scopes\DescScope;
 use App\Observers\HotelObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-#[ObservedBy([HotelObserver::class])]
+#[ObservedBy([HotelObserver::class]), ScopedBy(DescScope::class)]
 class Hotel extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    function scopeActive(Builder $builder){
+        $builder->where('status', true);
+    }
     public function scopeFilter(Builder $builder){
         $request = request();
         if ($q = trim($request->q)) {

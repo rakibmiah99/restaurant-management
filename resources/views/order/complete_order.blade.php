@@ -5,7 +5,7 @@
             <div class="mt-3">
                 <x-filter-data export-url="order.export.complete" translate-from="db.complete_order" :columns="$columns"/>
 
-                <div style="min-height: 400px" class="table-responsive mt-2 text-nowrap">
+                <div class="table-responsive table-paginate mt-2 text-nowrap">
                     <table class="table">
                         <thead>
                         <tr>
@@ -46,6 +46,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <x-when-table-empty :data-length="$data->count()"/>
                 </div>
 
 

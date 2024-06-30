@@ -5,12 +5,14 @@ namespace App\Models;
 use Alkoumi\LaravelHijriDate\Hijri;
 use App\Enums\Status;
 use App\Model;
+use App\Models\Scopes\DescScope;
 use App\Observers\OrderObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-#[ObservedBy([OrderObserver::class])]
+#[ObservedBy([OrderObserver::class]), ScopedBy(DescScope::class)]
 class Order extends Model
 {
     use HasFactory;
@@ -51,11 +53,32 @@ class Order extends Model
             }
         }
     }
+    public function scopeCompleteOrderFilter(Builder $builder){
+        $request = request();
+        if ($q = trim($request->q)) {
+            foreach (array_keys(__('db.complete_order')) as $column){
+                if ($column == 'order_number'){
+                    $builder->where('order_number', 'like', '%'.$q.'%');
+                }
+                elseif ($column == 'hotel'){
+                    $builder->orWhereRelation('hotel', 'name', 'like', '%'.$q."%");
+                }
+                elseif ($column == 'hall'){
+                    $builder->orWhereRelation('hall', 'name', 'like', '%'.$q."%");
+                }
+                elseif ($column == 'cuisine_name'){
+                    $builder->orWhereRelation('country', 'name', 'like', '%'.$q."%");
+                }
+
+            }
+        }
+    }
 
     public function scopeReportFilter(Builder $builder)
     {
         $request = request();
         $builder->with(['order_monitoring', 'hall', 'hotel', 'company', 'country', 'meal_systems']);
+
         if ($hotel_id = $request->hotel) {
             $builder->where('hotel_id', $hotel_id);
         }
@@ -73,6 +96,48 @@ class Order extends Model
         }
         if ($request->from_date && $request->to_date) {
             $builder->whereBetween('order_date', [$request->from_date, $request->to_date]);
+        }
+
+
+        $columns = [];
+
+        if ($request->segment(1) == "report" && $request->segment(2) == "hotel"){
+            $columns = array_keys(__('db.report.hotel'));
+        }
+        else if ($request->segment(1) == "report" && $request->segment(2) == "hall"){
+            $columns = array_keys(__('db.report.hall'));
+        }
+        else if ($request->segment(1) == "report" && $request->segment(2) == "order"){
+            $columns = array_keys(__('db.report.order'));
+        }
+
+
+
+        if ($q = trim($request->q)) {
+            foreach ($columns as $column){
+                if ($column == 'order_number'){
+                    $builder->orWhere($column, 'like', '%'.$q.'%');
+                }
+                elseif ($column == 'order_date'){
+                    $builder->orWhereDate($column, $q);
+                }
+                elseif ($column == 'service_type' && !$request->service_type){
+                    $builder->orWhere($column, 'like', '%'.$q.'%');
+                }
+                elseif ($column == 'hotel' && !$request->hotel){
+                    $builder->orWhereRelation('hotel', 'name', 'like', '%'.$q."%");
+                }
+                elseif ($column == 'hall' && !$request->hall){
+                    $builder->orWhereRelation('hall', 'name', 'like', '%'.$q."%");
+                }
+                elseif ($column == 'company' && !$request->company ){
+                    $builder->orWhereRelation('company', 'name', 'like', '%'.$q."%");
+                }
+                elseif ($column == 'cuisine_name' && !$request->country ){
+                    $builder->orWhereRelation('country', 'name', 'like', '%'.$q."%");
+                }
+
+            }
         }
     }
 

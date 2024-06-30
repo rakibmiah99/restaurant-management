@@ -94,6 +94,7 @@
             'cuisine_name' => "Cuisine Name",
 //            'order_meal_system_id' => "Order Meal System",
             'meal_system_id' => "Meal System",
+            'execution_status' => "Execution Status",
             'in_hall' => "In Hall",
             'complete' => "Complete",
             'total_meal' => "Total Meal",

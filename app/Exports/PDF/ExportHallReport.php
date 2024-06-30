@@ -12,6 +12,7 @@ class ExportHallReport implements FromView
     use PDFExportTrait;
     public function __construct()
     {
+        $this->title = __('page.list_of_hall_report');
         $this->handle_size = 3;
         $this->headings = 'db.report.hall';
         $columns = array_keys(__('db.report.hall'));;
@@ -24,6 +25,7 @@ class ExportHallReport implements FromView
         $columns = $this->valid_column;
         $headings = $this->headings;
         $per_cell =  $this->perCell();
-        return view('exports.reports.hall', compact('data','columns', 'per_cell', 'headings'));
+        $title = $this->title;
+        return view('exports.reports.hall', compact('title','data','columns', 'per_cell', 'headings'));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper;
 use App\Http\Requests\CompanySettingsRequest;
 use App\Models\CompanySetting;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class CompanySettingsController extends Controller
                 CompanySetting::create($request->validated());
             }
 
-            return $this->successMessage('updated successfully');
+            return $this->successMessage(Helper::UpdatedSuccessFully());
         }
         catch (\Exception $exception){
             return $this->errorMessage($exception->getMessage());

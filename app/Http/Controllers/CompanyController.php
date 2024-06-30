@@ -50,7 +50,7 @@ class CompanyController extends Controller
     public function store(CompanyCreateRequest $request){
         try {
             Company::create($request->validated());
-            return redirect()->back()->with('success', 'Company Created Successfully');
+            return redirect()->back()->with('success', Helper::CreatedSuccessFully());
         }
         catch (\Exception $exception){
             return redirect()->back()->with('error', $exception->getMessage())->withInput($request->all());
@@ -64,7 +64,7 @@ class CompanyController extends Controller
             abort(404);
         }
         $company->update($request->validated());
-        return redirect()->back()->with('success', 'Company Updated Successfully');
+        return redirect()->back()->with('success', Helper::UpdatedSuccessFully());
     }
 
 
@@ -75,7 +75,7 @@ class CompanyController extends Controller
         }
         $company->delete();
 
-        return redirect()->back()->with('success', "Company Deleted Successfully");
+        return redirect()->back()->with('success', Helper::DeletedSuccessFully());
     }
 
     public function changeStatus($id){
@@ -86,7 +86,7 @@ class CompanyController extends Controller
 
         $company->status = !$company->status;
         $company->save();
-        return redirect()->back()->with('success', "status successfully updated");
+        return redirect()->back()->with('success', Helper::StatusChangedSuccessFully());
     }
 
 

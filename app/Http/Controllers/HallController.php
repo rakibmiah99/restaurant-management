@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ExportFormat;
 use App\Exports\HallExport;
 use App\Helper;
 use App\Http\Requests\Hall\CreateHallRequest;
@@ -30,7 +31,7 @@ class HallController extends Controller
 
     public function create(Request $request): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
     {
-        $hotels = Hotel::all();
+        $hotels = Hotel::active()->get();
         return view('hall.create', compact('hotels'));
     }
 
@@ -40,7 +41,7 @@ class HallController extends Controller
         if (!$hall){
             abort(404);
         }
-        $hotels = Hotel::all();
+        $hotels = Hotel::active()->get();
         return view('hall.edit', compact('hall', 'hotels'));
     }
 
@@ -48,7 +49,7 @@ class HallController extends Controller
     public function store(CreateHallRequest $request){
         try {
             Hall::create($request->validated());
-            return redirect()->back()->with('success', 'Hall Created Successfully');
+            return redirect()->back()->with('success', Helper::CreatedSuccessFully());
         }
         catch (\Exception $exception){
             return redirect()->back()->with('error', $exception->getMessage())->withInput($request->all());
@@ -62,7 +63,7 @@ class HallController extends Controller
             abort(404);
         }
         $hall->update($request->validated());
-        return redirect()->back()->with('success', 'Hall Updated Successfully');
+        return redirect()->back()->with('success', Helper::UpdatedSuccessFully());
     }
 
 
@@ -73,7 +74,7 @@ class HallController extends Controller
         }
         $hall->delete();
 
-        return redirect()->back()->with('success', "Hall Deleted Successfully");
+        return redirect()->back()->with('success', Helper::DeletedSuccessFully());
     }
 
     public function changeStatus($id){
@@ -84,17 +85,17 @@ class HallController extends Controller
 
         $hall->status = !$hall->status;
         $hall->save();
-        return redirect()->back()->with('success', "status successfully updated");
+        return redirect()->back()->with('success', Helper::StatusChangedSuccessFully());
     }
 
 
     //for export to pdf and Excel file
     public function export(Request $request){
         if ($request->get('export-type') == "excel"){
-            return Excel::download(new \App\Exports\PDF\HallExport(), 'hall.xlsx');
+            return Excel::download(new \App\Exports\PDF\HallExport(), Helper::GenerateFileName('hall', ExportFormat::XLSX->value));
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new \App\Exports\PDF\HallExport(), 'hall.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new \App\Exports\PDF\HallExport(), Helper::GenerateFileName('hall', ExportFormat::PDF->value), \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
 }

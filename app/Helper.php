@@ -101,5 +101,23 @@ class Helper
     }
 
 
+    public static function CreatedSuccessFully($name = null): string
+    {
+        return $name." ".__('page.created_successfully');
+    }
+    public static function UpdatedSuccessFully($name = null): string
+    {
+        return $name." ".__('page.updated_successfully');
+    }
+
+    public static function DeletedSuccessFully($name = null): string
+    {
+        return $name." ".__('page.deleted_successfully');
+    }
+
+    public static function StatusChangedSuccessFully($name = null): string
+    {
+        return $name." ".__('page.status_change_successfully');
+    }
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ExportFormat;
 use App\Exports\HallExport;
 use App\Exports\OrderExport;
 use App\Helper;
@@ -281,11 +282,11 @@ class OrderController extends Controller
 
     public function create(Request $request): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
     {
-        $hotels = Hotel::all();
-        $companies = Company::all();
+        $hotels = Hotel::active()->get();
+        $companies = Company::active()->get();
         $countries = Country::all();
-        $mealPricesNormal = MealPrice::where('type', 'normal')->get();
-        $mealPricesRamadan = MealPrice::where('type', 'ramadan')->get();
+        $mealPricesNormal = MealPrice::active()->where('type', 'normal')->get();
+        $mealPricesRamadan = MealPrice::active()->where('type', 'ramadan')->get();
         return view('order.create', compact(
             'hotels',
             'companies',
@@ -305,11 +306,11 @@ class OrderController extends Controller
 
 //        return $order->is_modified;
 
-        $hotels = Hotel::all();
-        $companies = Company::all();
+        $hotels = Hotel::active()->get();
+        $companies = Company::active()->get();
         $countries = Country::all();
-        $mealPricesNormal = MealPrice::where('type', 'normal')->get();
-        $mealPricesRamadan = MealPrice::where('type', 'ramadan')->get();
+        $mealPricesNormal = MealPrice::where('type', 'normal')->active()->get();
+        $mealPricesRamadan = MealPrice::where('type', 'ramadan')->active()->get();
         return view('order.edit', compact(
             'order',
             'hotels',
@@ -387,10 +388,9 @@ class OrderController extends Controller
             OrderWiseMealPrice::insert($orderWiseMealPricesData);
             OrderMonitoring::insert($orderMonitorData);
             DB::commit();
-            return redirect()->back()->with('success', 'Hall Created Successfully');
+            return redirect()->back()->with('success', Helper::CreatedSuccessFully());
         }
         catch (\Exception $exception){
-            dd($exception->getMessage());
             return redirect()->back()->with('error', $exception->getMessage())->withInput($request->all());
         }
     }
@@ -413,7 +413,7 @@ class OrderController extends Controller
         }
         $order->delete();
 
-        return redirect()->back()->with('success', "Hall Deleted Successfully");
+        return redirect()->back()->with('success', Helper::DeletedSuccessFully());
     }
 
     public function changeStatus($id){
@@ -424,17 +424,17 @@ class OrderController extends Controller
 
         $order->status = !$order->status;
         $order->save();
-        return redirect()->back()->with('success', "status successfully updated");
+        return redirect()->back()->with('success', Helper::StatusChangedSuccessFully());
     }
 
 
     //for export to pdf and Excel file
     public function export(Request $request){
         if ($request->get('export-type') == "excel"){
-            return Excel::download(new \App\Exports\PDF\OrderExport(), 'orders.xlsx');
+            return Excel::download(new \App\Exports\PDF\OrderExport(), Helper::GenerateFileName('orders', ExportFormat::XLSX->value));
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new \App\Exports\PDF\OrderExport(), 'orders.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new \App\Exports\PDF\OrderExport(), Helper::GenerateFileName('orders', ExportFormat::PDF->value), \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
 

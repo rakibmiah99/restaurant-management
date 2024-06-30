@@ -12,6 +12,7 @@ class ExportRevenueReport implements FromView
     use PDFExportTrait;
     public function __construct()
     {
+        $this->title = __('page.list_of_revenue_report');
         $this->handle_size = 3;
         $this->headings = 'db.report.revenue';
         $columns = array_keys(__('db.report.revenue'));;
@@ -24,6 +25,7 @@ class ExportRevenueReport implements FromView
         $columns = $this->valid_column;
         $headings = $this->headings;
         $per_cell =  $this->perCell();
-        return view('exports.reports.revenue', compact('data','columns', 'per_cell', 'headings'));
+        $title = $this->title;
+        return view('exports.reports.revenue', compact('title','data','columns', 'per_cell', 'headings'));
     }
 }

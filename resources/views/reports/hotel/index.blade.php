@@ -8,7 +8,7 @@
                 @include('reports.hotel.filter_form')
                 <x-filter-data export-url="report.export.hotel" translate-from="db.report.hotel" :columns="$columns"/>
 
-                <div style="min-height: 400px" class="table-responsive mt-2 text-nowrap">
+                <div class="table-responsive table-paginate mt-2 text-nowrap">
                     <table class="table">
                         <thead>
                         <tr>
@@ -65,6 +65,7 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <x-when-table-empty :data-length="$data->count()"/>
                 </div>
 
 

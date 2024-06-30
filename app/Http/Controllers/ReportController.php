@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Enums\ExportFormat;
 use App\Helper;
 use App\Models\Company;
 use App\Models\Country;
@@ -28,10 +29,10 @@ class ReportController extends Controller
 
     public function export_hotel(Request $request){
         if ($request->get('export-type') == "excel"){
-            return Excel::download(new \App\Exports\PDF\ExportHotelReport(), 'hotel_export.xlsx');
+            return Excel::download(new \App\Exports\PDF\ExportHotelReport(), Helper::GenerateFileName('hotel_report', ExportFormat::XLSX->value));
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new \App\Exports\PDF\ExportHotelReport(), 'hotel_export.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new \App\Exports\PDF\ExportHotelReport(), Helper::GenerateFileName('hotel_report', ExportFormat::XLSX->value), \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
 
@@ -49,10 +50,10 @@ class ReportController extends Controller
 
     public function export_hall(Request $request){
         if ($request->get('export-type') == "excel"){
-            return Excel::download(new \App\Exports\PDF\ExportHallReport(), 'hall_export.xlsx');
+            return Excel::download(new \App\Exports\PDF\ExportHallReport(), Helper::GenerateFileName('hall_report', ExportFormat::XLSX->value));
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new \App\Exports\PDF\ExportHallReport(), 'hall_export.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new \App\Exports\PDF\ExportHallReport(), Helper::GenerateFileName('hall_report', ExportFormat::PDF->value), \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
 
@@ -70,10 +71,10 @@ class ReportController extends Controller
 
     public function export_order(Request $request){
         if ($request->get('export-type') == "excel"){
-            return Excel::download(new \App\Exports\PDF\ExportOrderReport(), 'order_export.xlsx');
+            return Excel::download(new \App\Exports\PDF\ExportOrderReport(), Helper::GenerateFileName('order_report', ExportFormat::XLSX->value));
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new \App\Exports\PDF\ExportOrderReport(), 'order_export.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new \App\Exports\PDF\ExportOrderReport(), Helper::GenerateFileName('order_report', ExportFormat::PDF->value), \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
 
@@ -89,10 +90,10 @@ class ReportController extends Controller
 
     public function export_invoice(Request $request){
         if ($request->get('export-type') == "excel"){
-            return Excel::download(new \App\Exports\PDF\ExportInvoiceReport(), 'invoice_export.xlsx');
+            return Excel::download(new \App\Exports\PDF\ExportInvoiceReport(), Helper::GenerateFileName('invoice_report', ExportFormat::XLSX->value));
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new \App\Exports\PDF\ExportInvoiceReport(), 'invoice_export.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new \App\Exports\PDF\ExportInvoiceReport(), Helper::GenerateFileName('invoice_report', ExportFormat::PDF->value), \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
     public function revenue()
@@ -107,10 +108,10 @@ class ReportController extends Controller
 
     public function export_revenue(Request $request){
         if ($request->get('export-type') == "excel"){
-            return Excel::download(new \App\Exports\PDF\ExportRevenueReport(), 'revenue_export.xlsx');
+            return Excel::download(new \App\Exports\PDF\ExportRevenueReport(), Helper::GenerateFileName('revenue_report', ExportFormat::XLSX->value));
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new \App\Exports\PDF\ExportRevenueReport(), 'revenue_export.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new \App\Exports\PDF\ExportRevenueReport(), Helper::GenerateFileName('revenue_report', ExportFormat::PDF->value), \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
 
@@ -128,10 +129,10 @@ class ReportController extends Controller
 
     public function export_kitchen(Request $request){
         if ($request->get('export-type') == "excel"){
-            return Excel::download(new \App\Exports\PDF\ExportKitchenReport(), 'kitchen_export.xlsx');
+            return Excel::download(new \App\Exports\PDF\ExportKitchenReport(), Helper::GenerateFileName('kitchen_report', ExportFormat::XLSX->value));
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new \App\Exports\PDF\ExportKitchenReport(), 'kitchen_export.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new \App\Exports\PDF\ExportKitchenReport(), Helper::GenerateFileName('kitchen', ExportFormat::PDF->value), \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
 
@@ -146,10 +147,10 @@ class ReportController extends Controller
 
     public function export_packaging(Request $request){
         if ($request->get('export-type') == "excel"){
-            return Excel::download(new \App\Exports\PDF\ExportPackagingReport(), 'packaging_export.xlsx');
+            return Excel::download(new \App\Exports\PDF\ExportPackagingReport(), Helper::GenerateFileName('packaging_report', ExportFormat::XLSX->value));
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new \App\Exports\PDF\ExportPackagingReport(), 'packaging_export.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new \App\Exports\PDF\ExportPackagingReport(), Helper::GenerateFileName('packaging_report', ExportFormat::XLSX->value), \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
 }

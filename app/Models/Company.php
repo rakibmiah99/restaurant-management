@@ -3,18 +3,27 @@
 namespace App\Models;
 
 use App\Enums\Status;
+use App\Models\Scopes\DescScope;
 use App\Observers\CompanyObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Model;
-#[ObservedBy([CompanyObserver::class])]
+#[ObservedBy([CompanyObserver::class]), ScopedBy(DescScope::class)]
 class Company extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
+    function scopeActive(Builder $builder){
+        $builder->where('status', true);
+    }
+    public function scopeDesc(Builder $builder, $column = null)
+    {
+        $builder->orderBy($column ?? 'id', 'desc');
+    }
     public function scopeFilter(Builder $builder){
         $request = request();
         if ($q = trim($request->q)) {

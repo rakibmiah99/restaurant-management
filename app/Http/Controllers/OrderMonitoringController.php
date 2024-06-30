@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ExportFormat;
 use App\Exports\OrderExport;
 use App\Exports\OrderMonitorExport;
 use App\Helper;
@@ -29,10 +30,10 @@ class OrderMonitoringController extends Controller
 
     public function export(Request $request){
         if ($request->get('export-type') == "excel"){
-            return Excel::download(new OrderMonitorExport(), 'order_monitor.xlsx');
+            return Excel::download(new OrderMonitorExport(), Helper::GenerateFileName('order_monitor', ExportFormat::XLSX->value));
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new OrderMonitorExport(), 'order_monitor.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new OrderMonitorExport(), Helper::GenerateFileName('order_monitor', ExportFormat::PDF->value), \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
 }

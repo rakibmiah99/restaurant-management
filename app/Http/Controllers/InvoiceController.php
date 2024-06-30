@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ExportFormat;
 use App\Helper;
 use App\Http\Requests\Company\CompanyCreateRequest;
 use App\Http\Requests\Company\CompanyUpdateRequest;
@@ -104,7 +105,7 @@ class InvoiceController extends Controller
 
             InvoiceData::insert($invoice_data);
             DB::commit();
-            return redirect()->route('invoice.index')->with('success', 'Created Successfully');
+            return redirect()->route('invoice.index')->with('success', Helper::CreatedSuccessFully());
         }
         catch (\Exception $exception){
             return redirect()->back()->with('error', $exception->getMessage())->withInput($request->all());
@@ -128,7 +129,7 @@ class InvoiceController extends Controller
                 $invoice->invoice_data()->where('meal_system_id', $meal_system_id)->update(['price' => $price]);
             }
             DB::commit();
-            return $this->successMessage('Updated Successfully');
+            return $this->successMessage(Helper::UpdatedSuccessFully());
         }
         catch (\Exception $exception){
             DB::rollBack();
@@ -144,7 +145,7 @@ class InvoiceController extends Controller
         }
         $invoice->delete();
 
-        return $this->successMessage('Deleted Successfully');
+        return $this->successMessage(Helper::DeletedSuccessFully());
     }
 
     public function changeStatus($id){
@@ -155,17 +156,17 @@ class InvoiceController extends Controller
 
         $invoice->is_close = !$invoice->is_close;
         $invoice->save();
-        return $this->successMessage('Status Changed Successfully');
+        return $this->successMessage(Helper::StatusChangedSuccessFully());
     }
 
 
     //for export to pdf and Excel file
     public function export(Request $request){
         if ($request->get('export-type') == "excel"){
-            return Excel::download(new \App\Exports\PDF\InvoiceExport(), 'company.xlsx');
+            return Excel::download(new \App\Exports\PDF\InvoiceExport(), Helper::GenerateFileName('invoice', ExportFormat::XLSX->value));
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new \App\Exports\PDF\InvoiceExport(), 'company.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new \App\Exports\PDF\InvoiceExport(), Helper::GenerateFileName('invoice', ExportFormat::PDF->value), \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
 }

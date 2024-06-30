@@ -6,6 +6,8 @@
                 <td style="font-size: 9px" align="left" width="{{$per_cell}}">
                     @if($column == "status")
                         {{$item->$column ? \App\Enums\Status::ACTIVE->value : \App\Enums\Status::INACTIVE->value }}
+                    @elseif($column == "country_id")
+                        {{$item->country?->name}}
                     @else
                         {{$item->$column}}
                     @endif

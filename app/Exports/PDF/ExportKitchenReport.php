@@ -12,6 +12,7 @@ class ExportKitchenReport implements  FromView, ShouldAutoSize
     use PDFExportTrait;
     public function __construct()
     {
+        $this->title = __('page.list_of_kitchen_report');
         $this->headings = 'db.report.kitchen';
         $columns = array_keys(__('db.report.kitchen'));;
         $this->setValidColumns($columns);
@@ -23,6 +24,7 @@ class ExportKitchenReport implements  FromView, ShouldAutoSize
         $columns = $this->valid_column;
         $headings = $this->headings;
         $per_cell =  $this->perCell();
-        return view('exports.reports.kitchen', compact('data','columns', 'per_cell', 'headings'));
+        $title = $this->title;
+        return view('exports.reports.kitchen', compact('title','data','columns', 'per_cell', 'headings'));
     }
 }

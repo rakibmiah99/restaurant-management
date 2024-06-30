@@ -14,7 +14,7 @@ class DateWiseMonitor extends Model
     public function scopeFilter(Builder $builder)
     {
         $request = request();
-        $builder->with(['order', 'meal_entries'])
+        $builder->with(['order.hall', 'meal_entries'])
             ->whereHas('order', function ($order) use($request) {
                 if ($hotel_id = $request->get('hotel')){
                     $order->where('hotel_id', $hotel_id);
@@ -26,6 +26,10 @@ class DateWiseMonitor extends Model
                     $order->where('country_id', $country_id);
                 }
             })
+//            ->whereHas('order.hall', function (Builder $hall) use($builder){
+//                $builder->where('meal_date', '=', date('Y-m-d'));
+////                $hall->where('id', 1);
+//            })
             ->whereDate('meal_date', '>=', date('Y-m-d'))
             ->orderBy('meal_date')
             ->orderBy('order_id', 'desc');
@@ -99,6 +103,12 @@ class DateWiseMonitor extends Model
     public function getTotalTakenAttribute(){
         return $this->meal_entries()->count();
     }
+    public function getExecutionStatusAttribute(){
+//        $this->
+    }
+
+
+
 
     public function getInHallAttribute(){
         return $this->meal_entries()

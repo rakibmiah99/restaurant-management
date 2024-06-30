@@ -13,6 +13,7 @@ class InvoiceExport implements FromView
     use PDFExportTrait;
     public function __construct()
     {
+        $this->title = __('page.invoice_list');
         $this->handle_size = 1;
         $this->headings = 'db.invoice';
         $columns = array_keys(__('db.invoice'));
@@ -25,6 +26,7 @@ class InvoiceExport implements FromView
         $columns = $this->valid_column;
         $headings = $this->headings;
         $per_cell =  $this->perCell();
-        return view('exports.invoice', compact('data','columns', 'per_cell', 'headings'));
+        $title = $this->title;
+        return view('exports.invoice', compact('title','data','columns', 'per_cell', 'headings'));
     }
 }

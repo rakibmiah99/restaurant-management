@@ -8,7 +8,7 @@
                 @include('order_monitoring.filter_form')
                 <x-filter-data export-url="order_monitoring.export" translate-from="db.order_monitoring" :columns="$columns"/>
 
-                <div style="min-height: 400px" class="table-responsive mt-2 text-nowrap">
+                <div class="table-responsive table-paginate mt-2 text-nowrap">
                     <table class="table">
                         <thead>
                         <tr>
@@ -21,6 +21,7 @@
                         <tbody class="table-border-bottom-0">
                             @php $index = \App\Helper::PageIndex() @endphp
                             @foreach ($data as $key=>$item)
+{{--                                @dd($item->order->hall->toArray())--}}
                                 <tr>
                                     <td>{{$index++}}</td>
                                     @foreach(request()->columns ?? $columns as $column)
@@ -39,6 +40,8 @@
                                                 {{$item->order?->country?->name}}
                                             @elseif($column == "meal_system_id")
                                                 {{$item->meal_system?->name}}
+                                            @elseif($column == "execution_status")
+                                                {{$item->execution_status}}
                                             @elseif($column == "complete")
                                                 {{$item->total_taken}}
                                             @elseif($column == "total_meal")
@@ -52,6 +55,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <x-when-table-empty :data-length="$data->count()"/>
                 </div>
 
 

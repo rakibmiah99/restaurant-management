@@ -43,8 +43,11 @@
 
     </div>
 
-    <!-- searchData function in main layout script -->
-    <input value="{{request()->q}}" name="q" onkeyup="searchData()" style="width: 150px" id="searchInput" class="form-control d-inline form-control-sm" type="text" placeholder="search">
+    @if($attributes->get('search') !== false)
+        <!-- searchData function in main layout script -->
+        <input value="{{request()->q}}" name="q" onkeyup="searchData()" style="width: 150px" id="searchInput" class="form-control d-inline form-control-sm" type="text" placeholder="search">
+
+    @endif
 
     @foreach(request()->except(['perpage', 'columns', 'q']) as $input_name=>$value)
         <input type="hidden" name="{{$input_name}}" value="{{$value}}"/>

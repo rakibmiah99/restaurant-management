@@ -13,6 +13,7 @@ class HallExport implements FromView
     use PDFExportTrait;
     public function __construct()
     {
+        $this->title = __('page.hall_list');
         $this->handle_size = 2;
         $this->headings = 'db.hall';
         $columns = (new Hall())->getColumns();
@@ -25,6 +26,7 @@ class HallExport implements FromView
         $columns = $this->valid_column;
         $headings = $this->headings;
         $per_cell =  $this->perCell();
-        return view('exports.hall', compact('data','columns', 'per_cell', 'headings'));
+        $title = $this->title;
+        return view('exports.hall', compact('title','data','columns', 'per_cell', 'headings'));
     }
 }

@@ -4,12 +4,14 @@ namespace App\Models;
 
 use App\Enums\Status;
 use App\Model;
+use App\Models\Scopes\DescScope;
 use App\Observers\MealPriceObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-#[ObservedBy([MealPriceObserver::class])]
+#[ObservedBy([MealPriceObserver::class]), ScopedBy(DescScope::class)]
 class MealPrice extends Model
 {
     use HasFactory;

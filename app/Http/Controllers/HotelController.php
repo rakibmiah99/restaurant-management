@@ -60,7 +60,7 @@ class HotelController extends Controller
     public function store(CreateHotelRequest $request){
         try {
             Hotel::create($request->validated());
-            return redirect()->back()->with('success', 'Hotel Created Successfully');
+            return redirect()->back()->with('success', Helper::CreatedSuccessFully());
         }
         catch (\Exception $exception){
             return redirect()->back()->with('error', $exception->getMessage())->withInput($request->all());
@@ -74,7 +74,7 @@ class HotelController extends Controller
             abort(404);
         }
         $hotel->update($request->validated());
-        return redirect()->back()->with('success', 'Hotel Updated Successfully');
+        return redirect()->back()->with('success', Helper::UpdatedSuccessFully());
     }
 
 
@@ -85,7 +85,7 @@ class HotelController extends Controller
         }
         $hotel->delete();
 
-        return redirect()->back()->with('success', "Hotel Deleted Successfully");
+        return redirect()->back()->with('success', Helper::DeletedSuccessFully());
     }
 
     public function changeStatus($id){
@@ -96,7 +96,7 @@ class HotelController extends Controller
 
         $hotel->status = !$hotel->status;
         $hotel->save();
-        return redirect()->back()->with('success', "status successfully updated");
+        return redirect()->back()->with('success', Helper::StatusChangedSuccessFully());
     }
 
 

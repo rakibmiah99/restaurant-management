@@ -6,9 +6,9 @@
             <x-card-header :url="route('order.choose')" :name="__('page.orders')" :url-name="__('page.create')"/>
             <div class="mt-3">
                 @include('reports.packaging.filter_form')
-                <x-filter-data export-url="report.export.packaging" translate-from="db.report.kitchen" :columns="$columns"/>
+                <x-filter-data :search="false" export-url="report.export.packaging" translate-from="db.report.kitchen" :columns="$columns"/>
 
-                <div style="min-height: 400px" class="table-responsive mt-2 text-nowrap">
+                <div class="table-responsive table-paginate mt-2 text-nowrap">
                     <table class="table">
                         <thead>
                         <tr>
@@ -37,6 +37,7 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <x-when-table-empty :data-length="$data->count()"/>
                 </div>
 
 

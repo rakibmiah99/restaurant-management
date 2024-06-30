@@ -112,7 +112,7 @@ class MealPriceController extends Controller
                 MealSystemForMealPrice::create($item);
             }
             DB::commit();
-            return redirect()->back()->with('success', 'Company Created Successfully');
+            return redirect()->back()->with('success', Helper::CreatedSuccessFully());
         }
         catch (\Exception $exception){
             DB::rollBack();
@@ -151,7 +151,7 @@ class MealPriceController extends Controller
             }
             DB::commit();
 
-            return redirect()->back()->with('success', 'Company Updated Successfully');
+            return redirect()->back()->with('success', Helper::UpdatedSuccessFully());
         }
         catch (\Exception $exception){
             DB::rollBack();
@@ -167,7 +167,7 @@ class MealPriceController extends Controller
         }
         $meal_price->delete();
 
-        return redirect()->back()->with('success', "Company Deleted Successfully");
+        return redirect()->back()->with('success',Helper::DeletedSuccessFully());
     }
 
     public function changeStatus($id){
@@ -178,7 +178,7 @@ class MealPriceController extends Controller
 
         $meal_price->status = !$meal_price->status;
         $meal_price->save();
-        return redirect()->back()->with('success', "status successfully updated");
+        return redirect()->back()->with('success', Helper::StatusChangedSuccessFully());
     }
 
 
