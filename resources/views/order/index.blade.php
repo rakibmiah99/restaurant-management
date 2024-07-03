@@ -50,9 +50,16 @@
                                                 <a class="dropdown-item view-btn" href="{{route('order.modify', $item->id)}}"><i class='bx bx-low-vision'></i>{{__('page.modify_guest')}}</a>
                                                 <a class="dropdown-item view-btn" href="{{route('order.showQR', $item->id)}}"><i class='bx bx-low-vision'></i>{{__('page.show_qr')}}</a>
                                                 <a data-bs-toggle="modal" data-bs-target="#viewModal" class="dropdown-item view-btn" href="javascript:void(0);" url="{{route('order.show', $item->id)}}"><i class='bx bx-low-vision'></i>{{__('page.view')}}</a>
-                                                <a class="dropdown-item" href="{{route('order.edit', $item->id)}}"><i class="bx bx-edit-alt me-1"></i>{{__('page.edit')}}</a>
+
+                                                @if($item->can_edit)
+                                                    <a class="dropdown-item" href="{{route('order.edit', $item->id)}}"><i class="bx bx-edit-alt me-1"></i>{{__('page.edit')}}</a>
+                                                @endif
+
                                                 <a class="dropdown-item" href="{{route('order.changeStatus', $item->id)}}"><i class='bx bx-checkbox-minus'></i> {{$item->status ? __('page.inactive') : __('page.active') }}</a>
-                                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" url="{{route('order.delete', $item->id)}}"  class="dropdown-item delete-btn" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>{{__('page.delete')}}</a>
+                                                @if($item->can_edit)
+                                                    <a data-bs-toggle="modal" data-bs-target="#deleteModal" url="{{route('order.delete', $item->id)}}"  class="dropdown-item delete-btn" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>{{__('page.delete')}}</a>
+                                                @endif
+
                                             </div>
                                         </div>
                                     </td>
@@ -72,19 +79,8 @@
     </div>
 
     <x-view-modal size="modal-lg">
-        <div class="table-responsive mt-2 text-nowrap">
-            <table class="table">
-                <tbody id="data" class="table-border-bottom-0">
-                    @foreach($columns as $column)
-                        <tr>
-                            <th>{{__('db.order.'.$column)}}</th>
-                            <th>:</th>
-                            <td id="v-{{$column}}"></td>
-                        </tr>
-                    @endforeach
+        <div id="data-view" class="table-responsive mt-2 text-nowrap">
 
-                </tbody>
-            </table>
         </div>
     </x-view-modal>
 </x-main-layout>
@@ -102,35 +98,7 @@
         .then(function (response){
             modalLoaderOFF();
             const data = response.data;
-            for(let property in data){
-                let id = '#v-'+property;
-
-                if (property == "status"){
-                    $(id).html(data[property] ? '{{__('page.active')}}' : '{{__('page.inactive')}}')
-                }
-                else if (
-                    property == 'b_start' ||
-                    property == 'b_end' ||
-                    property == 'l_start' ||
-                    property == 'l_end' ||
-                    property == 'd_start' ||
-                    property == 'd_end' ||
-                    property == 's_start' ||
-                    property == 's_end' ||
-                    property == 'i_start' ||
-                    property == 'i_end'
-                ){
-                    $(id).html(convertTo12HourFormat(data[property]));
-                }
-
-                else if (property == "hotel_id"){
-                    let name = data.hotel?.name;
-                    $(id).html(name);
-                }
-                else{
-                    $(id).html(data[property])
-                }
-            }
+            $('#data-view').html(data)
         })
         .catch(function (error){
 

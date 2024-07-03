@@ -2,11 +2,11 @@
 
 <x-input
     :title="__('page.company_code')"
-    name="unique_id"
+    name="code"
     type="text"
     :required="true"
     :readonly="true"
-    :value="$is_edit ? $company->unique_id :\App\Models\Company::GenerateUniqueID()"
+    :value="$is_edit ? $company->code :\App\Models\Company::GenerateUniqueID()"
 />
 
 <x-input

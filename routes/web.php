@@ -127,6 +127,21 @@ Route::middleware(['auth.check', 'localization'])->prefix('/')->group(function (
 
     });
 
+
+    Route::prefix('roles')->name('role.')->group(function (){
+        Route::get('/', [\App\Http\Controllers\RolesController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\RolesController::class, 'create'])->name('create');
+        Route::get('/show/{id}', [\App\Http\Controllers\InvoiceController::class, 'show'])->name('show');
+        Route::get('/edit/{id}', [\App\Http\Controllers\RolesController::class, 'edit'])->name('edit');
+        Route::post('/update/{id}', [\App\Http\Controllers\RolesController::class, 'update'])->name('update');
+        Route::post('/store', [\App\Http\Controllers\RolesController::class, 'store'])->name('store');
+        Route::post('/delete/{id}', [\App\Http\Controllers\InvoiceController::class, 'delete'])->name('delete');
+    });
+
+
+
+
+
     Route::get('meal-systems-by-meal-price', [\App\Http\Controllers\MealPriceController::class, 'mealSystemByMealPrice'])->name('meal-system-by-meal-price');
     Route::get('change-lang/{lang}', [\App\Http\Controllers\LangController::class, 'change'])->name('lang.change');
     Route::get('change-theme/{name}', [\App\Http\Controllers\LangController::class, 'changeTheme'])->name('theme.change');

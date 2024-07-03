@@ -23,7 +23,6 @@ class CompanyFactory extends Factory
     {
         return [
             'name' => fake()->name,
-            'unique_id' => fake()->numberBetween(1000, 99999),
             'code' => fake()->numberBetween(1000, 9999),
             'address' => fake()->address(),
             'phone' => fake()->phoneNumber(),

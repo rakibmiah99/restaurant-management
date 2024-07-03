@@ -18,7 +18,8 @@
             type="date"
             :required="true"
             :readonly="false"
-            :value="$is_edit ? $order->order_date : old('order_date')"
+            :min="date('Y-m-d')"
+            :value="$is_edit ? $order->order_date : old('order_date') ?? date('Y-m-d')"
         />
     </div>
     <div class="col-md-4">
@@ -43,14 +44,14 @@
         !request()->get('order-type')
     )
         @if(
-            !request()->get('edit-with') ||
-            request()->get('edit-with') == "meal-system"
+            !request()->get(\App\Enums\OrderEditTypeEnum::KEY->value) ||
+            request()->get(\App\Enums\OrderEditTypeEnum::KEY->value) == \App\Enums\OrderEditTypeEnum::WITH_MEAL->value
         )
             <div class="col-md-4">
                 <x-input-select2
                     mode="vertical"
                     :title="__('page.meal_price_normal')"
-                    :is_required="true"
+                    :is_required="$is_edit ? (boolean) $order->mpi_for_normal : true"
                     :array="$mealPricesNormal"
                     name="mpi_for_normal"
                     :with_code="true"
@@ -67,14 +68,14 @@
         !request()->get('order-type')
     )
         @if(
-           !request()->get('edit-with') ||
-           request()->get('edit-with') == "meal-system"
+           !request()->get(\App\Enums\OrderEditTypeEnum::KEY->value) ||
+           request()->get(\App\Enums\OrderEditTypeEnum::KEY->value) == \App\Enums\OrderEditTypeEnum::WITH_MEAL->value
        )
             <div class="col-md-4">
                 <x-input-select2
                     mode="vertical"
                     :title="__('page.meal_price_ramadan')"
-                    :is_required="true"
+                    :is_required="$is_edit ? (boolean)$order->mpi_for_ramadan : true"
                     :array="$mealPricesRamadan"
                     name="mpi_for_ramadan"
                     :with_code="true"
@@ -186,13 +187,13 @@
                         <input type='number' value="{{$meal_system_info->number_of_guest}}"  required class='form-control' name='guest[]'/>
                     </td>
                     <td style="width: 14%">
-                        <input type='date' value="{{$meal_system_info->from_date}}" required class='form-control' name='from_date[]'/>
+                        <input type='date' value="{{$meal_system_info->from_date}}" required class='form-control from-date' name='from_date[]'/>
                     </td>
                     <td style="width: 14%">
-                        <input type='date' required value="{{$meal_system_info->to_date}}" class="form-control" name='to_date[]'/>
+                        <input type='date' required value="{{$meal_system_info->to_date}}" class="form-control to-date" name='to_date[]'/>
                     </td>
                     <td style="width: 8%">{{$meal_system_info->price}}</td>
-                    <td style="width: 14%">{{$meal_system_info->days}}</td>
+                    <td class="days" style="width: 14%">{{$meal_system_info->days}}</td>
                     <td style="width: 6%">
                         <button type="button" class="btn btn-sm remove-meal-system rounded-pill btn-icon btn-danger text-white">
                             <span class="tf-icons bx bx-x"></span>
@@ -281,6 +282,7 @@
             Toast('{{__('page.this_meal_system_already_exist')}}', 'error');
         }
         else{
+            let today = "{{date('Y-m-d')}}";
             let tr = `
                 <tr type="${type}">
                     <td style="width: 26%;">
@@ -291,13 +293,13 @@
                         <input type='number' required class='form-control' name='guest[]'/>
                     </td>
                     <td style="width: 14%">
-                        <input type='date' required class='form-control' name='from_date[]'/>
+                        <input type='date' required min="${today}" class='form-control from-date' name='from_date[]'/>
                     </td>
                     <td style="width: 14%">
-                        <input type='date' required class="form-control" name='to_date[]'/>
+                        <input type='date' required min="${today}" class="form-control to-date" name='to_date[]'/>
                     </td>
                     <td style="width: 8%">${price}</td>
-                    <td style="width: 14%">0</td>
+                    <td class="days" style="width: 14%">0</td>
                     <td style="width: 6%">
                         <button type="button" class="btn btn-sm remove-meal-system rounded-pill btn-icon btn-danger text-white">
                           <span class="tf-icons bx bx-x"></span>
@@ -327,16 +329,49 @@
 
 
 
-    $('form').on('submit', function (e){
-        let has_meal_system = $('.meal_system_price_id').length;
-        if(has_meal_system == 0){
-            e.preventDefault();
-            Toast('At least one need one system', 'error')
-        }
-    })
+    //form submit condition
+    @if(request()->get(\App\Enums\OrderEditTypeEnum::KEY->value) == \App\Enums\OrderEditTypeEnum::WITH_MEAL->value)
+        $('form').on('submit', function (e){
+            let has_meal_system = $('.meal_system_price_id').length;
+            if(has_meal_system == 0){
+                e.preventDefault();
+                Toast('At least one need one system', 'error')
+            }
+        })
+    @endif
 
-
+    //remove meal system
     $('#order_meal_price').on('click', '.remove-meal-system', function (){
         $(this).parent().parent().remove();
     })
+
+
+    $('#order_meal_price').on('change', '.from-date', function (){
+        calculateDays();
+    })
+
+    $('#order_meal_price').on('change', '.to-date', function (){
+        calculateDays();
+    })
+
+    function calculateDays(){
+        const from_date_els = $('.from-date');
+
+        for(let i =0; i < from_date_els.length; i++){
+            let tr = from_date_els.eq(i).parent().parent();
+            let from_date = from_date_els.eq(i).val();
+            let to_date = tr.find('.to-date').val();
+            let days_el = tr.find('.days');
+            let count_of_days = dateDiff(from_date, to_date)
+            days_el.html(count_of_days)
+        }
+
+
+
+    }
+
+
+
+
+
 </script>

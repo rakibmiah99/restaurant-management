@@ -22,7 +22,7 @@ class CompanyUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'unique_id' => 'required',
+            'code' => 'required',
             'name' => 'required',
             'country_id' => 'required|exists:countries,id',
             'meal_price_id' => 'nullable|exists:meal_prices,id',

@@ -105,6 +105,11 @@
         'complete_order_list' => 'Complete Order List',
         'order_list' => 'Order List',
         'invoice_list' => 'Invoice List',
+        'roles' => 'Roles',
+
+
+
+
         'list_of_hotel_report' => 'List Of Hotel Report',
         'list_of_hall_report' => 'List Of Hall Report',
         'list_of_order_report' => 'List Of Order Report',
@@ -117,7 +122,7 @@
         'deleted_successfully' => 'Deleted Successfully',
         'status_change_successfully' => 'Status Change Successfully',
 
-
+        'editable_time_expired' => 'Editable Time Expired',
         'no_data_found' => 'No data found',
         'you_are_login_as' => 'You are logged in as',
         'this_week_meal_chart' => 'This Week Meal Chart',

@@ -97,6 +97,23 @@
     }
 
 
+    function dateDiff(from_date, to_date){
+        // Define the two dates
+        const date1 = new Date(from_date);
+        const date2 = new Date(to_date);
+
+        // Calculate the difference in milliseconds
+        const diffInMilliseconds = date2 - date1;
+
+        // Convert the difference from milliseconds to days
+        const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
+
+        return diffInDays+1;
+        // console.log(diffInDays); // Output: 2
+    }
+
+
+
 
     function Toast(message, type = 'success'){
         let options = {

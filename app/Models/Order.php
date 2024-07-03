@@ -22,6 +22,7 @@ class Order extends Model
 
     public function scopeFilter(Builder $builder){
         $request = request();
+        $builder->with(['date_wise_monitor', 'country','company','hotel','hall','meal_price_for_normal','meal_price_for_ramadan']);
         if ($q = trim($request->q)) {
             foreach ($this->getColumns($this->attributes_as_column) as $column){
                 if ($column == 'country_id'){
@@ -148,6 +149,11 @@ class Order extends Model
     public function order_monitoring(){
         return $this->hasMany(OrderMonitoring::class, 'order_id', 'id');
     }
+
+    public function date_wise_monitor(){
+        return $this->hasMany(DateWiseMonitor::class, 'order_id', 'id');
+    }
+
     public function meal_entries(){
         return $this->hasMany(MealEntries::class, 'order_id', 'id');
     }
@@ -185,13 +191,16 @@ class Order extends Model
     }
 
 
-    public function getIsModifiedAttribute(){
+    public function getIsModifiedAttribute(): bool{
         //get duplicates meal systems
         $duplicates =  $this->meal_systems->groupBy('order_meal_system_id')->filter(function ($group){
             return $group->count() > 1;
         });
 
-        return $duplicates->count() > 0;
+        $is_meal_system_modify = $duplicates->count() > 0;
+        $has_meal_entries = $this->meal_entries->count() > 0;
+
+        return $is_meal_system_modify || $has_meal_entries;
     }
 
 
@@ -309,6 +318,15 @@ class Order extends Model
             $status = true;
         }
         return $status;
+    }
+
+    public function getCanEditAttribute(): bool
+    {
+        $before_edit = CompanySetting::first()?->order_can_edit_before ?? 0;
+        $before_edit_time = date('Y-m-d H:i:s', strtotime("-$before_edit hours"));
+        $start_time = $this->date_wise_monitor->min('start_time');
+
+        return $start_time > $before_edit_time;
     }
 
 

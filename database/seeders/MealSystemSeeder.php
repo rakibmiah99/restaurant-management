@@ -17,51 +17,61 @@ class MealSystemSeeder extends Seeder
     {
         $mealSystem = [
             [
+                'id' => 1,
                 'name' => 'Full Board',
                 'is_main' => false,
                 'type' => MealSystemType::NORMAL->value
             ],
             [
+                'id' => 2,
                 'name' => 'HB -> Breakfast/Launch',
                 'is_main' => false,
                 'type' => MealSystemType::NORMAL->value
             ],
             [
+                'id' => 3,
                 'name' => 'HB-> Breakfast/Dinner',
                 'is_main' => false,
                 'type' => MealSystemType::NORMAL->value
             ],
             [
+                'id' => 4,
                 'name' => 'Lunch/Dinner',
                 'is_main' => false,
                 'type' => MealSystemType::NORMAL->value
             ],
             [
+                'id' => 5,
                 'name' => 'Breakfast',
                 'is_main' => true,
                 'type' => MealSystemType::NORMAL->value
             ],
             [
+                'id' => 6,
                 'name' => 'Lunch',
                 'is_main' => true,
                 'type' => MealSystemType::NORMAL->value
             ],
             [
+                'id' => 7,
                 'name' => 'Dinner',
                 'is_main' => true,
                 'type' => MealSystemType::NORMAL->value
             ],
             [
+                'id' => 8,
                 'name' => 'Full Board',
                 'is_main' => false,
                 'type' => MealSystemType::RAMADAN->value
             ],
             [
+                'id' => 9,
                 'name' => 'Sheri',
                 'is_main' => true,
                 'type' => MealSystemType::RAMADAN->value
             ],
             [
+                'id' => 10,
                 'name' => 'Iftar',
                 'is_main' => true,
                 'type' => MealSystemType::RAMADAN->value

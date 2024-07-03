@@ -5,6 +5,8 @@
     $title = $attributes->get('title');
     $after_label = $attributes->get('after-label');
     $value = $attributes->get('value');
+    $min = $attributes->get('min');
+    $max = $attributes->get('max');
     $type = $attributes->get('type') ?? "text";
     $input_size = "";
     $label_size = "";
@@ -36,6 +38,8 @@
             type="{{$type}}"
             value="{{$value}}"
             id="{{$name}}"
+            @if($min) min="{{$min}}" @endif
+            @if($max) max="{{$max}}" @endif
         >
     </div>
 </div>

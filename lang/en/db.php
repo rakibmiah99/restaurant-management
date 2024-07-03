@@ -107,6 +107,9 @@
             'meal_system' => "Meal System",
             'total_guest' => "total guest",
         ],
+        'roles' => [
+            'name' => "Role Name",
+        ],
         'report' => [
             'hotel' => [
                 'order_number' => 'order number',

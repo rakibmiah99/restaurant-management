@@ -10,11 +10,18 @@ use App\Models\Company;
 use App\Models\Country;
 use App\Models\MealPrice;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Maatwebsite\Excel\Facades\Excel;
 
 class CompanyController extends Controller
 {
+    public function __construct()
+    {
+        $this->group_name = 'company';
+    }
+
     public function index(Request $request){
+        Helper::HasPermissionView($this->group_name);
         $columns = (new Company())->getColumns();
         $data = Company::filter()->paginate(Helper::PerPage())->withQueryString();
         return view('company.index', compact('data', 'columns'));

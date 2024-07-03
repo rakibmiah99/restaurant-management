@@ -2,19 +2,26 @@
 
 namespace App\Models;
 
+use App\Casts\ExecutionStatusCast;
 use App\Enums\Status;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use function Pest\Laravel\json;
 
 class DateWiseMonitor extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'execution_status' => ExecutionStatusCast::class
+    ];
+
+
     public function scopeFilter(Builder $builder)
     {
         $request = request();
-        $builder->with(['order.hall', 'meal_entries'])
+        $builder->with(['order.hall','order.hotel', 'order.country', 'meal_entries', 'meal_system'])
             ->whereHas('order', function ($order) use($request) {
                 if ($hotel_id = $request->get('hotel')){
                     $order->where('hotel_id', $hotel_id);
@@ -31,7 +38,9 @@ class DateWiseMonitor extends Model
 ////                $hall->where('id', 1);
 //            })
             ->whereDate('meal_date', '>=', date('Y-m-d'))
+            ->where('execution_status', '>=', 0)
             ->orderBy('meal_date')
+            ->orderBy('start_time')
             ->orderBy('order_id', 'desc');
 
         if ($meal_system_id = $request->get('meal_system')){
@@ -95,24 +104,26 @@ class DateWiseMonitor extends Model
 
     public function meal_entries()
     {
-        return $this->hasMany(MealEntries::class, 'order_id', 'order_id')
+        return $this->hasMany(MealEntries::class, 'order_id', 'order_id');
+    }
+
+    public function meal_entries_condition(){
+        return $this->meal_entries
             ->where('taken_date', '=', $this->meal_date)
             ->where('meal_system_id', '=', $this->meal_system_id);
     }
 
     public function getTotalTakenAttribute(){
-        return $this->meal_entries()->count();
+        return $this->meal_entries_condition()->count();
     }
-    public function getExecutionStatusAttribute(){
-//        $this->
-    }
+
 
 
 
 
     public function getInHallAttribute(){
-        return $this->meal_entries()
-            ->whereDate('taken_date', date('Y-m-d'))
+        return $this->meal_entries_condition()
+            ->where('taken_date', '=', date('Y-m-d'))
             ->whereBetween('taken_time', [date('H:i:s', strtotime('-30 minutes')), date('H:i:s')])
             ->count();
     }

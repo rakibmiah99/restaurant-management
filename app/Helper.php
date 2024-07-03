@@ -7,6 +7,7 @@ use Illuminate\Container\Container;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 
 class Helper
 {
@@ -120,4 +121,22 @@ class Helper
         return $name." ".__('page.status_change_successfully');
     }
 
+    public static function HasPermission($group, $name){
+        Gate::authorize($group.".actions.".$name);
+    }
+    public static function HasPermissionView($group){
+        Gate::authorize($group.".actions.view");
+    }
+    public static function HasPermissionCreate($group){
+        Gate::authorize($group.".actions.create");
+    }
+    public static function HasPermissionUpdate($group){
+        Gate::authorize($group.".actions.update");
+    }
+    public static function HasPermissionExport($group){
+        Gate::authorize($group.".actions.export");
+    }
+    public static function HasPermissionChangeStatus($group){
+        Gate::authorize($group.".actions.change-status");
+    }
 }

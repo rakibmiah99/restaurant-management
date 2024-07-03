@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Model;
+use Spatie\Permission\Traits\HasPermissions;
+use Spatie\Permission\Traits\HasRoles;
+
 #[ObservedBy([CompanyObserver::class]), ScopedBy(DescScope::class)]
 class Company extends Model
 {
@@ -66,7 +69,7 @@ class Company extends Model
         $company = Company::orderBy('id', 'desc')->first();
         $uniqueID = "1000";
         if ($company){
-            $uniqueID = $company->unique_id+1;
+            $uniqueID = $company->code+1;
         }
 
         return $uniqueID;

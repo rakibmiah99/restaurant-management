@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ExportFormat;
+use App\Enums\OrderEditTypeEnum;
 use App\Exports\HallExport;
 use App\Exports\OrderExport;
 use App\Helper;
 use App\Http\Requests\Hall\CreateHallRequest;
 use App\Http\Requests\Hall\UpdateHallRequest;
 use App\Http\Requests\Order\CreateOrderRequest;
+use App\Http\Requests\Order\UpdateOrderRequest;
 use App\Models\Company;
 use App\Models\Country;
 use App\Models\DateAndMealSWiseMonitor;
@@ -20,6 +22,7 @@ use App\Models\MealSystemForMealPrice;
 use App\Models\Order;
 use App\Models\OrderMonitoring;
 use App\Models\OrderWiseMealPrice;
+use App\Observers\OrderObserver;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
@@ -273,11 +276,13 @@ class OrderController extends Controller
 
     }
     public function show($id){
-        $hall = Hall::find($id);
-        if (!$hall){
+        $order = Order::find($id);
+        if (!$order){
             abort(404);
         }
-        return response()->json($hall->load(['hotel']));
+        $columns = (new Order())->getColumns();
+
+        return view('order.details', compact('order', 'columns'));
     }
 
     public function create(Request $request): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
@@ -299,12 +304,14 @@ class OrderController extends Controller
     public function edit($id, Request $request)
     {
         $order = Order::find($id);
+
         if (!$order){
             abort(404);
         }
 
-
-//        return $order->is_modified;
+        if (!$order->can_edit){
+            return $this->errorMessage(__('page.editable_time_expired'));
+        }
 
         $hotels = Hotel::active()->get();
         $companies = Company::active()->get();
@@ -320,6 +327,56 @@ class OrderController extends Controller
             'mealPricesNormal'
         ));
     }
+
+
+
+    public function GenerateOrderMonitorData($request , $order){
+//        dd($request->meal_system_price_id);
+
+        $orderMonitorData = [];
+        foreach ($request->meal_system_price_id as $key=>$id){
+            //make order wise meal system data ;
+            $meal_system_for_meal_price = MealSystemForMealPrice::find($id);
+            if (!$meal_system_for_meal_price){
+                //handle error here
+                dd('error');
+            }
+
+            $meal_system_id = $meal_system_for_meal_price->meal_system_id;
+            $meal_system = MealSystem::find($meal_system_id);
+            $allow_meal = $meal_system->allowMealSystem;
+
+            //make order monitoring data
+            $from_date = $request->from_date[$key];
+            $to_date = $request->to_date[$key];
+
+            $number_of_guest = $request->guest[$key];
+
+            // Define the start and end dates
+            $from_date = Carbon::create($from_date);
+            $to_date = Carbon::create($to_date);
+
+            // Create a period instance for the range
+            $period = CarbonPeriod::create($from_date, $to_date);
+
+            // Loop through each day in the range
+            foreach ($period as $date) {
+                foreach ($allow_meal as $meal){
+                    $orderMonitorData [] = [
+                        'order_id' => $order->id,
+                        'meal_system_type' => $meal_system->type,
+                        'number_of_guest' => $number_of_guest,
+                        'meal_date' => $date->format('Y-m-d'),
+                        'order_meal_system_id' => $meal_system->id,
+                        'meal_system_id' => $meal->id
+                    ];
+                }
+            }
+        }
+
+        return $orderMonitorData;
+    }
+
 
 
     public function store(CreateOrderRequest $request){
@@ -342,50 +399,8 @@ class OrderController extends Controller
             ]);
 
             $order = Order::create($orderData);
-            $orderMonitorData = [];
-            $orderWiseMealPricesData = [];
-            foreach ($request->meal_system_price_id as $key=>$id){
-                //make order wise meal system data ;
-                $meal_system_for_meal_price = MealSystemForMealPrice::find($id);
-                if (!$meal_system_for_meal_price){
-                    //handle error here
-                    dd('error');
-                }
+            $orderMonitorData = $this->GenerateOrderMonitorData($request, $order);
 
-                $meal_system_id = $meal_system_for_meal_price->meal_system_id;
-                $meal_system = MealSystem::find($meal_system_id);
-                $allow_meal = $meal_system->allowMealSystem;
-
-                //make order monitoring data
-                $from_date = $request->from_date[$key];
-                $to_date = $request->to_date[$key];
-
-                $number_of_guest = $request->guest[$key];
-
-                // Define the start and end dates
-                $from_date = Carbon::create($from_date);
-                $to_date = Carbon::create($to_date);
-
-                // Create a period instance for the range
-                $period = CarbonPeriod::create($from_date, $to_date);
-
-                // Loop through each day in the range
-                foreach ($period as $date) {
-                    foreach ($allow_meal as $meal){
-                        $orderMonitorData [] = [
-                            'order_id' => $order->id,
-                            'meal_system_type' => $meal_system->type,
-                            'number_of_guest' => $number_of_guest,
-                            'meal_date' => $date->format('Y-m-d'),
-                            'order_meal_system_id' => $meal_system->id,
-                            'meal_system_id' => $meal->id
-                        ];
-                    }
-                }
-            }
-
-
-            OrderWiseMealPrice::insert($orderWiseMealPricesData);
             OrderMonitoring::insert($orderMonitorData);
             DB::commit();
             return redirect()->back()->with('success', Helper::CreatedSuccessFully());
@@ -396,13 +411,69 @@ class OrderController extends Controller
     }
 
 
-    public function update($id, UpdateHallRequest $request){
-        $hall = Hall::find($id);
-        if (!$hall){
+    public function update($id, UpdateOrderRequest $request){
+        $order = Order::find($id);
+        if (!$order){
             abort(404);
         }
-        $hall->update($request->validated());
-        return redirect()->back()->with('success', 'Hall Updated Successfully');
+
+        DB::beginTransaction();
+
+        try {
+            if ($request->input(OrderEditTypeEnum::KEY->value) == OrderEditTypeEnum::WITH_MEAL->value || !$request->input(OrderEditTypeEnum::KEY->value))
+            {
+                $order->meal_entries()->delete();
+                $order->order_monitoring()->delete();
+                $orderData = collect($request->only([
+                    'order_date',
+                    'country_id',
+                    'service_type',
+                    'company_id',
+                    'hotel_id',
+                    'hall_id',
+                    'mpi_for_normal',
+                    'mpi_for_ramadan',
+                    'order_note',
+                    'status',
+                ]));
+
+                if (!$request->mpi_for_normal){
+                    $orderData = $orderData->except(['mpi_for_normal']);
+                }
+                if (!$request->mpi_for_ramadan){
+                    $orderData = $orderData->except(['mpi_for_ramadan']);
+                }
+
+                $order->update($orderData->toArray());
+
+
+                $orderMonitorData = $this->GenerateOrderMonitorData($request, $order);
+
+                OrderMonitoring::insert($orderMonitorData);
+
+            }
+            else{
+                $orderData = $request->only([
+                    'order_date',
+                    'country_id',
+                    'service_type',
+                    'company_id',
+                    'hotel_id',
+                    'hall_id',
+                    'order_note',
+                    'status',
+                ]);
+
+                $order->update($orderData);
+            }
+            DB::commit();
+            return redirect()->back()->with('success', Helper::UpdatedSuccessFully());
+        }
+        catch (\Exception $exception){
+            DB::rollBack();
+            dd($exception->getMessage());
+        }
+
     }
 
 
@@ -411,6 +482,10 @@ class OrderController extends Controller
         if (!$order){
             abort(404);
         }
+        if (!$order->can_edit){
+            return $this->errorMessage(__('page.editable_time_expired'));
+        }
+
         $order->delete();
 
         return redirect()->back()->with('success', Helper::DeletedSuccessFully());
