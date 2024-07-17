@@ -20,6 +20,17 @@ class RolesController extends Controller
         return view('roles.index', compact('data', 'columns'));
     }
 
+
+    public function show($id){
+        $role = \App\Models\Role::find($id);
+        if (!$role){
+            abort(404);
+        }
+        $role_has_permissions = $role->permissions->pluck('id')->toArray();
+        $permissions = Permission::get()->groupBy('group_name');
+        return view('roles.show', compact('role', 'role_has_permissions', 'permissions'));
+    }
+
     public function create(Request $request)
     {
         $permissions = Permission::get()->groupBy('group_name');
@@ -95,5 +106,15 @@ class RolesController extends Controller
 
 
 
+    }
+
+    public function delete($id){
+        $role = \App\Models\Role::find($id);
+        if (!$role){
+            abort(404);
+        }
+
+        $role->delete();
+        return $this->successMessage(Helper::DeletedSuccessFully());
     }
 }

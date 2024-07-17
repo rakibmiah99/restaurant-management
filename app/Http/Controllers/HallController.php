@@ -9,6 +9,7 @@ use App\Http\Requests\Hall\CreateHallRequest;
 use App\Http\Requests\Hall\UpdateHallRequest;
 use App\Models\Hall;
 use App\Models\Hotel;
+use App\Services\HallService;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -67,14 +68,18 @@ class HallController extends Controller
     }
 
 
-    public function delete($id){
-        $hall = Hall::find($id);
-        if (!$hall){
-            abort(404);
+    public function delete(HallService $hallService){
+        try {
+            if ($hallService->canDelete()){
+                return redirect()->back()->with('success', Helper::DeletedSuccessFully());
+            }
+            else{
+                return $this->errorMessage(Helper::CantDeleteUsedInAnother());
+            }
         }
-        $hall->delete();
-
-        return redirect()->back()->with('success', Helper::DeletedSuccessFully());
+        catch (\Exception $exception){
+            return $exception->getMessage();
+        }
     }
 
     public function changeStatus($id){

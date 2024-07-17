@@ -1,7 +1,7 @@
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-            <x-card-header :name="__('page.roles')" :url="route('role.index')" :url-name="__('page.back')"/>
+            <x-card-header :can-create="true" :name="__('page.roles')" :url="route('role.index')" :url-name="__('page.back')"/>
             <form action="{{route('role.store')}}" method="post" c class="card-body">
                 @csrf
                 @include('roles.form_data')

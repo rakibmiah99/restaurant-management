@@ -2,9 +2,9 @@
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-           <x-card-header :url="route('hall.create')" :name="__('page.halls')" :url-name="__('page.create')"/>
+           <x-card-header :can-create="\App\Helper::HasPermissionMenu('hall', 'create')" :url="route('hall.create')" :name="__('page.halls')" :url-name="__('page.create')"/>
             <div class="mt-3">
-                <x-filter-data export-url="hall.export" translate-from="db.hall" :columns="$columns"/>
+                <x-filter-data :can-export="\App\Helper::HasPermissionMenu('hall', 'export')" export-url="hall.export" translate-from="db.hall" :columns="$columns"/>
 
                 <div class="table-responsive table-paginate mt-2 text-nowrap">
                     <table class="table">
@@ -51,12 +51,11 @@
                                             <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="bx bx-dots-vertical-rounded"></i>
                                             </button>
-                                            <div class="dropdown-menu" style="">
-                                                <a data-bs-toggle="modal" data-bs-target="#viewModal" class="dropdown-item view-btn" href="javascript:void(0);" url="{{route('hall.show', $item->id)}}"><i class='bx bx-low-vision'></i>{{__('page.view')}}</a>
-                                                <a class="dropdown-item" href="{{route('hall.edit', $item->id)}}"><i class="bx bx-edit-alt me-1"></i>{{__('page.edit')}}</a>
-                                                <a class="dropdown-item" href="{{route('hall.changeStatus', $item->id)}}"><i class='bx bx-checkbox-minus'></i> {{$item->status ? __('page.inactive') : __('page.active') }}</a>
-                                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" url="{{route('hall.delete', $item->id)}}"  class="dropdown-item delete-btn" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>{{__('page.delete')}}</a>
-                                            </div>
+                                            <x-action-buttons
+                                                :model="$item"
+                                                permission-for="hall"
+                                                route-prefix="hall"
+                                            />
                                         </div>
                                     </td>
                                 </tr>

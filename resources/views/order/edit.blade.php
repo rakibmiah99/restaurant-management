@@ -2,7 +2,7 @@
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-            <x-card-header :name="__('page.orders')" :url="route('order.index')" :url-name="__('page.back')"/>
+            <x-card-header :can-create="true" :name="__('page.orders')" :url="route('order.index')" :url-name="__('page.back')"/>
             @if($order->is_modified && !request()->get(\App\Enums\OrderEditTypeEnum::KEY->value))
                 @include('order.is_modified')
             @else

@@ -3,10 +3,10 @@
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-           <x-card-header :url="route('order.choose')" :name="__('page.orders')" :url-name="__('page.create')"/>
+           <x-card-header :url="route('order.choose')" :name="__('page.order_monitoring')" :url-name="__('page.create')"/>
             <div class="mt-3">
                 @include('order_monitoring.filter_form')
-                <x-filter-data export-url="order_monitoring.export" translate-from="db.order_monitoring" :columns="$columns"/>
+                <x-filter-data :can-export="true" export-url="order_monitoring.export" translate-from="db.order_monitoring" :columns="$columns"/>
 
                 <div class="table-responsive table-paginate mt-2 text-nowrap">
                     <table class="table">

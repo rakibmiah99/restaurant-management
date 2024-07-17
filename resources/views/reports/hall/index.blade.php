@@ -1,12 +1,10 @@
-
-
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-            <x-card-header :url="route('order.choose')" :name="__('page.orders')" :url-name="__('page.create')"/>
+            <x-card-header :url="route('order.choose')" :name="__('page.hall_reports')" :url-name="__('page.create')"/>
             <div class="mt-3">
                 @include('reports.hall.filter_form')
-                <x-filter-data export-url="report.export.hall" translate-from="db.report.hall" :columns="$columns"/>
+                <x-filter-data :can-export="true" export-url="report.export.hall" translate-from="db.report.hall" :columns="$columns"/>
 
                 <div class="table-responsive table-paginate mt-2 text-nowrap">
                     <table class="table">
@@ -16,6 +14,7 @@
                             @foreach(request()->columns ?? $columns as $column)
                                 <th>{{__('db.report.hall.'.$column)}}</th>
                             @endforeach
+                            <th>{{__('page.action')}}</th>
                         </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
@@ -56,11 +55,10 @@
                                         @endif
                                     </th>
 
-
-
-
-
                                 @endforeach
+                                <td>
+                                    @include('reports.view_btn', ['route' => route('report.show.hall', $item->id)])
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -75,4 +73,28 @@
             </div>
         </div>
     </div>
+    <x-view-modal size="modal-lg">
+        <div id="data-view" class="table-responsive mt-2 text-nowrap">
+
+        </div>
+    </x-view-modal>
 </x-main-layout>
+<script>
+    $('.view-btn').on('click', function (){
+        $('#meal-systems').empty();
+        modalLoaderON();
+        let url = $(this).attr('url')
+        axios({
+            method: 'get',
+            url: url
+        })
+            .then(function (response){
+                modalLoaderOFF();
+                const data = response.data;
+                $('#data-view').html(data)
+            })
+            .catch(function (error){
+
+            });
+    })
+</script>

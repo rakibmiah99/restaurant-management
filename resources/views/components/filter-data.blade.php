@@ -5,20 +5,22 @@
                 <option @if(request()->perpage == $item) selected @endif value="{{$item}}">{{$item}}</option>
             @endforeach
         </select>
-        <a
-            href="{{route($attributes->get('export-url'), array_merge(request()->all(), ['export-type' => 'pdf']))}}"
-            type="button"
-            class="btn btn-sm btn-icon ms-2 btn-outline-danger "
-        >
-            <i class='bx bxs-file-pdf'></i>
-        </a>
-        <a
-            href="{{route($attributes->get('export-url'), array_merge(request()->all(), ['export-type' => 'excel']))}}"
-            type="button" class="btn btn-icon btn-sm ms-2 btn-outline-success "
-        >
-            <i class='bx bx-spreadsheet' ></i>
-        </a>
 
+        @if($attributes->get('can-export'))
+            <a
+                href="{{route($attributes->get('export-url'), array_merge(request()->all(), ['export-type' => 'pdf']))}}"
+                type="button"
+                class="btn btn-sm btn-icon ms-2 btn-outline-danger "
+            >
+                <i class='bx bxs-file-pdf'></i>
+            </a>
+            <a
+                href="{{route($attributes->get('export-url'), array_merge(request()->all(), ['export-type' => 'excel']))}}"
+                type="button" class="btn btn-icon btn-sm ms-2 btn-outline-success "
+            >
+                <i class='bx bx-spreadsheet' ></i>
+            </a>
+        @endif
 
         <div class="dropdown">
             <button type="button" class="btn btn-sm btn-icon btn-outline-secondary ms-2 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false">
@@ -34,7 +36,7 @@
                     </li>
                 @endforeach
                 <li class="dropdown-item">
-                    <input type="submit" value="filter" class="btn d-block btn-sm btn-primary"/>
+                    <input type="submit" value="{{__('page.filter')}}" class="btn d-block btn-sm btn-primary"/>
                 </li>
             </ul>
         </div>
@@ -45,7 +47,7 @@
 
     @if($attributes->get('search') !== false)
         <!-- searchData function in main layout script -->
-        <input value="{{request()->q}}" name="q" onkeyup="searchData()" style="width: 150px" id="searchInput" class="form-control d-inline form-control-sm" type="text" placeholder="search">
+        <input value="{{request()->q}}" name="q" onkeyup="searchData()" style="width: 150px" id="searchInput" class="form-control d-inline form-control-sm" type="text" placeholder="{{__('page.search')}}">
 
     @endif
 

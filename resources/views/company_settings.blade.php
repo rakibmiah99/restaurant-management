@@ -2,7 +2,7 @@
     <div class="p-4">
         <div class="card">
             <x-card-header :name="__('page.company_settings')" :url="route('settings.company')" :url-name="__('page.back')"/>
-            <form action="{{route('settings.company.update')}}" method="post"  class="card-body">
+            <form enctype="multipart/form-data" action="{{route('settings.company.update')}}" method="post"  class="card-body">
                 @csrf
                 <x-input
                     :title="__('page.company_name')"
@@ -59,6 +59,14 @@
                     :value="$settings?->order_can_edit_before"
                 />
 
+                <div class="col-md-12">
+                    <x-input
+                        :title="__('page.image')"
+                        name="file"
+                        type="file"
+                        :required="false"
+                    />
+                </div>
 
 
 

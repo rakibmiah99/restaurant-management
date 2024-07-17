@@ -7,6 +7,7 @@ use App\MealSystemType;
 use App\Model;
 use App\Models\Scopes\DescScope;
 use App\Observers\HallObserver;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
@@ -43,6 +44,10 @@ class Hall extends Model
 
     public function hotel(){
         return $this->belongsTo(Hotel::class, 'hotel_id', 'id');
+    }
+
+    public function orders(){
+        return $this->hasMany(Order::class, 'hall_id', 'id');
     }
 
 
@@ -85,8 +90,7 @@ class Hall extends Model
             else if($now < $this->l_start){
                 $meal_systems = MealSystem::GetAfterBreakfast();
             }
-            else if($now < $this->d_start){
-
+            else if($now >= $this->d_start && $now <= $this->d_end){
                 $meal_systems = MealSystem::GetAfterLunch();
             }
         }
@@ -94,7 +98,7 @@ class Hall extends Model
             if($now < $this->s_start){
                 $meal_systems = MealSystem::GetAllForRamadan();
             }
-            else if($now < $this->i_start){
+            else if($now >= $this->i_start && $now <= $this->i_end){
                 $meal_systems = MealSystem::GetAfterSeheri();
             }
         }
@@ -105,11 +109,11 @@ class Hall extends Model
 
     public static function GenerateUniqueCode(){
         $model = MealPrice::orderBy('id', 'desc')->first();
-        $code = "1000";
+        $code = 1;
         if ($model){
-            $code = $model->code+1;
+            $code = $model->id+1;
         }
 
-        return $code;
+        return str_pad($code, 4, 0, STR_PAD_LEFT);
     }
 }

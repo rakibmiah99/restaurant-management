@@ -50,13 +50,26 @@ class MealPrice extends Model
         return $this->hasMany(MealSystemForMealPrice::class, 'meal_price_id', 'id');
     }
 
+    public function companies(){
+        return $this->hasMany(Company::class, 'meal_price_id', 'id');
+    }
+
+    public function orders(){
+        if ($this->type == "normal"){
+            return $this->hasMany(Order::class, 'mpi_for_normal', 'id');
+        }
+        else{
+            return $this->hasMany(Order::class, 'mpi_for_ramadan', 'id');
+        }
+    }
+
     public static function GenerateUniqueCode(){
         $model = MealPrice::orderBy('id', 'desc')->first();
-        $code = "1000";
+        $code = 1;
         if ($model){
-            $code = $model->code+1;
+            $code = $model->id+1;
         }
 
-        return $code;
+        return str_pad($code, 4, 0, STR_PAD_LEFT);
     }
 }

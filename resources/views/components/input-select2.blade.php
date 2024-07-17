@@ -6,6 +6,7 @@
     $column = $attributes->get('column') ?? 'id';
     $display_column = $attributes->get('display_column') ?? 'name';
     $is_required = $attributes->get('is_required');
+    $is_multiple = $attributes->get('multiple');
     $title = $attributes->get('title');
     $value = $attributes->get('value');
     $input_size = "";
@@ -35,7 +36,7 @@
 
         </label>
         <div class="{{$input_size}}">
-            <select @if($is_required) required @endif name="{{$name}}" class="form-select {{$size}} select-2" id="{{$name}}">
+            <select @if($is_multiple) multiple @endif @if($is_required) required @endif name="{{$name}}" class="form-select {{$size}} select-2" id="{{$name}}">
                 <option value="">{{__('page.select')}}</option>
                 @foreach($array as $item)
                     <option value="{{$item->$column}}">{{$item->$display_column}}</option>
@@ -46,7 +47,12 @@
 
     @if($value)
         <script>
-            $('#{{$name}}').val('{{$value}}')
+            @if(isset($is_multiple) && $is_multiple === true)
+                $('#{{$name}}').val({{json_encode($value)}});
+            @else
+                $('#{{$name}}').val({{$value}});
+            @endif
+
         </script>
     @endif
 @endif
@@ -67,7 +73,7 @@
                 <input class="form-control {{$size ? 'form-control-sm': ''}}" type="text" name="{{$name}}-code"  value="{{$code ?? old($name."-code")}}" id="{{$name}}-code">
             </div>
             <div class="{{$mode == "horizontal" ? 'col-md-8' : 'w-75'}}  ps-0">
-                <select @if($is_required) required @endif  name="{{$name}}" class="form-select {{$size}} select-2" id="{{$name}}">
+                <select @if($is_multiple) multiple @endif @if($is_required) required @endif  name="{{$name}}" class="form-select {{$size}} select-2" id="{{$name}}">
                     <option value="">{{__('page.select')}}</option>
                     @foreach($array as $item)
                         <option code="{{$item->code}}" value="{{$item->$column}}">{{$item->$display_column}}</option>

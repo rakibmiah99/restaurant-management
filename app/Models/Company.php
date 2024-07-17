@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -62,17 +63,20 @@ class Company extends Model
     }
 
 
+    public function orders(){
+        return $this->hasMany(Order::class, 'company_id', 'id');
+    }
 
 
 
     public static function GenerateUniqueID(){
         $company = Company::orderBy('id', 'desc')->first();
-        $uniqueID = "1000";
+        $uniqueID = 1;
         if ($company){
-            $uniqueID = $company->code+1;
+            $uniqueID = $company->id+1;
         }
 
-        return $uniqueID;
+        return str_pad($uniqueID, 4, 0, STR_PAD_LEFT);
     }
 
 }

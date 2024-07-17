@@ -8,6 +8,7 @@ use App\Helper;
 use App\Http\Requests\Hotel\CreateHotelRequest;
 use App\Http\Requests\Hotel\UpdateHotelRequest;
 use App\Models\Hotel;
+use App\Services\HotelService;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -78,14 +79,18 @@ class HotelController extends Controller
     }
 
 
-    public function delete($id){
-        $hotel = Hotel::find($id);
-        if (!$hotel){
-            abort(404);
+    public function delete(HotelService $hotelService){
+        try {
+            if ($hotelService->canDelete()){
+                return redirect()->back()->with('success', Helper::DeletedSuccessFully());
+            }
+            else{
+                return $this->errorMessage(Helper::CantDeleteUsedInAnother());
+            }
         }
-        $hotel->delete();
-
-        return redirect()->back()->with('success', Helper::DeletedSuccessFully());
+        catch (\Exception $exception){
+            return $exception->getMessage();
+        }
     }
 
     public function changeStatus($id){

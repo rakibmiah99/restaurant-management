@@ -36,6 +36,16 @@ class MealEntryController extends Controller
                 ->where('meal_date', $date)->first();
 
 
+
+            $total_taken = $order->meal_entries->where('taken_date', $date)
+                ->where('order_meal_system_id', $meal_system_id)
+                ->where('meal_system_id', $running_meal)
+                ->count();
+
+            if($total_taken >= $today_meal_info->number_of_guest){
+                throw new \Exception('today all meal eaten!');
+            }
+
             $taken_meal = $order->meal_entries->where('taken_date', $date)
                 ->where('guest_info', $guest_info)
                 ->where('order_meal_system_id', $meal_system_id)
@@ -46,6 +56,7 @@ class MealEntryController extends Controller
             if(!$today_meal_info){
                 throw new \Exception('today no meal found!');
             }
+
 
             if($taken_meal > $today_meal_info->number_of_guest){
                 throw new \Exception('already all meal taken!');

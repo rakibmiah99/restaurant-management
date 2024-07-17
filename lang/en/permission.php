@@ -29,7 +29,9 @@ return [
         'name' => 'Order',
         'actions' => array_merge($actions, [
             'monitoring' => 'Monitoring',
-            'complete_order' => 'Complete Order'
+            'complete_order' => 'Complete Order',
+            'modify_guest' => 'Modify Guest',
+            'show_qr' => 'Show QR'
         ])
     ],
     'invoice' => [
@@ -41,6 +43,7 @@ return [
         'name' => 'Report',
         'actions' => [
             'hall' => 'Hall',
+            'hotel' => 'Hotel',
             'kitchen' => 'Kitchen',
             'revenue' => 'Revenue',
             'order' => 'Order',
@@ -54,5 +57,15 @@ return [
         'actions' => [
             'update' => $actions['update']
         ]
+    ],
+
+    'role' => [
+        'name' => 'Roles',
+        'actions' => collect($actions)->only(['create', 'view', 'update', 'delete'])->toArray()
+    ],
+
+    'user' => [
+        'name' => 'Users',
+        'actions' => collect($actions)->except(['change_status'])->toArray()
     ],
 ];

@@ -2,9 +2,13 @@
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-           <x-card-header :url="route('company.create')" :name="__('page.companies')" :url-name="__('page.create')"/>
+           <x-card-header
+               :can-create="\App\Helper::HasPermissionMenu('company', 'create')"
+               :url="route('company.create')"
+               :name="__('page.companies')"
+               :url-name="__('page.create')"/>
             <div class="mt-3">
-                <x-filter-data export-url="company.export" translate-from="db.company" :columns="$columns"/>
+                <x-filter-data :can-export="\App\Helper::HasPermissionMenu('company', 'export')" export-url="company.export" translate-from="db.company" :columns="$columns"/>
 
                 <div class="table-responsive mt-2 table-paginate text-nowrap">
                     <table class="table">
@@ -42,12 +46,11 @@
                                             <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="bx bx-dots-vertical-rounded"></i>
                                             </button>
-                                            <div class="dropdown-menu" style="">
-                                                <a data-bs-toggle="modal" data-bs-target="#viewModal" class="dropdown-item view-btn" href="javascript:void(0);" url="{{route('company.show', $item->id)}}"><i class='bx bx-low-vision'></i>{{__('page.view')}}</a>
-                                                <a class="dropdown-item" href="{{route('company.edit', $item->id)}}"><i class="bx bx-edit-alt me-1"></i>{{__('page.edit')}}</a>
-                                                <a class="dropdown-item" href="{{route('company.changeStatus', $item->id)}}"><i class='bx bx-checkbox-minus'></i> {{$item->status ? __('page.inactive') : __('page.active') }}</a>
-                                                <a data-bs-toggle="modal" data-bs-target="#deleteModal" url="{{route('company.delete', $item->id)}}"  class="dropdown-item delete-btn" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>{{__('page.delete')}}</a>
-                                            </div>
+                                            <x-action-buttons
+                                                :model="$item"
+                                                permission-for="company"
+                                                route-prefix="company"
+                                            />
                                         </div>
                                     </td>
                                 </tr>

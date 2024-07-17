@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth.check', 'localization'])->prefix('/')->group(function (){
     Route::get('/', [\App\Http\Controllers\DashboardController::class, 'page'])->name('home');
+    Route::get('/profile', [\App\Http\Controllers\UserController::class, 'profilePage'])->name('profile');
+    Route::post('/profile', [\App\Http\Controllers\UserController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/profile/change-password', [\App\Http\Controllers\UserController::class, 'changePasswordPage'])->name('profile.change_password_page');
+    Route::post('/profile/change-password', [\App\Http\Controllers\UserController::class, 'changePassword'])->name('profile.change_password');
 
     Route::prefix('company')->name('company.')->group(function (){
         Route::get('/', [\App\Http\Controllers\CompanyController::class, 'index'])->name('index');
@@ -59,12 +63,14 @@ Route::middleware(['auth.check', 'localization'])->prefix('/')->group(function (
     Route::prefix('order')->name('order.')->group(function (){
         Route::get('/', [\App\Http\Controllers\OrderController::class, 'index'])->name('index');
         Route::get('/show-qr/{id}', [\App\Http\Controllers\OrderController::class, 'showQR'])->name('showQR');
+        Route::get('/print-qr/{id}', [\App\Http\Controllers\OrderController::class, 'printQR'])->name('printQR');
         Route::get('/show-guest-qr/{code}', [\App\Http\Controllers\OrderController::class, 'showGuestQr'])->name('showGuestQr');
         Route::get('/modify-guest/{id}', [\App\Http\Controllers\OrderController::class, 'modifyGuest'])->name('modify');
         Route::post('/modify-guest/{id}', [\App\Http\Controllers\OrderController::class, 'updateModifyGuest'])->name('modify.save');
         Route::get('/choose', [\App\Http\Controllers\OrderController::class, 'choose'])->name('choose');
         Route::get('/create', [\App\Http\Controllers\OrderController::class, 'create'])->name('create');
         Route::get('/show/{id}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
+        Route::get('/print-details/{id}', [\App\Http\Controllers\OrderController::class, 'printDetails'])->name('printDetails');
         Route::get('/edit/{id}', [\App\Http\Controllers\OrderController::class, 'edit'])->name('edit');
         Route::get('/changeStatus/{id}', [\App\Http\Controllers\OrderController::class, 'changeStatus'])->name('changeStatus');
         Route::post('/update/{id}', [\App\Http\Controllers\OrderController::class, 'update'])->name('update');
@@ -103,20 +109,31 @@ Route::middleware(['auth.check', 'localization'])->prefix('/')->group(function (
         Route::get('/export', [\App\Http\Controllers\OrderMonitoringController::class, 'export'])->name('export');
     });
     Route::prefix('report')->name('report.')->group(function (){
-        Route::get('/hotel', [\App\Http\Controllers\ReportController::class, 'hotel'])->name('hotel');
-        Route::get('/export-hotel', [\App\Http\Controllers\ReportController::class, 'export_hotel'])->name('export.hotel');
+        //Hotel Reports
+        Route::get('/hotel', [\App\Http\Controllers\HotelReportController::class, 'index'])->name('hotel');
+        Route::get('/export-hotel', [\App\Http\Controllers\HotelReportController::class, 'export'])->name('export.hotel');
+        Route::get('/hotel/show/{order_id}', [\App\Http\Controllers\HotelReportController::class, 'show'])->name('show.hotel');
 
-        Route::get('/hall', [\App\Http\Controllers\ReportController::class, 'hall'])->name('hall');
-        Route::get('/export-hall', [\App\Http\Controllers\ReportController::class, 'export_hall'])->name('export.hall');
+        //Hall Reports
+        Route::get('/hall', [\App\Http\Controllers\HallReportController::class, 'index'])->name('hall');
+        Route::get('/export-hall', [\App\Http\Controllers\HallReportController::class, 'export'])->name('export.hall');
+        Route::get('/hall/show/{order_id}', [\App\Http\Controllers\HallReportController::class, 'show'])->name('show.hall');
 
-        Route::get('/order', [\App\Http\Controllers\ReportController::class, 'order'])->name('order');
-        Route::get('/export-order', [\App\Http\Controllers\ReportController::class, 'export_order'])->name('export.order');
+        //Order Reports
+        Route::get('/order', [\App\Http\Controllers\OrderReportController::class, 'index'])->name('order');
+        Route::get('/export-order', [\App\Http\Controllers\OrderReportController::class, 'export'])->name('export.order');
+        Route::get('/order/show/{order_id}', [\App\Http\Controllers\HotelReportController::class, 'show'])->name('show.order');
 
-        Route::get('/invoice', [\App\Http\Controllers\ReportController::class, 'invoice'])->name('invoice');
-        Route::get('/export-invoice', [\App\Http\Controllers\ReportController::class, 'export_invoice'])->name('export.invoice');
+        //Invoice Reports
+        Route::get('/invoice', [\App\Http\Controllers\InvoiceReportController::class, 'index'])->name('invoice');
+        Route::get('/export-invoice', [\App\Http\Controllers\InvoiceReportController::class, 'export'])->name('export.invoice');
+        Route::get('/invoice/show/{invoice_id}', [\App\Http\Controllers\InvoiceReportController::class, 'show'])->name('show.invoice');
 
-        Route::get('/revenue', [\App\Http\Controllers\ReportController::class, 'revenue'])->name('revenue');
-        Route::get('/export-revenue', [\App\Http\Controllers\ReportController::class, 'export_revenue'])->name('export.revenue');
+        //Revenue Reports
+        Route::get('/revenue', [\App\Http\Controllers\RevenueReportController::class, 'index'])->name('revenue');
+        Route::get('/export-revenue', [\App\Http\Controllers\RevenueReportController::class, 'export'])->name('export.revenue');
+        Route::get('/revenue/show/{invoice_id}', [\App\Http\Controllers\RevenueReportController::class, 'show'])->name('show.revenue');
+
 
         Route::get('/kitchen', [\App\Http\Controllers\ReportController::class, 'kitchen'])->name('kitchen');
         Route::get('/export-kitchen', [\App\Http\Controllers\ReportController::class, 'export_kitchen'])->name('export.kitchen');
@@ -131,11 +148,24 @@ Route::middleware(['auth.check', 'localization'])->prefix('/')->group(function (
     Route::prefix('roles')->name('role.')->group(function (){
         Route::get('/', [\App\Http\Controllers\RolesController::class, 'index'])->name('index');
         Route::get('/create', [\App\Http\Controllers\RolesController::class, 'create'])->name('create');
-        Route::get('/show/{id}', [\App\Http\Controllers\InvoiceController::class, 'show'])->name('show');
+        Route::get('/show/{id}', [\App\Http\Controllers\RolesController::class, 'show'])->name('show');
         Route::get('/edit/{id}', [\App\Http\Controllers\RolesController::class, 'edit'])->name('edit');
         Route::post('/update/{id}', [\App\Http\Controllers\RolesController::class, 'update'])->name('update');
         Route::post('/store', [\App\Http\Controllers\RolesController::class, 'store'])->name('store');
-        Route::post('/delete/{id}', [\App\Http\Controllers\InvoiceController::class, 'delete'])->name('delete');
+        Route::post('/delete/{id}', [\App\Http\Controllers\RolesController::class, 'delete'])->name('delete');
+    });
+
+
+    Route::prefix('users')->name('user.')->group(function (){
+        Route::get('/', [\App\Http\Controllers\UserController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\UserController::class, 'create'])->name('create');
+        Route::get('/show/{id}', [\App\Http\Controllers\UserController::class, 'show'])->name('show');
+        Route::get('/edit/{id}', [\App\Http\Controllers\UserController::class, 'edit'])->name('edit');
+        Route::get('/changeStatus/{id}', [\App\Http\Controllers\UserController::class, 'changeStatus'])->name('changeStatus');
+        Route::post('/update/{id}', [\App\Http\Controllers\UserController::class, 'update'])->name('update');
+        Route::post('/store', [\App\Http\Controllers\UserController::class, 'store'])->name('store');
+        Route::post('/delete/{id}', [\App\Http\Controllers\UserController::class, 'delete'])->name('delete');
+        Route::get('/export', [\App\Http\Controllers\UserController::class, 'export'])->name('export');
     });
 
 
@@ -152,3 +182,12 @@ Route::get('/taken-meal/{token}',  [\App\Http\Controllers\MealEntryController::c
 Route::get('/login', [\App\Http\Controllers\AuthController::class, 'loginPage'])->name('loginPage');
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
 Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
+
+
+Route::prefix('copy')->group(function (){
+    Route::get('/hotel', [\App\Http\Controllers\CopyController::class, 'hotel']);
+    Route::get('/hall', [\App\Http\Controllers\CopyController::class, 'hall']);
+    Route::get('/country', [\App\Http\Controllers\CopyController::class, 'country']);
+    Route::get('/meal-price', [\App\Http\Controllers\CopyController::class, 'meal_price']);
+    Route::get('/company', [\App\Http\Controllers\CopyController::class, 'company']);
+});

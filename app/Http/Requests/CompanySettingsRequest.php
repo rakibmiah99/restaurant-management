@@ -29,6 +29,7 @@ class CompanySettingsRequest extends FormRequest
             'company_website' => 'required|string',
             'tax' => 'required|numeric',
             'order_can_edit_before' => 'required|numeric',
+            'file' => 'nullable|mimes:jpeg,jpg,png,gif|max:100000'
         ];
     }
 }

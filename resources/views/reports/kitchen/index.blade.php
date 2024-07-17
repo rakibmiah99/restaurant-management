@@ -3,10 +3,10 @@
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-            <x-card-header :url="route('order.choose')" :name="__('page.orders')" :url-name="__('page.create')"/>
+            <x-card-header :url="route('order.choose')" :name="__('page.kitchen_reports')" :url-name="__('page.create')"/>
             <div class="mt-3">
                 @include('reports.kitchen.filter_form')
-                <x-filter-data :search="false" export-url="report.export.kitchen" translate-from="db.report.kitchen" :columns="$columns"/>
+                <x-filter-data :can-export="true" :search="false" export-url="report.export.kitchen" translate-from="db.report.kitchen" :columns="$columns"/>
 
                 <div class="table-responsive table-paginate mt-2 text-nowrap">
                     <table class="table">

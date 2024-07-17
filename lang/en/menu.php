@@ -24,10 +24,10 @@
       'settings' => 'Settings',
       'company_settings' => 'Company Settings',
       'roles_management' => 'Roles Management',
+      'users_management' => 'Users Management',
       'permission' => 'Permission',
       'roles' => 'Roles',
+      'users' => 'Users',
       'user_activity' => 'User Activity',
-
-
   ];
 

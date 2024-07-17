@@ -8,10 +8,10 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Lang;
 
 class Helper
 {
-
 
     public int $perpage = 1;
     /**
@@ -110,10 +110,18 @@ class Helper
     {
         return $name." ".__('page.updated_successfully');
     }
+    public static function UpdatedFailed($name = null): string
+    {
+        return $name." ".__('page.updated_failed');
+    }
 
     public static function DeletedSuccessFully($name = null): string
     {
         return $name." ".__('page.deleted_successfully');
+    }
+    public static function CantDeleteUsedInAnother($name = null): string
+    {
+        return $name." ".__('page.cant_delete');
     }
 
     public static function StatusChangedSuccessFully($name = null): string
@@ -138,5 +146,33 @@ class Helper
     }
     public static function HasPermissionChangeStatus($group){
         Gate::authorize($group.".actions.change-status");
+    }
+
+    public static function HasPermissionMenu($group, $action = null){
+        $status = 0;
+        $permissions = Lang::get('permission.'.$group, [], 'en');
+        if (is_array($permissions)){
+            $actions = array_keys($permissions['actions']);
+
+            if ($action){
+                if (in_array($action, $actions)){
+                    $permission_name = $group.".actions.".$action;
+                    $status = auth()->user()->can($permission_name);
+                }
+            }
+            else{
+                for ($i = 0; $i < count($actions); $i++){
+                    $action = $actions[$i];
+                    $permission_name = $group.".actions.".$action;
+                    $can = auth()->user()->can($permission_name);
+                    if ($can){
+                        $status = 1;
+                        break;
+                    }
+                }
+            }
+
+        }
+        return $status;
     }
 }

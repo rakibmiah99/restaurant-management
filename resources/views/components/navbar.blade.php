@@ -32,23 +32,23 @@
                 <button type="button" class="btn btn-outline-primary rounded-0 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     @if(app()->getLocale() == 'en')
                         <img height="15px"  class="me-2 d-inline-block" src="{{asset('/assets/us.jpg')}}"/>
-                        <span>ENGLISH</span>
+                        <span class="text-uppercase">{{__('page.english')}}</span>
                     @elseif(app()->getLocale() == 'ar')
                         <img height="15px" class="mr-2 me-2" src="{{asset('/assets/ar.png')}}"/>
-                        <span>ARABIC</span>
+                        <span class="text-uppercase">{{__('page.arabic')}}</span>
                     @endif
                 </button>
                 <ul class="dropdown-menu" style="">
                     <li>
                         <a class="dropdown-item d-flex align-items-center" href="{{route('lang.change', 'en')}}">
                             <img height="15px"  class="me-2 d-inline-block" src="{{asset('/assets/us.jpg')}}"/>
-                            <span>ENGLISH</span>
+                            <span class="text-uppercase">{{__('page.english')}}</span>
                         </a>
                     </li>
                     <li>
                         <a class="dropdown-item d-flex align-items-center" href="{{route('lang.change', 'ar')}}">
                             <img height="15px" class="mr-2 me-2" src="{{asset('/assets/ar.png')}}"/>
-                            <span>ARABIC</span>
+                            <span class="text-uppercase">{{__('page.arabic')}}</span>
                         </a>
                     </li>
 
@@ -68,12 +68,12 @@
                 <ul class="dropdown-menu dropdown-menu-end dropdown-styles">
                     <li>
                         <a class="dropdown-item" href="{{route('theme.change', \App\Enums\Theme::LIGHT->value)}}" data-theme="light">
-                            <span class="align-middle"><i class="bx bx-sun me-2"></i>Light</span>
+                            <span class="align-middle"><i class="bx bx-sun me-2"></i>{{__('page.light')}}</span>
                         </a>
                     </li>
                     <li>
                         <a class="dropdown-item" href="{{route('theme.change', \App\Enums\Theme::DARK->value)}}" data-theme="dark">
-                            <span class="align-middle"><i class="bx bx-moon me-2"></i>Dark</span>
+                            <span class="align-middle"><i class="bx bx-moon me-2"></i>{{__('page.dark')}}</span>
                         </a>
                     </li>
 {{--                    <li>--}}
@@ -92,7 +92,7 @@
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
                     <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                         <div class="avatar avatar-online">
-                            <img src="{{asset('assets/img/avatars/1.png')}}" alt class="w-px-40 h-auto rounded-circle" />
+                            <img src="{{auth()->user()->image ?? asset('assets/img/avatars/2.webp')}}" alt class="w-px-40 h-auto rounded-circle" />
                         </div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
@@ -101,12 +101,12 @@
                                 <div class="d-flex">
                                     <div class="flex-shrink-0 me-3">
                                         <div class="avatar avatar-online">
-                                            <img src="{{asset('assets/img/avatars/1.png')}}" alt class="w-px-40 h-auto rounded-circle" />
+                                            <img src="{{auth()->user()->image ?? asset('assets/img/avatars/2.webp')}}" alt class="w-px-40 h-auto rounded-circle" />
                                         </div>
                                     </div>
                                     <div class="flex-grow-1">
-                                        <span class="fw-semibold d-block">John Doe</span>
-                                        <small class="text-muted">Admin</small>
+                                        <span class="fw-semibold d-block">{{auth()->user()->name}}</span>
+                                        <small class="text-muted">{{auth()->user()->getRoleNames()->first()}}</small>
                                     </div>
                                 </div>
                             </a>
@@ -115,18 +115,27 @@
                             <div class="dropdown-divider"></div>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="{{route('profile')}}">
                                 <i class="bx bx-user me-2"></i>
-                                <span class="align-middle">My Profile</span>
+                                <span class="align-middle">{{__('page.my_profile')}}</span>
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#">
-                                <i class="bx bx-cog me-2"></i>
-                                <span class="align-middle">Settings</span>
+                            <a class="dropdown-item" href="{{route('profile.change_password_page')}}">
+                                <i class="bx bx-key me-2"></i>
+                                <span class="align-middle">{{__('page.change_password')}}</span>
                             </a>
                         </li>
-                        <li>
+                        @if(\App\Helper::HasPermissionMenu('settings', 'update'))
+                            <li>
+                                <a class="dropdown-item" href="{{route('settings.company')}}">
+                                    <i class="bx bx-cog me-2"></i>
+                                    <span class="align-middle">{{__('page.settings')}}</span>
+                                </a>
+                            </li>
+                        @endif
+
+                        {{--<li>
                             <a class="dropdown-item" href="#">
                         <span class="d-flex align-items-center align-middle">
                           <i class="flex-shrink-0 bx bx-credit-card me-2"></i>
@@ -134,14 +143,14 @@
                           <span class="flex-shrink-0 badge badge-center rounded-pill bg-danger w-px-20 h-px-20">4</span>
                         </span>
                             </a>
-                        </li>
+                        </li>--}}
                         <li>
                             <div class="dropdown-divider"></div>
                         </li>
                         <li>
                             <a class="dropdown-item" href="{{route('logout')}}">
                                 <i class="bx bx-power-off me-2"></i>
-                                <span class="align-middle">Log Out</span>
+                                <span class="align-middle">{{__('page.logout')}}</span>
                             </a>
                         </li>
                     </ul>

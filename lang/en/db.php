@@ -110,6 +110,16 @@
         'roles' => [
             'name' => "Role Name",
         ],
+        'users' => [
+            'name' => "Name",
+            'email' => "Email",
+            'username' => "User Name",
+            'phone' => "Phone",
+            'company_name' => "Company Name",
+            'location' => "Location",
+            'website' => "Website",
+            'roles' => "Roles",
+        ],
         'report' => [
             'hotel' => [
                 'order_number' => 'order number',

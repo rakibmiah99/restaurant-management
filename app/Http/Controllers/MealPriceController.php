@@ -16,6 +16,7 @@ use App\Models\Country;
 use App\Models\MealPrice;
 use App\Models\MealSystem;
 use App\Models\MealSystemForMealPrice;
+use App\Services\MealPriceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -160,14 +161,18 @@ class MealPriceController extends Controller
     }
 
 
-    public function delete($id){
-        $meal_price = MealPrice::find($id);
-        if (!$meal_price){
-            abort(404);
+    public function delete(MealPriceService $mealPriceService){
+        try {
+            if ($mealPriceService->canDelete()){
+                return redirect()->back()->with('success', Helper::DeletedSuccessFully());
+            }
+            else{
+                return $this->errorMessage(Helper::CantDeleteUsedInAnother());
+            }
         }
-        $meal_price->delete();
-
-        return redirect()->back()->with('success',Helper::DeletedSuccessFully());
+        catch (\Exception $exception){
+            return $exception->getMessage();
+        }
     }
 
     public function changeStatus($id){

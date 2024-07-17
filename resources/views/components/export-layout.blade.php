@@ -8,8 +8,11 @@
 <html>
 <head>
     <title>ff</title>
-    <style>
+    <link href="https://fonts.cdnfonts.com/css/dejavu-sans" rel="stylesheet">
 
+
+    <style>
+        * { font-family: DejaVu Sans, sans-serif; }
     </style>
 </head>
 <body>

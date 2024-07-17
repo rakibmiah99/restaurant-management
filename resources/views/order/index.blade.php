@@ -1,9 +1,9 @@
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-           <x-card-header :url="route('order.choose')" :name="__('page.orders')" :url-name="__('page.create')"/>
+           <x-card-header :can-create="\App\Helper::HasPermissionMenu('order', 'create')" :url="route('order.choose')" :name="__('page.orders')" :url-name="__('page.create')"/>
             <div class="mt-3">
-                <x-filter-data export-url="order.export" translate-from="db.order" :columns="$columns"/>
+                <x-filter-data :can-export="\App\Helper::HasPermissionMenu('order', 'export')" export-url="order.export" translate-from="db.order" :columns="$columns"/>
 
                 <div  class="table-responsive table-paginate mt-2 text-nowrap">
                     <table class="table">
@@ -46,21 +46,29 @@
                                             <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="bx bx-dots-vertical-rounded"></i>
                                             </button>
-                                            <div class="dropdown-menu" style="">
-                                                <a class="dropdown-item view-btn" href="{{route('order.modify', $item->id)}}"><i class='bx bx-low-vision'></i>{{__('page.modify_guest')}}</a>
-                                                <a class="dropdown-item view-btn" href="{{route('order.showQR', $item->id)}}"><i class='bx bx-low-vision'></i>{{__('page.show_qr')}}</a>
-                                                <a data-bs-toggle="modal" data-bs-target="#viewModal" class="dropdown-item view-btn" href="javascript:void(0);" url="{{route('order.show', $item->id)}}"><i class='bx bx-low-vision'></i>{{__('page.view')}}</a>
 
-                                                @if($item->can_edit)
+                                            <x-action-buttons
+                                                :model="$item"
+                                                permission-for="order"
+                                                route-prefix="order"
+                                                :edit="false"
+                                                :delete="false"
+                                            >
+                                                @if(\App\Helper::HasPermissionMenu('order', 'modify_guest'))
+                                                    <a class="dropdown-item view-btn" href="{{route('order.modify', $item->id)}}"><i class='bx bx-revision me-1'></i>{{__('page.modify_guest')}}</a>
+                                                @endif
+                                                @if(\App\Helper::HasPermissionMenu('order', 'show_qr'))
+                                                        <a class="dropdown-item view-btn" href="{{route('order.showQR', $item->id)}}"><i class='bx bx-qr me-1'></i>{{__('page.show_qr')}}</a>
+                                                        <a class="dropdown-item view-btn" href="{{route('order.printQR', $item->id)}}"><i class='bx bx-printer me-1'></i>{{__('page.print_qr')}}</a>
+                                                @endif
+
+                                                @if($item->can_edit && \App\Helper::HasPermissionMenu('order', 'update') )
                                                     <a class="dropdown-item" href="{{route('order.edit', $item->id)}}"><i class="bx bx-edit-alt me-1"></i>{{__('page.edit')}}</a>
                                                 @endif
-
-                                                <a class="dropdown-item" href="{{route('order.changeStatus', $item->id)}}"><i class='bx bx-checkbox-minus'></i> {{$item->status ? __('page.inactive') : __('page.active') }}</a>
-                                                @if($item->can_edit)
+                                                @if($item->can_edit && \App\Helper::HasPermissionMenu('order', 'delete'))
                                                     <a data-bs-toggle="modal" data-bs-target="#deleteModal" url="{{route('order.delete', $item->id)}}"  class="dropdown-item delete-btn" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>{{__('page.delete')}}</a>
                                                 @endif
-
-                                            </div>
+                                            </x-action-buttons>
                                         </div>
                                     </td>
                                 </tr>
@@ -104,5 +112,4 @@
 
         });
     })
-
 </script>

@@ -1,9 +1,9 @@
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-           <x-card-header :url="route('order.choose')" :name="__('page.orders')" :url-name="__('page.create')"/>
+           <x-card-header :url="route('order.choose')" :name="__('page.complete_orders')" :url-name="__('page.create')"/>
             <div class="mt-3">
-                <x-filter-data export-url="order.export.complete" translate-from="db.complete_order" :columns="$columns"/>
+                <x-filter-data :can-export="true" export-url="order.export.complete" translate-from="db.complete_order" :columns="$columns"/>
 
                 <div class="table-responsive table-paginate mt-2 text-nowrap">
                     <table class="table">
@@ -13,7 +13,9 @@
                             @foreach(request()->columns ?? $columns  as $column)
                                 <th>{{__('db.complete_order.'.$column)}}</th>
                             @endforeach
-                            <th>{{__('page.action')}}</th>
+                            @if(\App\Helper::HasPermissionMenu('invoice', 'create'))
+                                <th>{{__('page.action')}}</th>
+                            @endif
                         </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
@@ -40,7 +42,9 @@
                                     @endforeach
 
                                     <td>
-                                        <a href="{{route('invoice.create', $item->id)}}" class="btn btn-sm btn-primary">{{__('page.generate')}}</a>
+                                        @if(\App\Helper::HasPermissionMenu('invoice', 'create'))
+                                            <a href="{{route('invoice.create', $item->id)}}" class="btn btn-sm btn-primary">{{__('page.generate')}}</a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

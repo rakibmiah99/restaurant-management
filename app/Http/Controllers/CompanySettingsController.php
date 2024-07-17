@@ -19,11 +19,16 @@ class CompanySettingsController extends Controller
     {
         try {
             $settings = CompanySetting::first();
+            $data = collect($request->validated())->except('file')->toArray();
+            if ($request->file){
+                $settings->clearMediaCollection();
+                $settings->addMediaFromRequest('file')->toMediaCollection();
+            }
             if ($settings){
-                $settings->update($request->validated());;
+                $settings->update($data);;
             }
             else{
-                CompanySetting::create($request->validated());
+                CompanySetting::create($data);
             }
 
             return $this->successMessage(Helper::UpdatedSuccessFully());

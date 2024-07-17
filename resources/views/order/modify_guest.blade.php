@@ -42,11 +42,11 @@
             <div class="d-flex px-4 justify-content-center mt-3">
                 <table class="table w-75 table-bordered table-light">
                     <tr>
-                        <th class="bg-primary text-white">Meal System</th>
-                        <th class="bg-primary text-white">Days</th>
-                        <th class="bg-primary text-white">Total Meal</th>
-                        <th class="bg-primary text-white">Price</th>
-                        <th class="bg-primary text-white">Total Price</th>
+                        <th class="bg-primary text-white">{{__('page.meal_system')}}</th>
+                        <th class="bg-primary text-white">{{__('page.days')}}</th>
+                        <th class="bg-primary text-white">{{__('page.total_meal')}}</th>
+                        <th class="bg-primary text-white">{{__('page.price')}}</th>
+                        <th class="bg-primary text-white">{{__('page.total_price')}}</th>
                     </tr>
                     @foreach($order->available_meal_systems as $meal_system)
                     <tr>
@@ -132,11 +132,11 @@
                 @csrf
                 <table class="table  table-light">
                     <tr>
-                        <th class="bg-primary text-white">Date</th>
-                        <th class="bg-primary text-white">Exist Guest</th>
-                        <th class="bg-primary text-white">New Guest</th>
-                        <th class="bg-primary text-white">Current Meal System</th>
-                        <th class="bg-primary text-white">Meal System</th>
+                        <th class="bg-primary text-white">{{__('page.date')}}</th>
+                        <th class="bg-primary text-white">{{__('page.exist_guest')}}</th>
+                        <th class="bg-primary text-white">{{__('page.new_guest')}}</th>
+                        <th class="bg-primary text-white">{{__('page.current_meal_system')}}</th>
+                        <th class="bg-primary text-white">{{__('page.meal_system')}}</th>
                     </tr>
 
                     @foreach($date_wise_meal_data as $item)
@@ -179,9 +179,12 @@
                     @endforeach
                 </table>
 
-                <div class="d-flex justify-content-center mt-4">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
+                @if(count($date_wise_meal_data))
+                    <div class="d-flex justify-content-center mt-4">
+                        <button type="submit" class="btn btn-primary">{{__('page.save')}}</button>
+                    </div>
+                @endif
+
             </form>
         </div>
     </div>

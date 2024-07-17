@@ -57,6 +57,29 @@ class OrderController extends Controller
         return view('order.show_qr', compact('data', 'order', 'per_page_data'));
     }
 
+    public function printQR($id)
+    {
+
+//        return Crypt::decrypt('eyJpdiI6IlgwcE93MUp6aWRaNy9LTm81M2Vab0E9PSIsInZhbHVlIjoib1lTZ3JESHNNeHhiQUlKNFgwRHJCQT09IiwibWFjIjoiNTFiYzQ0NjFmNTcyNjE2YTIwYTkwMjJlMTYwMjk1ZmVjZmIxYjg2ZWY5NDUzOWRkNTYxYjViMGU4Yjk2M2M1YiIsInRhZyI6IiJ9');
+
+        $order = Order::find($id);
+        if (!$order){
+            abort(404);
+        }
+
+        $per_page_data = 10;
+        $data =  $this->getGuestPosition($order);
+        $data = $data->map(function ($item){
+            $item['qr'] = QrCode::size(150)->generate(route('take_meal', $item['code']));
+            return (object)$item;
+        });
+        /*$data =  self::DecryptGuestPosition($code);
+        $qr = QrCode::size(150)->generate(route('take_meal', $code));
+        $guest_name = self::makeGuestName($data->order_id, $data->index, $data->meal_system_id, $data->position);*/
+
+        return view('order.print_qr', compact('data'));
+    }
+
     public function showGuestQr($code)
     {
         $data =  self::DecryptGuestPosition($code);
@@ -285,6 +308,18 @@ class OrderController extends Controller
         return view('order.details', compact('order', 'columns'));
     }
 
+    public function printDetails($id){
+        $order = Order::find($id);
+        if (!$order){
+            abort(404);
+        }
+        $columns = (new Order())->getColumns();
+
+        return view('order.print_details', compact('order', 'columns'));
+    }
+
+
+
     public function create(Request $request): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
     {
         $hotels = Hotel::active()->get();
@@ -310,7 +345,7 @@ class OrderController extends Controller
         }
 
         if (!$order->can_edit){
-            return $this->errorMessage(__('page.editable_time_expired'));
+            return $this->errorMessage(__('page.editable_time_expired'), 'order.index');
         }
 
         $hotels = Hotel::active()->get();
@@ -444,6 +479,7 @@ class OrderController extends Controller
                     $orderData = $orderData->except(['mpi_for_ramadan']);
                 }
 
+                $order->meal_entries()->delete();
                 $order->update($orderData->toArray());
 
 
@@ -467,11 +503,11 @@ class OrderController extends Controller
                 $order->update($orderData);
             }
             DB::commit();
-            return redirect()->back()->with('success', Helper::UpdatedSuccessFully());
+            return $this->successMessage( Helper::UpdatedSuccessFully(), 'order.index');
         }
         catch (\Exception $exception){
             DB::rollBack();
-            dd($exception->getMessage());
+            return $this->errorMessage($exception->getMessage(), 'order.index');
         }
 
     }

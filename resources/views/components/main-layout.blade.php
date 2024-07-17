@@ -1,5 +1,8 @@
+@php
+    $per_cell = $attributes->get('per_cell');
+@endphp
 
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html
     lang="{{app()->getLocale() == "en" ? 'en' : 'ar'}}"
     dir="{{app()->getLocale() == "en" ? 'ltr' : 'rtl'}}"

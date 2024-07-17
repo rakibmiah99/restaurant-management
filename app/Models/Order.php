@@ -7,6 +7,7 @@ use App\Enums\Status;
 use App\Model;
 use App\Models\Scopes\DescScope;
 use App\Observers\OrderObserver;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
@@ -365,14 +366,17 @@ class Order extends Model
 
     static function GenerateOrderNumber()
     {
-        $order_number = Order::orderBy('id', 'desc')->first()?->order_number;
-        $exp = explode('/', $order_number);
         $year = Hijri::Date('Y');
+        /*$order_number = Order::orderBy('id', 'desc')->first()?->order_number;
+        $exp = explode('/', $order_number);
         $sl = 1;
         if(is_array($exp) && count($exp) == 2){
             $sl = $exp[1];
             $sl++;
-        }
+        }*/
+        $order_number = Order::orderBy('id', 'desc')->first();
+        $sl = $order_number ? $order_number->id : 1;
+
         $sl =  str_pad($sl,5,"0",STR_PAD_LEFT );
         return $year."/".$sl;
     }

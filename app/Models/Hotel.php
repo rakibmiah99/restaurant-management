@@ -40,13 +40,19 @@ class Hotel extends Model
         return $this->hasMany(Hall::class, 'hotel_id', 'id');
     }
 
+    public function orders(){
+        return $this->hasMany(Order::class, 'hotel_id', 'id');
+    }
+
+
+
     public static function GenerateUniqueCode(){
         $model = Hotel::orderBy('id', 'desc')->first();
-        $code = "1000";
+        $code = 1;
         if ($model){
-            $code = $model->code+1;
+            $code = $model->id+1;
         }
 
-        return $code;
+        return str_pad($code, 4, 0, STR_PAD_LEFT);
     }
 }

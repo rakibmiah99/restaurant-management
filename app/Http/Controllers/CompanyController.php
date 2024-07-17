@@ -9,8 +9,8 @@ use App\Http\Requests\Company\CompanyUpdateRequest;
 use App\Models\Company;
 use App\Models\Country;
 use App\Models\MealPrice;
+use App\Services\CompanyService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Maatwebsite\Excel\Facades\Excel;
 
 class CompanyController extends Controller
@@ -75,14 +75,18 @@ class CompanyController extends Controller
     }
 
 
-    public function delete($id){
-        $company =  Company::find($id);
-        if (!$company){
-            abort(404);
+    public function delete(CompanyService $companyService){
+        try {
+            if ($companyService->canDelete()){
+                return redirect()->back()->with('success', Helper::DeletedSuccessFully());
+            }
+            else{
+                return $this->errorMessage(Helper::CantDeleteUsedInAnother());
+            }
         }
-        $company->delete();
-
-        return redirect()->back()->with('success', Helper::DeletedSuccessFully());
+        catch (\Exception $exception){
+            return $exception->getMessage();
+        }
     }
 
     public function changeStatus($id){

@@ -1,10 +1,9 @@
-
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-           <x-card-header :url="route('invoice.create')" :name="__('page.invoices')" :url-name="__('page.create')"/>
+           <x-card-header :can-create="\App\Helper::HasPermissionMenu('invoice', 'create')" :url="route('invoice.create')" :name="__('page.invoices')" :url-name="__('page.create')"/>
             <div class="mt-3">
-                <x-filter-data export-url="invoice.export" translate-from="db.invoice" :columns="$columns"/>
+                <x-filter-data :can-export="\App\Helper::HasPermissionMenu('invoice', 'export')" export-url="invoice.export" translate-from="db.invoice" :columns="$columns"/>
 
                 <div class="table-responsive table-paginate mt-2 text-nowrap">
                     <table class="table">
@@ -41,12 +40,15 @@
                                                 <i class="bx bx-dots-vertical-rounded"></i>
                                             </button>
                                             <div class="dropdown-menu" style="">
-                                                <a {{--data-bs-toggle="modal" data-bs-target="#viewModal"--}} class="dropdown-item view-btn" url="javascript:void(0);" href="{{route('invoice.show', $item->id)}}"><i class='bx bx-low-vision'></i>{{__('page.view')}}</a>
-                                                @if(!$item->is_close)
+                                                <a class="dropdown-item view-btn" url="javascript:void(0);" href="{{route('invoice.show', $item->id)}}"><i class='bx bx-low-vision me-1'></i>{{__('page.view')}}</a>
+                                                @if(!$item->is_close && \App\Helper::HasPermissionMenu('invoice', 'update'))
                                                     <a class="dropdown-item" href="{{route('invoice.edit', $item->id)}}"><i class="bx bx-edit-alt me-1"></i>{{__('page.edit')}}</a>
                                                 @endif
-                                                <a class="dropdown-item" href="{{route('invoice.changeStatus', $item->id)}}"><i class='bx bx-checkbox-minus'></i> {{$item->is_close ? __('page.closed') : __('page.make_to_close') }}</a>
-                                                @if(!$item->is_close)
+                                                @if(\App\Helper::HasPermissionMenu('invoice', 'change_status'))
+                                                    <a class="dropdown-item" href="{{route('invoice.changeStatus', $item->id)}}"><i class='bx bx-checkbox-minus'></i> {{$item->is_close ? __('page.closed') : __('page.make_to_close') }}</a>
+                                                @endif
+
+                                                @if(!$item->is_close && \App\Helper::HasPermissionMenu('invoice', 'delete'))
                                                     <a data-bs-toggle="modal" data-bs-target="#deleteModal" url="{{route('invoice.delete', $item->id)}}"  class="dropdown-item delete-btn" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>{{__('page.delete')}}</a>
                                                 @endif
                                             </div>

@@ -4,10 +4,10 @@ namespace App;
 
 use App\Models\Company;
 use Barryvdh\Debugbar\Facades\Debugbar;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Model extends \Illuminate\Database\Eloquent\Model
 {
-
     public function getColumns($final_exclude = []): array
     {
         $columns =  $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());

@@ -1,7 +1,7 @@
 <x-main-layout>
     <div class="p-4">
         <div class="card">
-            <x-card-header :name="__('page.companies')" :url="route('company.index')" :url-name="__('page.back')"/>
+            <x-card-header :can-create="true" :name="__('page.companies')" :url="route('company.index')" :url-name="__('page.back')"/>
             <form action="{{route('company.store')}}" method="post" c class="card-body">
                 @csrf
                 @include('company.form_data')

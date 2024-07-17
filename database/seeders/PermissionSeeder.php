@@ -17,15 +17,13 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-
-
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         DB::table('permissions')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 
         $permissions = Lang::get('permission', [], 'en');
         $user = User::first();
-        $role = Role::firstOrCreate(['name' => 'system-admin']);
+        $role = Role::firstOrCreate(['name' => 'system-admin', 'is_system' => 1]);
         foreach ($permissions as $group=>$item){
             $groupName = $group.".name";
             $actions = array_keys($item['actions']);

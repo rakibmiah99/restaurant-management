@@ -1,10 +1,15 @@
+@php
+    $size = $attributes->get('size');
+    $title = $attributes->get('title');
+@endphp
+
 <div class="modal" id="viewModal">
-    <div class="modal-dialog {{$attributes->get('size') ?? 'modal-md'}}">
+    <div class="modal-dialog {{$size ?? 'modal-md'}}">
         <div class="modal-content">
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title">Details</h4>
+                <h4 class="modal-title">{{$title ?? __('page.details')}}</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
