@@ -165,6 +165,7 @@
         'old_password' => 'Old Password',
         'new_password' => 'New Password',
         'updated_failed' => "Updated Failed",
+        'your_old_password_did_not_match' => "Your Old Password Did Not Match",
         'print_qr' => "Print QR",
         'hall_reports' => 'Hall Reports',
         'hotel_reports' => "Hotel Reports",
@@ -174,4 +175,9 @@
         'invoice_reports' => "Invoice Reports",
         'packaging_reports' => "Packaging Reports",
         'restaurant' => "Restaurant",
+
+        'this_order_was_modified' => 'This Order Was Modified!',
+        'do_you_want_to_update' => 'Do you want to update',
+        'with_meal_system' => 'With Meal System',
+        'with_out_meal_system' => 'With Out Meal System',
     ];

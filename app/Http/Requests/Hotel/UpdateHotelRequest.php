@@ -24,13 +24,13 @@ class UpdateHotelRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
+            'name' => 'required|string|max:25',
             'code' => [
                 'required',
                 Rule::unique('hotels')->ignore($this->id)
             ],
-            'phone' => 'required',
-            'email' => 'nullable',
+            'phone' => 'required|max:15',
+            'email' => 'nullable|email',
             'address' => 'nullable',
             'status' => 'required'
         ];

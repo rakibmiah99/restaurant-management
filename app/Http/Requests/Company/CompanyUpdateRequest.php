@@ -23,14 +23,14 @@ class CompanyUpdateRequest extends FormRequest
     {
         return [
             'code' => 'required',
-            'name' => 'required',
+            'name' => 'required|string|max:25',
             'country_id' => 'required|exists:countries,id',
             'meal_price_id' => 'nullable|exists:meal_prices,id',
             'email' => 'nullable|email',
-            'phone' => 'nullable',
+            'phone' => 'nullable|max:15',
             'address' => 'nullable',
-            'agent_name' => 'nullable',
-            'agent_mobile' => 'nullable',
+            'agent_name' => 'nullable|string|max:25',
+            'agent_mobile' => 'nullable|max:15',
             'status' => 'required',
         ];
     }

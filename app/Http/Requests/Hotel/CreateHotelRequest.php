@@ -22,10 +22,10 @@ class CreateHotelRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
+            'name' => 'required|string|max:25',
             'code' => 'required|unique:hotels',
-            'phone' => 'required',
-            'email' => 'nullable',
+            'phone' => 'required|max:15',
+            'email' => 'nullable|email',
             'address' => 'nullable',
             'status' => 'required'
         ];

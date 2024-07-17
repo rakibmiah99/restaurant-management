@@ -56,7 +56,7 @@ class UserController extends Controller
             return $this->successMessage(Helper::UpdatedSuccessFully());
         }
         else{
-            return $this->errorMessage(Helper::UpdatedFailed());
+            return $this->errorMessage(__('page.your_old_password_did_not_match'));
         }
     }
 

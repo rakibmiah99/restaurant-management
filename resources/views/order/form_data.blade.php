@@ -133,7 +133,8 @@
 <x-input
     :title="__('page.order_note')"
     name="order_note"
-    :required="true"
+    :required="false"
+    type="text-area"
     :value="$is_edit ? $order->order_note:  old('order_note')"
 />
 

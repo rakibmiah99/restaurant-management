@@ -30,16 +30,28 @@
         @endif
     </label>
     <div class="{{$input_size}} ">
-        <input
-            @if($required) required @endif
-            @if($readonly) readonly @endif
-            @if($disabled) disabled @endif
-            class="form-control {{$size}}" name="{{$name}}"
-            type="{{$type}}"
-            value="{{$value}}"
-            id="{{$name}}"
-            @if($min) min="{{$min}}" @endif
-            @if($max) max="{{$max}}" @endif
-        >
+        @if($type != "text-area")
+            <input
+                @if($required) required @endif
+                @if($readonly) readonly @endif
+                @if($disabled) disabled @endif
+                class="form-control {{$size}}" name="{{$name}}"
+                type="{{$type}}"
+                value="{{$value}}"
+                id="{{$name}}"
+                @if($min) min="{{$min}}" @endif
+                @if($max) max="{{$max}}" @endif
+            >
+        @else
+            <textarea
+                @if($required) required @endif
+                @if($readonly) readonly @endif
+                @if($disabled) disabled @endif
+                class="form-control {{$size}}" name="{{$name}}"
+                id="{{$name}}"
+                @if($min) min="{{$min}}" @endif
+                @if($max) max="{{$max}}" @endif
+            >{{$value}}</textarea>
+        @endif
     </div>
 </div>

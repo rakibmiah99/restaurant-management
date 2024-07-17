@@ -24,7 +24,7 @@ class CreateMealPriceRequest extends FormRequest
         return [
             'type' => 'required',
             'code' => 'required',
-            'name' => 'required',
+            'name' => 'required|string|max:25',
             'country_id' => 'required|exists:countries,id',
             'service_type' => 'required',
             'status' => 'required',

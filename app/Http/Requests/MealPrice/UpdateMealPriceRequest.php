@@ -23,7 +23,7 @@ class UpdateMealPriceRequest extends FormRequest
     {
         return [
             'code' => 'required',
-            'name' => 'required',
+            'name' => 'required|string|max:25',
             'country_id' => 'required|exists:countries,id',
             'service_type' => 'required',
             'status' => 'required',

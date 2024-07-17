@@ -22,7 +22,7 @@ class UpdateHallRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
+            'name' => 'required|string|max:25',
             'code' => 'required',
             'capacity' => 'required|numeric',
             'hotel_id' => 'required|exists:hotels,id',

@@ -172,6 +172,9 @@ return [
     'invoice_reports' => "تقارير الفواتير",
     'packaging_reports' => "تقارير التغليف",
     'restaurant' => "مطعم",
-
+    'this_order_was_modified' => 'تم تعديل هذا الطلب!',
+    'do_you_want_to_update' => 'هل تريد التحديث',
+    'with_meal_system' => 'مع نظام الوجبات',
+    'with_out_meal_system' => 'بدون نظام الوجبات',
 ];
 
