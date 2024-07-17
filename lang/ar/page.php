@@ -157,5 +157,21 @@ return [
     'current_meal_system' => 'نظام الوجبات الحالي',
     'entry_date' => 'تاريخ الدخول',
     'exit_date' => 'تاريخ الخروج',
+    'profile' => 'الملف الشخصي',
+    'image' => 'صورة',
+    'change_password' => 'تغيير كلمة المرور',
+    'old_password' => 'كلمة المرور القديمة',
+    'new_password' => 'كلمة المرور الجديدة',
+    'updated_failed' => 'فشل التحديث',
+    'print_qr' => "طباعة رمز الاستجابة السريعة",
+    'hall_reports' => "تقارير القاعة",
+    'hotel_reports' => "تقارير الفندق",
+    'kitchen_reports' => "تقارير المطبخ",
+    'revenue_reports' => "تقارير الإيرادات",
+    'order_reports' => "تقارير الطلبات",
+    'invoice_reports' => "تقارير الفواتير",
+    'packaging_reports' => "تقارير التغليف",
+    'restaurant' => "مطعم",
+
 ];
 

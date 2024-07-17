@@ -1,5 +1,5 @@
 
-<x-main-layout>
+<x-main-layout :title="__('menu.orders')">
     <div class="p-4">
         <div class="card">
             <x-card-header :can-create="\App\Helper::HasPermissionMenu('order', 'show_qr')" :url="route('order.index')" :name="__('page.orders')" :url-name="__('page.back')"/>

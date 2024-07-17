@@ -1,6 +1,6 @@
 @php $user = auth()->user(); @endphp
 
-<x-main-layout>
+<x-main-layout :title="__('page.my_profile')">
     <div class="p-4">
         <div class="card">
             <x-card-header :can-create="false" :name="__('page.profile')" :url="route('user.index')" :url-name="__('page.back')"/>

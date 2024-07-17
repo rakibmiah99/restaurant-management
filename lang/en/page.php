@@ -159,7 +159,6 @@
         'current_meal_system' => 'Current Meal System',
         'entry_date' => 'Entry Date',
         'exit_date' => 'Exit Date',
-
         'profile' => 'Profile',
         'image' => 'Image',
         'change_password' => 'Change Password',
@@ -174,5 +173,5 @@
         'order_reports' => "Order Reports",
         'invoice_reports' => "Invoice Reports",
         'packaging_reports' => "Packaging Reports",
-
+        'restaurant' => "Restaurant",
     ];

@@ -1,4 +1,4 @@
-<x-main-layout>
+<x-main-layout :title="__('menu.invoice')">
     <div class="p-4">
         <div class="card">
             <x-card-header :name="__('page.invoices')" :url="route('invoice.index')" :url-name="__('page.back')"/>

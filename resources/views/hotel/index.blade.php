@@ -1,5 +1,5 @@
 
-<x-main-layout>
+<x-main-layout :title="__('menu.hotel')">
     <div class="p-4">
         <div class="card">
            <x-card-header :can-create="\App\Helper::HasPermissionMenu('hotel', 'create')" :url="route('hotel.create')" :name="__('page.hotels')" :url-name="__('page.create')"/>

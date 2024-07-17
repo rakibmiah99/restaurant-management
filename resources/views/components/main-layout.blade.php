@@ -1,5 +1,5 @@
 @php
-    $per_cell = $attributes->get('per_cell');
+    $title = $attributes->get('title') ?? '';
 @endphp
 
     <!DOCTYPE html>
@@ -13,6 +13,7 @@
     data-template="vertical-menu-template"
 >
 <head>
+    <title>{{__('page.restaurant'). ' | '.$title }} </title>
     <x-header/>
 </head>
 

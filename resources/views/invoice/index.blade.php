@@ -1,4 +1,4 @@
-<x-main-layout>
+<x-main-layout :title="__('menu.invoice')">
     <div class="p-4">
         <div class="card">
            <x-card-header :can-create="\App\Helper::HasPermissionMenu('invoice', 'create')" :url="route('invoice.create')" :name="__('page.invoices')" :url-name="__('page.create')"/>

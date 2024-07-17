@@ -1,6 +1,6 @@
 
 
-<x-main-layout>
+<x-main-layout :title="__('menu.order_monitoring')">
     <div class="p-4">
         <div class="card">
            <x-card-header :url="route('order.choose')" :name="__('page.order_monitoring')" :url-name="__('page.create')"/>

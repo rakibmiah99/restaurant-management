@@ -1,4 +1,4 @@
-<x-main-layout>
+<x-main-layout :title="__('menu.complete_order')">
     <div class="p-4">
         <div class="card">
            <x-card-header :url="route('order.choose')" :name="__('page.complete_orders')" :url-name="__('page.create')"/>

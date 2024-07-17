@@ -1,6 +1,6 @@
 @php $settings = \App\Models\CompanySetting::first(); @endphp
 
-<x-main-layout>
+<x-main-layout :title="__('menu.invoice')">
     <div class="p-4">
         <div class="card pb-4">
             <div id="invoice">

@@ -1,4 +1,4 @@
-<x-main-layout>
+<x-main-layout :title="__('menu.orders')">
     <div class="p-4">
         <div class="card">
             <x-card-header :can-create="true" :name="__('page.orders')" :url="route('order.index')" :url-name="__('page.back')"/>

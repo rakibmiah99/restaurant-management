@@ -1,5 +1,5 @@
 @php $is_edit = request()->segment(2) ?? false  @endphp
-<x-main-layout>
+<x-main-layout :title="__('menu.orders')">
     <div class="p-4">
         <div class="card pb-3">
             <x-card-header :name="__('page.orders').'-'.__('page.modify_guest')" :url="route('order.index')" :url-name="__('page.back')"/>

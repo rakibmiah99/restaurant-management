@@ -1,4 +1,4 @@
-<x-main-layout>
+<x-main-layout :title="__('menu.company_settings')">
     <div class="p-4">
         <div class="card">
             <x-card-header :name="__('page.company_settings')" :url="route('settings.company')" :url-name="__('page.back')"/>

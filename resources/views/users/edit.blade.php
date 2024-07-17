@@ -1,5 +1,5 @@
 @php $is_edit = request()->segment(2) == "edit"  @endphp
-<x-main-layout>
+<x-main-layout :title="__('menu.users')">
     <div class="p-4">
         <div class="card">
             <x-card-header :can-create="true" :name="__('page.users')" :url="route('user.index')" :url-name="__('page.back')"/>

@@ -1,5 +1,5 @@
 
-<x-main-layout>
+<x-main-layout :title="__('menu.roles')">
     <div class="p-4">
         <div class="card">
            <x-card-header :can-create="\App\Helper::HasPermissionMenu('role', 'create')" :url="route('role.create')" :name="__('page.roles')" :url-name="__('page.create')"/>
