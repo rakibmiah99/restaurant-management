@@ -1,4 +1,4 @@
-<form action="{{$_SERVER['PHP_SELF']}}" class="row px-2">
+<form action="{{route('report.hotel')}}" class="row px-2">
     <div class="col-md-3">
         <x-input
             mode="vertical"

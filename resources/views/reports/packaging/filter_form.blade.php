@@ -1,4 +1,4 @@
-<form action="{{$_SERVER['PHP_SELF']}}" class="row px-2">
+<form action="{{route('report.packaging')}}" class="row px-2">
     <div class="col-md-2">
         <x-input
             mode="vertical"
