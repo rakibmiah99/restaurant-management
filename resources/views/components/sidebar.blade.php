@@ -5,7 +5,7 @@
 @endphp
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
-        <a href="/" class="app-brand-link">
+        <a href="{{route('home')}}" class="app-brand-link">
           <span class="app-brand-logo demo">
             <img height="50px" src="{{\App\Models\CompanySetting::first()?->image ?? asset('assets/logo.png')}}"/>
           </span>
@@ -19,7 +19,7 @@
     <div class="menu-inner-shadow"></div>
 
     <ul class="menu-inner py-1">
-        <x-menu-item icon="bx bx-grid-alt bx-sm" url="/" :name="__('menu.dashboard')"/>
+        <x-menu-item icon="bx bx-grid-alt bx-sm" :url="route('home')" :name="__('menu.dashboard')"/>
         <x-menu-item-dropdown
             bi-icon="bi-window"
             :visibility="\App\Helper::HasPermissionMenu('company')"
