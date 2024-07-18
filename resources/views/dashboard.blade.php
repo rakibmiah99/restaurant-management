@@ -9,10 +9,10 @@
                             <div class="card-body">
                                 <h5 class="card-title text-primary">{{__('page.congratulations')." ".auth()->user()->name}} ! 🎉</h5>
                                 <p class="mb-4">
-                                    {{__('page.you_are_login_as')}} <span class="fw-bold">supper admin</span>
+                                    {{__('page.you_are_login_as')}} <span class="fw-bold">{{auth()->user()->getRoleNames()->first()}}</span>
                                 </p>
 
-                                <a href="javascript:;" class="btn btn-sm btn-outline-primary">View Badges</a>
+{{--                                <a href="javascript:;" class="btn btn-sm btn-outline-primary">View Badges</a>--}}
                             </div>
                         </div>
                         <div class="col-sm-5 text-center text-sm-left">
