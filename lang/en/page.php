@@ -180,4 +180,10 @@
         'do_you_want_to_update' => 'Do you want to update',
         'with_meal_system' => 'With Meal System',
         'with_out_meal_system' => 'With Out Meal System',
+
+        'welcome_to_restaurant' => "Welcome to Restaurant !",
+        'sign_in_account_info' => "Please sign-in to your account and start the adventure",
+        'email_address' => "Email Address",
+        'remember_me' => "Remember Me",
+        'sign_in' => "Sign In",
     ];

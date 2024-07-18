@@ -179,7 +179,7 @@ Route::middleware(['auth.check', 'localization'])->prefix('/')->group(function (
 
 Route::get('/taken-meal/{token}',  [\App\Http\Controllers\MealEntryController::class, 'take'])->name('take_meal');
 
-Route::get('/login', [\App\Http\Controllers\AuthController::class, 'loginPage'])->name('loginPage');
+Route::middleware('localization')->get('/login', [\App\Http\Controllers\AuthController::class, 'loginPage'])->name('loginPage');
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
 Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 

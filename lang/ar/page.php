@@ -176,5 +176,12 @@ return [
     'do_you_want_to_update' => 'هل تريد التحديث',
     'with_meal_system' => 'مع نظام الوجبات',
     'with_out_meal_system' => 'بدون نظام الوجبات',
+
+    'welcome_to_restaurant' => "مرحبًا بكم في المطعم!",
+    'sign_in_account_info' => "يرجى تسجيل الدخول إلى حسابك وبدء المغامرة",
+    'email_address' => "عنوان البريد الإلكتروني",
+    'remember_me' => "تذكرني",
+    'sign_in' => "تسجيل الدخول",
+
 ];
 

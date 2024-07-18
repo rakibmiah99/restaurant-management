@@ -9,8 +9,6 @@
 <head>
     <title>ff</title>
     <link href="https://fonts.cdnfonts.com/css/dejavu-sans" rel="stylesheet">
-
-
     <style>
         * { font-family: DejaVu Sans, sans-serif; }
     </style>
