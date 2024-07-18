@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-md-6">
         <x-input
-            :title="__('page.role_name')"
+            :title="__('page.role_name', ['in' => __('page.english')])"
             mode="vertical"
             name="role_name[en]"
             type="text"
@@ -15,7 +15,7 @@
             label-size="4"
             input-size="8"
             mode="vertical"
-            :title="__('page.role_name')"
+            :title="__('page.role_name', ['in' => __('page.arabic')])"
             name="role_name[ar]"
             type="text"
             :required="false"

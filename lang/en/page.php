@@ -186,4 +186,5 @@
         'email_address' => "Email Address",
         'remember_me' => "Remember Me",
         'sign_in' => "Sign In",
+        'role_name' => 'Role Name In (:in)',
     ];

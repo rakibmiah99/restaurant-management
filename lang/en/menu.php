@@ -29,5 +29,6 @@
       'roles' => 'Roles',
       'users' => 'Users',
       'user_activity' => 'User Activity',
+
   ];
 
