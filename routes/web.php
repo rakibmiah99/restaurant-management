@@ -185,9 +185,10 @@ Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->
 
 
 Route::prefix('copy')->group(function (){
+    Route::get('/country', [\App\Http\Controllers\CopyController::class, 'country']);
     Route::get('/hotel', [\App\Http\Controllers\CopyController::class, 'hotel']);
     Route::get('/hall', [\App\Http\Controllers\CopyController::class, 'hall']);
-    Route::get('/country', [\App\Http\Controllers\CopyController::class, 'country']);
     Route::get('/meal-price', [\App\Http\Controllers\CopyController::class, 'meal_price']);
+    Route::get('/orders', [\App\Http\Controllers\CopyController::class, 'orders']);
     Route::get('/company', [\App\Http\Controllers\CopyController::class, 'company']);
 });

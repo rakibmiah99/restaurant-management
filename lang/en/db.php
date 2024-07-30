@@ -1,8 +1,8 @@
 <?php
     return [
         'company' => [
-            'id' => 'id',
-            'unique_id' => 'unique id',
+            // 'id' => 'id',
+            // 'unique_id' => 'unique id',
             'name' => 'name',
             'code' => 'code',
             'address' => 'address',

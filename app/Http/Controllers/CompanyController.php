@@ -22,7 +22,7 @@ class CompanyController extends Controller
 
     public function index(Request $request){
         Helper::HasPermissionView($this->group_name);
-        $columns = (new Company())->getColumns();
+        $columns = array_keys(__('db.company'));
         $data = Company::filter()->paginate(Helper::PerPage())->withQueryString();
         return view('company.index', compact('data', 'columns'));
     }
