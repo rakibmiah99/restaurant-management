@@ -8,10 +8,18 @@
 <html>
 <head>
     <title>ff</title>
-    <link href="https://fonts.cdnfonts.com/css/dejavu-sans" rel="stylesheet">
+    
     <style>
-        * { font-family: DejaVu Sans, sans-serif; }
+        @font-face {
+            font-family: 'Tajawal';
+            src: url("{{asset('assets/fonts/Tajawal-Regular.ttf')}}") format('truetype');
+        }
+    
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
     </style>
+    
 </head>
 <body>
 <table class="table">

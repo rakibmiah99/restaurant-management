@@ -183,6 +183,7 @@ return [
     'remember_me' => "تذكرني",
     'sign_in' => "تسجيل الدخول",
     'role_name' => 'اسم الدور في (:in)',
+    'hall_status' => 'حالة القاعة',
 
 ];
 

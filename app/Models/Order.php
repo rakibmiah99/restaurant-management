@@ -206,7 +206,8 @@ class Order extends Model
 
 
     public function getTodayMealPriceWiseMealSystemsAttribute(){
-        $hall_available_meal =  $this->hall->getMealSystemAttribute()->pluck('id');
+        // Debugbar::log($this->hall->getMealSystemAttribute()?->pluck('id'));
+        $hall_available_meal =  $this->hall->getMealSystemAttribute() ? $this->hall->getMealSystemAttribute()->pluck('id') : [] ;
         return $this->getMealPriceWiseMealSystemsAttribute()->whereIn('id', $hall_available_meal);
     }
 

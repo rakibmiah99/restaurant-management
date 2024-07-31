@@ -1,7 +1,7 @@
 @php
   $mode = $attributes->get('mode') ?? 'horizontal'; //vertical,horizontal
   $title = $attributes->get('title');
-  $value = $attributes->get('value') ?? 0;
+  $value = $attributes->get('value') ?? 1;
 @endphp
 
 <div class="mb-3 {{$mode == 'horizontal' ? 'row' : ''}}">

@@ -15,7 +15,7 @@ class SetTimeZoneMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        date_default_timezone_set("Asia/Dhaka");
+        date_default_timezone_set(config("page.timezone"));
         return $next($request);
     }
 }

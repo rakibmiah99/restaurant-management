@@ -138,7 +138,7 @@
     :value="$is_edit ? $order->order_note:  old('order_note')"
 />
 
-<x-input-status :value="$is_edit ? $order->status : old('status')" :title="__('page.hotel_status')"/>
+<x-input-status :value="$is_edit ? $order->status : old('status')" :title="__('page.order_status')"/>
 @if(
   !request()->get('edit-with') ||
   request()->get('edit-with') == "meal-system"

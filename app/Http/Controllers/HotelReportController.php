@@ -31,7 +31,7 @@ class HotelReportController extends Controller
             return Excel::download(new \App\Exports\PDF\ExportHotelReport(), Helper::GenerateFileName('hotel_report', ExportFormat::XLSX->value));
         }
         else if($request->get('export-type') == "pdf"){
-            return Excel::download(new \App\Exports\PDF\ExportHotelReport(), Helper::GenerateFileName('hotel_report', ExportFormat::XLSX->value), \Maatwebsite\Excel\Excel::DOMPDF);
+            return Excel::download(new \App\Exports\PDF\ExportHallReport(), Helper::GenerateFileName('hotel_report', ExportFormat::PDF->value), \Maatwebsite\Excel\Excel::DOMPDF);
         }
     }
 

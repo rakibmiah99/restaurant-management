@@ -102,4 +102,4 @@
     :required="true"
     :value="$is_edit ? date('H:i', strtotime($hall->i_end)) : old('i_end')"
 />
-<x-input-status :value="$is_edit ? $hall->status : old('status')" :title="__('page.hotel_status')"/>
+<x-input-status :value="$is_edit ? $hall->status : old('status')" :title="__('page.hall_status')"/>
