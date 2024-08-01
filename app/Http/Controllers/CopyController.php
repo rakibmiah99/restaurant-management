@@ -34,6 +34,7 @@ class CopyController extends Controller
 
     public function hotel(){
         return $this->hotel->get()->each(function ($hotel){
+        
             $data = [
                 'id' => $hotel->id,
                 'name' => $hotel->restaurant_name,
@@ -174,6 +175,7 @@ class CopyController extends Controller
                 // 'mpi_for_ramadan',
                 'order_note' => $item->order_note,
                 'status' => $this->status( $item->status),
+                'created_by' => $this->created_by
             ];
 
             $order = Order::create($orderData);

@@ -12,7 +12,9 @@ class HallObserver
      */
     public function creating(Hall $hall): void
     {
-        $hall->created_by = Auth::id();
+        if(auth()->check()){
+            $hall->created_by = Auth::id();
+        }
     }
     /**
      * Handle the Hall "created" event.

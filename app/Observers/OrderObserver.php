@@ -13,7 +13,9 @@ class OrderObserver
      */
     public function creating(Order $order): void
     {
-        $order->created_by = Auth::id();
+        if(auth()->check()){
+            $order->created_by = Auth::id();
+        }
     }
     /**
      * Handle the Order "created" event.

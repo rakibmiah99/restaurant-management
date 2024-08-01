@@ -12,7 +12,9 @@ class CompanyObserver
      */
     public function creating(Company $company): void
     {
-        $company->created_by = Auth::id();
+        if(auth()->check()){
+            $company->created_by = Auth::id();
+        }
     }
     /**
      * Handle the Company "created" event.

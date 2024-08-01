@@ -12,7 +12,9 @@ class HotelObserver
      */
     public function creating(Hotel $hotel): void
     {
-        $hotel->created_by = Auth::id();
+        if(auth()->check()){
+            $hotel->created_by = Auth::id();
+        }
     }
 
     /**

@@ -12,7 +12,9 @@ class MealPriceObserver
      */
     public function creating(MealPrice $mealPrice): void
     {
-        $mealPrice->created_by = Auth::id();
+        if(auth()->check()){
+            $mealPrice->created_by = Auth::id();
+        }
     }
 
     /**
