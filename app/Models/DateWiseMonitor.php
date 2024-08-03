@@ -44,7 +44,7 @@ class DateWiseMonitor extends Model
             ->orderBy('order_id', 'desc');
 
         if ($meal_system_id = $request->get('meal_system')){
-            $builder->where('meal_system_id', $meal_system_id);
+            $builder->where('order_meal_system_id', $meal_system_id);
         }
 
         if ($request->get('from_date') && $request->get('to_date')){

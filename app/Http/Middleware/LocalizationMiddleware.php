@@ -16,6 +16,7 @@ class LocalizationMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // dd(date('Y-m-d H:i:s'));
         $lang = $request->session()->get('lang', 'en');
         App::setLocale($lang);
         return $next($request);

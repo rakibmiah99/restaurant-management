@@ -368,15 +368,16 @@ class Order extends Model
     static function GenerateOrderNumber()
     {
         $year = Hijri::Date('Y');
-        /*$order_number = Order::orderBy('id', 'desc')->first()?->order_number;
+        // $order_number = Order::orderBy('id', 'desc')->first()?->order_number;
+        $order_number = Order::max('order_number');
         $exp = explode('/', $order_number);
         $sl = 1;
         if(is_array($exp) && count($exp) == 2){
             $sl = $exp[1];
             $sl++;
-        }*/
-        $order_number = Order::orderBy('id', 'desc')->first();
-        $sl = $order_number ? $order_number->id : 1;
+        }
+        // $order = Order::orderBy('id', 'desc')->first();
+        // $sl = $order ? $order->id : 1;
 
         $sl =  str_pad($sl,5,"0",STR_PAD_LEFT );
         return $year."/".$sl;
