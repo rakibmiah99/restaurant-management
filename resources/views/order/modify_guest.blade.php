@@ -136,6 +136,7 @@
                         <th class="bg-primary text-white">{{__('page.exist_guest')}}</th>
                         <th class="bg-primary text-white">{{__('page.new_guest')}}</th>
                         <th class="bg-primary text-white">{{__('page.current_meal_system')}}</th>
+                        <th class="bg-primary text-white">{{__('page.service_type')}}</th>
                         <th class="bg-primary text-white">{{__('page.meal_system')}}</th>
                     </tr>
 
@@ -148,12 +149,15 @@
                         <td style="width: 15%">
                             {{$item->number_of_guest}}
                         </td>
-                        <td style="width: 20%">
+                        <td style="width: 15%">
                             <input name="number_of_guest[]" class="form-control" type="number" value="{{request()->guest}}"/>
                         </td>
                         <td style="width: 25%">
                             <input name="from_meal_system_id[]" value="{{$item->order_meal_system_id}}" type="hidden"/>
                             {{$item->meal_system_name}}
+                        </td>
+                        <td style="width: 15%">
+                            {{$order->service_type}}
                         </td>
                         <td style="width: 25%">
                             <select name="to_meal_system[]" class="form-control">
