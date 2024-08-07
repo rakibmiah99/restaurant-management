@@ -31,11 +31,14 @@ class MealEntryController extends Controller
                 throw new \Exception('no meal found');
             }
 
+        
             $today_meal_info =  $order->date_and_meal_wise_order_monitor
                 ->where('order_meal_system_id', $meal_system_id)
                 ->where('meal_date', $date)->first();
 
-
+            if(!$today_meal_info){
+                throw new \Exception('this token not for this meal sytem!');
+            }
 
             $total_taken = $order->meal_entries->where('taken_date', $date)
                 ->where('order_meal_system_id', $meal_system_id)
@@ -93,6 +96,7 @@ class MealEntryController extends Controller
             return redirect()->back()->with('success', 'meal taken successfully');
         }
         catch (\Exception $exception){
+            // return $exception->getMessage();
             return redirect()->back()->with('error', $exception->getMessage());
         }
 

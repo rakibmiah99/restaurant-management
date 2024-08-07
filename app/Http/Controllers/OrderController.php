@@ -39,7 +39,7 @@ class OrderController extends Controller
         return view('order.index', compact('data', 'columns'));
     }
 
-    public function showQR($id)
+    public function showQR($id, Request $request)
     {
 
 //        return Crypt::decrypt('eyJpdiI6IlgwcE93MUp6aWRaNy9LTm81M2Vab0E9PSIsInZhbHVlIjoib1lTZ3JESHNNeHhiQUlKNFgwRHJCQT09IiwibWFjIjoiNTFiYzQ0NjFmNTcyNjE2YTIwYTkwMjJlMTYwMjk1ZmVjZmIxYjg2ZWY5NDUzOWRkNTYxYjViMGU4Yjk2M2M1YiIsInRhZyI6IiJ9');
@@ -48,36 +48,76 @@ class OrderController extends Controller
         if (!$order){
             abort(404);
         }
-
+        
+        
         $per_page_data = 10;
-        $data =  $this->getGuestPosition($order);
+
+
+        $meal_systems = $order->meal_systems->map(function($meal_system_info){
+            return $meal_system_info->meal_system;
+        });
+
+
+        $data =  $this->getGuestPosition($order, $request->get('is-available-guest') == "false" ? false : true);
+        if($guest_name = $request->get('guest-name')){
+            $data = $data->where('name', $guest_name);
+        }
+        if($meal_system = $request->get('meal-system')){
+            $data = $data->where('meal_system', $meal_system);
+        }
+        // return $data;
         $data = Helper::Paginate($data, $per_page_data);
 
 
-        return view('order.show_qr', compact('data', 'order', 'per_page_data'));
+        
+        // return $data;
+        return view('order.show_qr', compact('data', 'order', 'per_page_data', 'meal_systems'));
     }
 
-    public function printQR($id)
+    public function printQR($id, Request $request)
     {
 
 //        return Crypt::decrypt('eyJpdiI6IlgwcE93MUp6aWRaNy9LTm81M2Vab0E9PSIsInZhbHVlIjoib1lTZ3JESHNNeHhiQUlKNFgwRHJCQT09IiwibWFjIjoiNTFiYzQ0NjFmNTcyNjE2YTIwYTkwMjJlMTYwMjk1ZmVjZmIxYjg2ZWY5NDUzOWRkNTYxYjViMGU4Yjk2M2M1YiIsInRhZyI6IiJ9');
+
 
         $order = Order::find($id);
         if (!$order){
             abort(404);
         }
+        $meal_systems = $order->meal_systems->map(function($meal_system_info){
+            return $meal_system_info->meal_system;
+        });
+        $chunk_data = $this->getGuestPosition($order, $request->get('is-available-guest') == "false" ? false : true);
+        if($meal_system = $request->get('meal-system')){
+            $meal_system = MealSystem::find($meal_system);
+            $meal_system ? $chunk_data = $chunk_data->where('meal_system', $meal_system->name) : null;
+        }
 
-        $per_page_data = 10;
-        $data =  $this->getGuestPosition($order);
+        
+        $per_page_data = $request->get('per-page') ?? config('page.per_page_view_print');
+        
+        $chunk_data = $chunk_data->chunk($per_page_data);
+        $segments = collect(range(0, $chunk_data->count()));
+        try{
+            $data = $chunk_data[$request->get('segment') ?? 0];
+        }
+        catch(\Exception $e){
+            $data = $chunk_data;
+        }
+        
         $data = $data->map(function ($item){
             $item['qr'] = QrCode::size(150)->generate(route('take_meal', $item['code']));
             return (object)$item;
         });
+
         /*$data =  self::DecryptGuestPosition($code);
         $qr = QrCode::size(150)->generate(route('take_meal', $code));
         $guest_name = self::makeGuestName($data->order_id, $data->index, $data->meal_system_id, $data->position);*/
 
-        return view('order.print_qr', compact('data'));
+        return view('order.print_qr', compact('data', 'order', 'meal_systems', 'segments'));
+        
+
+        
     }
 
     public function showGuestQr($code)
@@ -554,34 +594,45 @@ class OrderController extends Controller
 
 
 
-    public function getGuestPosition($order){
+    public function getGuestPosition($order, $is_available_today = false){
         $GLOBALS['guest'] = [];
         $company = $order->company->name;
-        $order->meal_systems->each(function($item, $index) use($company){
+        $order->meal_systems
+        ->when($is_available_today, function ($query){
+            return $query->filter(function ($item) {
+                $current_date = date('Y-m-d');
+                return $item->from_date <= $current_date && $item->to_date >= $current_date;
+            });
+        })
+        ->each(function($item, $index) use($company){
             $number_of_guest = $item->number_of_guest;
             $meal_system_id = $item->order_meal_system_id;
             $order_id = $item->order_id;
 
-            $guest_names = [];
+            $guest_info = [];
 
             for($i =0; $i < $number_of_guest; $i++){
-                $guest_names [] = [
+                $guest_info [] = [
+                    'company' => $company,
                     'name' => self::makeGuestName($order_id,$index,$meal_system_id,$i),
                     'code' => self::EncryptGuestPosition($order_id,$index,$meal_system_id,$i),
+                    'meal_system' => $item->meal_system->name,
+                    'from_date' => $item->from_date,
+                    'to_date' => $item->to_date
                 ];
             }
 
             $GLOBALS['guest'] [] = [
                 'company' => $company,
                 'meal_system' => $item->meal_system->name,
-                'names' => $guest_names
+                'info' => $guest_info
             ];
 
         });
 
         $meal_system_wise_guest = collect($GLOBALS['guest']);
 
-        return  $all_guest_name =  $meal_system_wise_guest->flatMap->names;
+        return  $all_guest_name =  $meal_system_wise_guest->flatMap->info;
     }
 
 

@@ -188,4 +188,11 @@
         'sign_in' => "Sign In",
         'role_name' => 'Role Name In (:in)',
         'hall_status' => 'Hall Status',
+        
+
+        'guest_mode' => 'Guest Mode',
+        'only_available' => 'Only Available',
+        'all_guest' => 'All Guest',
+        'inquery' => 'Inquery',
+        'filter_by_guest_name' => 'Filter by guest name...'
     ];
