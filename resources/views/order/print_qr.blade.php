@@ -30,11 +30,11 @@
                     <div style="padding-top: 4px" class="d-flex p-6 justify-between me-4">
                         {{-- <small style="margin-top: 10px" class="mb-0 d-block text-uppercase">{{__('page.guest_mode')}}</small> --}}
                         <div class="form-check form-check-inline">
-                          <input class="form-check-input" @if(request()->get('is-available-guest') == "false") checked @endif type="radio"  name="is-available-guest" id="inlineRadio1" value="true">
+                          <input class="form-check-input" @if(request()->get('is-available-guest') == "false") checked @endif type="radio"  name="is-available-guest" id="inlineRadio1" value="false">
                           <label class="form-check-label" for="inlineRadio1">{{__('page.only_available')}}</label>
                         </div>
                         <div class="form-check form-check-inline">
-                          <input class="form-check-input" @if(request()->get('is-available-guest') != "false") checked @endif type="radio" name="is-available-guest" id="inlineRadio2" value="false">
+                          <input class="form-check-input" @if(request()->get('is-available-guest') != "false") checked @endif type="radio" name="is-available-guest" id="inlineRadio2" value="true">
                           <label class="form-check-label" for="inlineRadio2">{{__('page.all_guest')}}</label>
                         </div>
                     

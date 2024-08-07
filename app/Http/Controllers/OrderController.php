@@ -87,7 +87,8 @@ class OrderController extends Controller
         $meal_systems = $order->meal_systems->map(function($meal_system_info){
             return $meal_system_info->meal_system;
         });
-        $chunk_data = $this->getGuestPosition($order, $request->get('is-available-guest') == "false" ? false : true);
+        $is_available_guest =  !$request->get('is-available-guest') || $request->get('is-available-guest') == "false" ? true : false;
+        $chunk_data = $this->getGuestPosition($order, $is_available_guest);
         if($meal_system = $request->get('meal-system')){
             $meal_system = MealSystem::find($meal_system);
             $meal_system ? $chunk_data = $chunk_data->where('meal_system', $meal_system->name) : null;
@@ -104,7 +105,6 @@ class OrderController extends Controller
         catch(\Exception $e){
             $data = $chunk_data;
         }
-        
         $data = $data->map(function ($item){
             $item['qr'] = QrCode::size(150)->generate(route('take_meal', $item['code']));
             return (object)$item;
